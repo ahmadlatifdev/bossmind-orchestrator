@@ -1,0 +1,11 @@
+{
+  "config_file": "bossmind-config.json",
+  "agents_file": "bossmind-agents.json",
+  "settings_file": "bossmind-settings.json",
+  "runtime_file": "bossmind-runtime.json",
+  "current_mission_file": "mission-1-elegancyart.json",
+  "active": true,
+"current_task_queue_file": "mission-1-tasks.json"
+"agent_progress_file": "mission-1-agents-progress.json"
+"products_file": "mission-1-products.json"
+}

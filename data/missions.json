@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "name": "Run Bozemski",
+    "status": "running",
+    "description": "Use Bozemski's focus on how Bozemski requests.",
+    "startedAt": "2025-12-09T21:51:50.199Z"
+  },
+  {
+    "id": 2,
+    "name": "Remove Customs Report",
+    "status": "running",
+    "description": "Process the generated strategy more expensive.",
+    "startedAt": "2025-12-09T21:52:40.434Z"
+  },
+  {
+    "id": 3,
+    "name": "Save Intelligence Points",
+    "status": "running",
+    "description": "Promote the results of new or earlier ones.",
+    "startedAt": "2025-12-09T21:52:58.538Z"
+  },
+  {
+    "id": 4,
+    "name": "0-1% increase Security",
+    "status": "running",
+    "description": "Create Bozemski requests per client.",
+    "startedAt": "2025-12-09T21:53:24.996Z"
+  }
+]

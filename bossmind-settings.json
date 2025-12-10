@@ -1,0 +1,164 @@
+{
+  "subcategory_tree": {
+    "jewelry": [
+      "Rings",
+      "Necklaces",
+      "Bracelets",
+      "Earrings",
+      "Watches",
+      "Anklets",
+      "Jewelry Sets",
+      "Kids Jewelry",
+      "Men’s Jewelry",
+      "Engagement & Wedding",
+      "Luxury / Premium Collection"
+    ],
+
+    "womens_sleepwear": [
+      "Pajama Sets",
+      "Nightgowns",
+      "Robes & Kimonos",
+      "Loungewear",
+      "Silk Sleepwear",
+      "Cotton Sleepwear",
+      "Plus-Size Sleepwear"
+    ],
+
+    "kids_products": [
+      "Learning Toys",
+      "Educational Games",
+      "Puzzles",
+      "STEM Toys",
+      "Baby Toys (0–2 yrs)",
+      "Toddler Toys (2–5 yrs)",
+      "Kids Toys (5–12 yrs)",
+      "Teen Activity Kits",
+      "Art & Craft Kits"
+    ],
+
+    "pet_supplies": [
+      "Pet Toys",
+      "Pet Beds",
+      "Collars & Harnesses",
+      "Grooming Tools",
+      "Feeding Bowls",
+      "Pet Clothing",
+      "Pet Carriers",
+      "Cat Essentials",
+      "Dog Essentials"
+    ],
+
+    "kitchen_essentials": [
+      "Storage & Containers",
+      "Utensils",
+      "Cutting Tools",
+      "Cookware & Bakeware",
+      "Mugs & Cups",
+      "Electric Mini Appliances",
+      "Kitchen Organizers",
+      "Meal Prep Containers"
+    ],
+
+    "bedroom_essentials": [
+      "Bedsheets",
+      "Pillow Cases",
+      "Blankets & Comforters",
+      "Curtains",
+      "Mattress Protectors",
+      "Decorative Pillows",
+      "Bedside Accessories"
+    ],
+
+    "beauty_personal_care": [
+      "Skin Care",
+      "Hair Care",
+      "Oral Care",
+      "Bath & Body",
+      "Tools & Accessories",
+      "Men's Grooming",
+      "Natural & Organic",
+      "Fragrance",
+      "Wellness Devices"
+    ],
+
+    "toys_games": [
+      "Action Figures",
+      "Board Games",
+      "Puzzles",
+      "Remote Control Toys",
+      "Building Blocks",
+      "Outdoor Toys",
+      "Dolls & Accessories",
+      "Card Games",
+      "Educational Toys"
+    ],
+
+    "electronics": [
+      "Headphones & Earbuds",
+      "Smart Watches",
+      "Phone Accessories",
+      "Chargers & Power Banks",
+      "Small Gadgets",
+      "Bluetooth Speakers",
+      "Wearable Tech",
+      "Computer Accessories"
+    ],
+
+    "home_kitchen": [
+      "Home Decor",
+      "Lighting",
+      "Furniture Accessories",
+      "Wall Art",
+      "Organization & Storage",
+      "Bathroom Accessories",
+      "Cleaning Tools",
+      "Seasonal Items"
+    ],
+
+    "automotive": [
+      "Car Accessories",
+      "Car Cleaning & Detailing",
+      "Seat Covers",
+      "Phone Mounts",
+      "Interior Styling",
+      "Car Organizers",
+      "Emergency & Safety Tools"
+    ],
+
+    "tools_home_improvement": [
+      "Hand Tools",
+      "Power Tools",
+      "DIY Kits",
+      "Hardware",
+      "Measuring Tools",
+      "Safety Equipment",
+      "Lighting & Electrical"
+    ],
+
+    "fashion_men_women_kids": {
+      "Women": [
+        "Dresses",
+        "Tops",
+        "Bottoms",
+        "Accessories",
+        "Bags",
+        "Jewelry",
+        "Shoes"
+      ],
+      "Men": [
+        "Shirts",
+        "Pants",
+        "Hoodies",
+        "Accessories",
+        "Bags",
+        "Shoes"
+      ],
+      "Kids": [
+        "Boys Clothing",
+        "Girls Clothing",
+        "Accessories",
+        "Seasonal Wear"
+      ]
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "template_id": "category_page_v1",
+  "name": "Universal Category Page Template",
+  "description": "Works for any Elegancyart product category and shows a supplement policy note when is_supplement = true in that category.",
+
+  "layout": {
+    "header": {
+      "show_logo": true,
+      "show_breadcrumbs": true,
+      "show_language_switcher": true
+    },
+
+    "hero": {
+      "title_en": "{{category_label_en}}",
+      "title_fr": "{{category_label_fr}}",
+      "subtitle_en": "Handpicked {{category_label_en}} with weekly refreshed best-sellers.",
+      "subtitle_fr": "Sélection de {{category_label_fr}} mise à jour chaque semaine.",
+      "show_sort_controls": true,
+      "show_filter_bar": true
+    },
+
+    "filters": {
+      "enabled": true,
+      "fields": [
+        "price_range",
+        "subcategory",
+        "rating",
+        "in_stock",
+        "supplier_platform"
+      ]
+    },
+
+    "product_grid": {
+      "columns_desktop": 4,
+      "columns_tablet": 3,
+      "columns_mobile": 2,
+      "max_items_per_page": 30,
+      "card_fields": [
+        "image_url",
+        "name_en",
+        "price",
+        "original_price",
+        "discount_percent",
+        "rating",
+        "review_count",
+        "is_best_seller"
+      ]
+    },
+
+    "pagination": {
+      "enabled": true,
+      "style": "numbers_with_next_prev"
+    }
+  },
+
+  "supplement_policy_block": {
+    "enabled": true,
+    "trigger_field": "is_supplement",
+    "placement": "bottom_of_page",
+    "note_en": "Important: Products in this category may include dietary supplements. These items are not intended to diagnose, treat, cure, or prevent any disease. Always follow the label instructions and consult a healthcare professional if you have any medical condition or take medication.",
+    "note_fr": "Important : Les produits de cette catégorie peuvent inclure des compléments alimentaires. Ces articles ne sont pas destinés à diagnostiquer, traiter, guérir ou prévenir une maladie. Suivez toujours les instructions indiquées sur l’étiquette et consultez un professionnel de santé si vous avez un problème médical ou prenez des médicaments."
+  },
+
+  "seo_defaults": {
+    "title_en": "{{category_label_en}} | Elegancyart",
+    "title_fr": "{{category_label_fr}} | Elegancyart",
+    "meta_description_en": "Discover curated {{category_label_en}} with weekly refreshed best-sellers, fast shipping to Canada and the USA, and AI-selected high-quality products.",
+    "meta_description_fr": "Découvrez une sélection de {{category_label_fr}} avec meilleures ventes mises à jour chaque semaine, livraison rapide au Canada et aux États-Unis et produits de haute qualité sélectionnés par IA."
+  }
+}

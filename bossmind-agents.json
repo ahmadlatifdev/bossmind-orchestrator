@@ -1,0 +1,13 @@
+{
+  "agents": {
+    "BossMind_Orchestrator": "Central brain that coordinates all other agents, reads targets, assigns tasks, and ensures full system compliance.",
+    "Product_Selector_AI": "Manages product sourcing, selection, validation, category limits, weekly refresh, and supplier criteria.",
+    "UI_Designer_AI": "Designs luxury layouts, sliders, EN/FR language switcher, and all visual components.",
+    "Frontend_Engineer_AI": "Builds all Next.js + Tailwind pages, registration forms, product sliders, footer, and layout components.",
+    "Backend_Engineer_AI": "Manages Supabase, APIs, Stripe, tax automation, customer data, and weekly cron logic.",
+    "Content_Branding_AI": "Writes all product text, category text, landing pages, translations (EN/FR), About Us text, and SEO content.",
+    "QA_Tester_AI": "Tests frontend, backend, checkout, policies, product limits, translations, and ensures nothing breaks.",
+    "Deployment_Guardian_AI": "Handles DNS, SSL, Railway deployment, environment variables, and system uptime.",
+    "Analytics_Reporter_AI": "Generates daily/weekly/monthly summaries, sales reports, alerts, and insights for system improvement."
+  }
+}

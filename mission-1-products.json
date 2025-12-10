@@ -1,0 +1,264 @@
+{
+  "mission_id": 1,
+  "name": "Elegancyart Product Streams",
+  "source_platforms": ["alibaba", "cj", "aliexpress"],
+
+  "rules": {
+    "max_per_category": 30,
+    "keep_best_sellers": true,
+    "auto_refresh_weekly": true,
+    "no_outdoor_clothing": true,
+    "removed_categories": [
+      "Health & Baby Care",
+      "Sports & Outdoors",
+      "Office Products",
+      "Industrial & Scientific"
+    ]
+  },
+
+  "product_schema": {
+    "id": "string - internal product id",
+    "name_en": "string - English title",
+    "name_fr": "string - French title",
+    "slug": "string - URL friendly slug",
+    "category_key": "string - matches one of the category keys below",
+    "subcategory": "string - one of that category's subcategories",
+    "price": "number - final sale price",
+    "original_price": "number - original price before discount",
+    "currency": "string - e.g. CAD, USD",
+    "discount_percent": "number - optional",
+    "supplier_platform": "string - alibaba | cj | aliexpress",
+    "supplier_name": "string",
+    "supplier_product_id": "string",
+    "source_url": "string - product URL at supplier",
+    "image_url": "string - main image",
+    "thumbnail_url": "string - small image",
+    "shipping_to": "array of ISO country codes, e.g. [\"CA\", \"US\"]",
+    "shipping_days_estimate": "number - max days to deliver",
+    "rating": "number - average rating",
+    "review_count": "number",
+    "stock_status": "string - in_stock | low_stock | out_of_stock",
+    "is_best_seller": "boolean",
+    "is_featured": "boolean",
+    "is_supplement": "boolean - true only for supplement/health products",
+    "active": "boolean",
+    "created_at": "ISO datetime string",
+    "updated_at": "ISO datetime string"
+  },
+
+  "categories": [
+    {
+      "key": "jewelry",
+      "label": "Jewelry",
+      "subcategories": [
+        "Rings",
+        "Necklaces",
+        "Bracelets",
+        "Earrings",
+        "Watches",
+        "Anklets",
+        "Jewelry Sets",
+        "Kids Jewelry",
+        "Men’s Jewelry",
+        "Engagement & Wedding",
+        "Luxury / Premium Collection"
+      ],
+      "items": []
+    },
+    {
+      "key": "womens_sleepwear",
+      "label": "Women’s Sleepwear",
+      "subcategories": [
+        "Pajama Sets",
+        "Nightgowns",
+        "Robes & Kimonos",
+        "Loungewear",
+        "Silk Sleepwear",
+        "Cotton Sleepwear",
+        "Plus-Size Sleepwear"
+      ],
+      "items": []
+    },
+    {
+      "key": "kids_products",
+      "label": "Kids Products",
+      "subcategories": [
+        "Learning Toys",
+        "Educational Games",
+        "Puzzles",
+        "STEM Toys",
+        "Baby Toys (0–2 yrs)",
+        "Toddler Toys (2–5 yrs)",
+        "Kids Toys (5–12 yrs)",
+        "Teen Activity Kits",
+        "Art & Craft Kits"
+      ],
+      "items": []
+    },
+    {
+      "key": "pet_supplies",
+      "label": "Pet Supplies",
+      "subcategories": [
+        "Pet Toys",
+        "Pet Beds",
+        "Collars & Harnesses",
+        "Grooming Tools",
+        "Feeding Bowls",
+        "Pet Clothing",
+        "Pet Carriers",
+        "Cat Essentials",
+        "Dog Essentials"
+      ],
+      "items": []
+    },
+    {
+      "key": "kitchen_essentials",
+      "label": "Kitchen Essentials",
+      "subcategories": [
+        "Storage & Containers",
+        "Utensils",
+        "Cutting Tools",
+        "Cookware & Bakeware",
+        "Mugs & Cups",
+        "Electric Mini Appliances",
+        "Kitchen Organizers",
+        "Meal Prep Containers"
+      ],
+      "items": []
+    },
+    {
+      "key": "bedroom_essentials",
+      "label": "Bedroom Essentials",
+      "subcategories": [
+        "Bedsheets",
+        "Pillow Cases",
+        "Blankets & Comforters",
+        "Curtains",
+        "Mattress Protectors",
+        "Decorative Pillows",
+        "Bedside Accessories"
+      ],
+      "items": []
+    },
+    {
+      "key": "beauty_personal_care",
+      "label": "Beauty & Personal Care",
+      "subcategories": [
+        "Skin Care",
+        "Hair Care",
+        "Oral Care",
+        "Bath & Body",
+        "Tools & Accessories",
+        "Men's Grooming",
+        "Natural & Organic",
+        "Fragrance",
+        "Wellness Devices"
+      ],
+      "items": []
+    },
+    {
+      "key": "toys_games",
+      "label": "Toys & Games",
+      "subcategories": [
+        "Action Figures",
+        "Board Games",
+        "Puzzles",
+        "Remote Control Toys",
+        "Building Blocks",
+        "Outdoor Toys",
+        "Dolls & Accessories",
+        "Card Games",
+        "Educational Toys"
+      ],
+      "items": []
+    },
+    {
+      "key": "electronics",
+      "label": "Electronics",
+      "subcategories": [
+        "Headphones & Earbuds",
+        "Smart Watches",
+        "Phone Accessories",
+        "Chargers & Power Banks",
+        "Small Gadgets",
+        "Bluetooth Speakers",
+        "Wearable Tech",
+        "Computer Accessories"
+      ],
+      "items": []
+    },
+    {
+      "key": "home_kitchen",
+      "label": "Home & Kitchen",
+      "subcategories": [
+        "Home Decor",
+        "Lighting",
+        "Furniture Accessories",
+        "Wall Art",
+        "Organization & Storage",
+        "Bathroom Accessories",
+        "Cleaning Tools",
+        "Seasonal Items"
+      ],
+      "items": []
+    },
+    {
+      "key": "automotive",
+      "label": "Automotive",
+      "subcategories": [
+        "Car Accessories",
+        "Car Cleaning & Detailing",
+        "Seat Covers",
+        "Phone Mounts",
+        "Interior Styling",
+        "Car Organizers",
+        "Emergency & Safety Tools"
+      ],
+      "items": []
+    },
+    {
+      "key": "tools_home_improvement",
+      "label": "Tools & Home Improvement",
+      "subcategories": [
+        "Hand Tools",
+        "Power Tools",
+        "DIY Kits",
+        "Hardware",
+        "Measuring Tools",
+        "Safety Equipment",
+        "Lighting & Electrical"
+      ],
+      "items": []
+    },
+    {
+      "key": "fashion_men_women_kids",
+      "label": "Fashion (Men, Women, Kids)",
+      "groups": {
+        "Women": [
+          "Dresses",
+          "Tops",
+          "Bottoms",
+          "Accessories",
+          "Bags",
+          "Jewelry",
+          "Shoes"
+        ],
+        "Men": [
+          "Shirts",
+          "Pants",
+          "Hoodies",
+          "Accessories",
+          "Bags",
+          "Shoes"
+        ],
+        "Kids": [
+          "Boys Clothing",
+          "Girls Clothing",
+          "Accessories",
+          "Seasonal Wear"
+        ]
+      },
+      "items": []
+    }
+  ]
+}

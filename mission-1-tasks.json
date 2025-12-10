@@ -1,0 +1,16 @@
+{
+  "mission_id": 1,
+  "queue_status": "processing",
+
+  "pending_tasks": [
+    "Product_Selector_AI: Build category blueprint and product rules.",
+    "UI_Designer_AI: Build wireframe for home and category pages.",
+    "Frontend_Engineer_AI: Prepare component list for sliders, headers, and footers.",
+    "Backend_Engineer_AI: Prepare database schema draft for products, users, orders, and returns.",
+    "Content_Branding_AI: Prepare EN/FR text outline for each category and product page.",
+    "QA_Tester_AI: Prepare initial checklist for system validation.",
+    "Deployment_Guardian_AI: Prepare domain, SSL, and deployment requirement list.",
+    "Analytics_Reporter_AI: Prepare initial metric types for reporting."
+  ],
+  "completed_tasks": []
+}

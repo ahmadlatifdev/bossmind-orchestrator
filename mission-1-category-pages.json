@@ -1,0 +1,99 @@
+{
+  "mission_id": 1,
+  "name": "Elegancyart Category Pages",
+  "template_id": "category_page_v1",
+
+  "categories": [
+    {
+      "key": "jewelry",
+      "slug": "jewelry",
+      "label_en": "Jewelry",
+      "label_fr": "Bijoux",
+      "is_supplement_category": false
+    },
+    {
+      "key": "womens_sleepwear",
+      "slug": "womens-sleepwear",
+      "label_en": "Women’s Sleepwear",
+      "label_fr": "Tenues de nuit pour femmes",
+      "is_supplement_category": false
+    },
+    {
+      "key": "kids_products",
+      "slug": "kids-products",
+      "label_en": "Kids Products",
+      "label_fr": "Produits pour enfants",
+      "is_supplement_category": false
+    },
+    {
+      "key": "pet_supplies",
+      "slug": "pet-supplies",
+      "label_en": "Pet Supplies",
+      "label_fr": "Articles pour animaux",
+      "is_supplement_category": false
+    },
+    {
+      "key": "kitchen_essentials",
+      "slug": "kitchen-essentials",
+      "label_en": "Kitchen Essentials",
+      "label_fr": "Essentiels de cuisine",
+      "is_supplement_category": false
+    },
+    {
+      "key": "bedroom_essentials",
+      "slug": "bedroom-essentials",
+      "label_en": "Bedroom Essentials",
+      "label_fr": "Essentiels de chambre",
+      "is_supplement_category": false
+    },
+    {
+      "key": "beauty_personal_care",
+      "slug": "beauty-personal-care",
+      "label_en": "Beauty & Personal Care",
+      "label_fr": "Beauté et soins personnels",
+      "is_supplement_category": false
+    },
+    {
+      "key": "toys_games",
+      "slug": "toys-games",
+      "label_en": "Toys & Games",
+      "label_fr": "Jouets et jeux",
+      "is_supplement_category": false
+    },
+    {
+      "key": "electronics",
+      "slug": "electronics",
+      "label_en": "Electronics",
+      "label_fr": "Électronique",
+      "is_supplement_category": false
+    },
+    {
+      "key": "home_kitchen",
+      "slug": "home-kitchen",
+      "label_en": "Home & Kitchen",
+      "label_fr": "Maison et cuisine",
+      "is_supplement_category": false
+    },
+    {
+      "key": "automotive",
+      "slug": "automotive",
+      "label_en": "Automotive",
+      "label_fr": "Automobile",
+      "is_supplement_category": false
+    },
+    {
+      "key": "tools_home_improvement",
+      "slug": "tools-home-improvement",
+      "label_en": "Tools & Home Improvement",
+      "label_fr": "Outils et rénovation",
+      "is_supplement_category": false
+    },
+    {
+      "key": "fashion",
+      "slug": "fashion",
+      "label_en": "Fashion (Men, Women, Kids)",
+      "label_fr": "Mode (hommes, femmes, enfants)",
+      "is_supplement_category": false
+    }
+  ]
+}

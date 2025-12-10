@@ -1,0 +1,37 @@
+{
+  "system_name": "BossMind Orchestrator for Elegancyart",
+  "languages": ["en", "fr"],
+
+  "categories": [
+    "jewelry",
+    "womens_sleepwear",
+    "kids_products",
+    "pet_supplies",
+    "kitchen_essentials",
+    "bedroom_essentials",
+    "beauty_personal_care",
+    "toys_games",
+    "electronics",
+    "home_kitchen",
+    "automotive",
+    "tools_home_improvement",
+    "fashion_men_women_kids"
+  ],
+
+  "rules": {
+    "max_products_per_category": 30,
+    "auto_refresh_weekly": true,
+    "keep_best_sellers": true,
+    "profit_margin_min": 35,
+    "shipping_days_max": 10,
+    "no_outdoor_clothing": true,
+    "return_policy_days": 15,
+    "auto_tax_refund_on_return": true
+  },
+
+  "tax_system": {
+    "usa": "TaxJar AutoFile",
+    "global": "Stripe Tax",
+    "remittance_cycle": "quarterly"
+  }
+}

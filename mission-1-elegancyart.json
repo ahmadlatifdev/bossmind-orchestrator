@@ -1,0 +1,24 @@
+{
+  "mission_id": 1,
+  "name": "Elegancyart Dropshipping System Setup",
+  "status": "active",
+
+  "steps": [
+    "Define initial categories and product rules in detail.",
+    "Prepare UI layout plan for home, category, and product pages.",
+    "Prepare backend data model for products, customers, orders, and returns.",
+    "Prepare content plan for EN/FR texts, SEO, and policies.",
+    "Plan deployment, tax, and analytics connections."
+  ],
+  "assigned_agents": [
+    "BossMind_Orchestrator",
+    "Product_Selector_AI",
+    "UI_Designer_AI",
+    "Frontend_Engineer_AI",
+    "Backend_Engineer_AI",
+    "Content_Branding_AI",
+    "QA_Tester_AI",
+    "Deployment_Guardian_AI",
+    "Analytics_Reporter_AI"
+  ]
+}

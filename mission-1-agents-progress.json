@@ -1,0 +1,15 @@
+{
+  "mission_id": 1,
+  "progress": {
+    "BossMind_Orchestrator": "pending",
+    "Product_Selector_AI": "in_progress",
+
+    "UI_Designer_AI": "pending",
+    "Frontend_Engineer_AI": "pending",
+    "Backend_Engineer_AI": "pending",
+    "Content_Branding_AI": "pending",
+    "QA_Tester_AI": "pending",
+    "Deployment_Guardian_AI": "pending",
+    "Analytics_Reporter_AI": "pending"
+  }
+}

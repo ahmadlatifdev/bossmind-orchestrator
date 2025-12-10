@@ -1,0 +1,20 @@
+{
+  "status": "active",
+
+  "last_refresh": {
+    "products": "force",
+    "about_us": "force",
+    "analytics_report": "force"
+  },
+
+  "activation": {
+    "config_loaded": true,
+    "agents_loaded": true,
+    "settings_loaded": true
+  },
+
+  "current_mission": "Elegancyart Dropshipping System Setup",
+
+  "products_file": "mission-1-products.json",
+  "products_stream_status": "ready"
+}
