@@ -29,6 +29,7 @@ app.get("/api/health", (req, res) => {
   res.json({
     status: "OK",
     message: "BossMind Orchestrator Backend Running",
+    port: PORT,
     model: DEEPSEEK_MODEL,
   });
 });
@@ -67,7 +68,7 @@ app.post("/api/deepseek/chat", async (req, res) => {
 });
 
 // ===============================
-// Start Server
+// Start Server (Railway requires dynamic port)
 // ===============================
 app.listen(PORT, () => {
   console.log(`BossMind Orchestrator running on port ${PORT}`);
