@@ -1,75 +1,40 @@
-// ===============================
-// BossMind Orchestrator - server.js
-// ===============================
-
 import express from "express";
 import cors from "cors";
-import fetch from "node-fetch";
 import dotenv from "dotenv";
 
 dotenv.config();
 
 const app = express();
-app.use(express.json());
+
 app.use(cors());
+app.use(express.json());
 
-// ===============================
-// Environment Variables
-// ===============================
-const PORT = process.env.PORT || 3000;
-const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
-const DEEPSEEK_MODEL = process.env.DEEPSEEK_MODEL || "deepseek-chat";
-const DEEPSEEK_BASE_URL =
-  process.env.DEEPSEEK_BASE_URL || "https://api.deepseek.com";
-
-// ===============================
-// Health Check Endpoint
-// ===============================
+// Health Check Route
 app.get("/api/health", (req, res) => {
-  res.json({
-    status: "OK",
-    message: "BossMind Orchestrator Backend Running",
-    port: PORT,
-    model: DEEPSEEK_MODEL,
-  });
+  res.status(200).json({ status: "OK", service: "bossmind-orchestrator" });
 });
 
-// ===============================
-// DeepSeek Chat Endpoint
-// ===============================
-app.post("/api/deepseek/chat", async (req, res) => {
+// DeepSeek Example Route (optional)
+app.post("/api/ask", async (req, res) => {
   try {
-    const { messages } = req.body;
+    const { question } = req.body;
 
-    if (!DEEPSEEK_API_KEY) {
-      return res.status(500).json({
-        error: "Missing DEEPSEEK_API_KEY in environment variables",
-      });
+    if (!question) {
+      return res.status(400).json({ error: "Question is required." });
     }
 
-    const response = await fetch(`${DEEPSEEK_BASE_URL}/chat/completions`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: DEEPSEEK_MODEL,
-        messages: messages || [],
-      }),
+    res.json({
+      answer: "DeepSeek connection active",
+      questionReceived: question,
     });
-
-    const data = await response.json();
-    res.json(data);
-  } catch (error) {
-    console.error("DeepSeek API error:", error);
-    res.status(500).json({ error: "DeepSeek request failed" });
+  } catch (err) {
+    res.status(500).json({ error: "Internal error", details: err.message });
   }
 });
 
-// ===============================
-// Start Server (Railway requires dynamic port)
-// ===============================
+// IMPORTANT: Railway requires this PORT
+const PORT = process.env.PORT || 8888;
+
 app.listen(PORT, () => {
-  console.log(`BossMind Orchestrator running on port ${PORT}`);
+  console.log(`BossMind Orchestrator running on PORT ${PORT}`);
 });
