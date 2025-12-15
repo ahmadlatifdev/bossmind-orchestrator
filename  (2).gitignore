@@ -1,0 +1,25 @@
+# ===============================
+# BossMind – Secrets Protection
+# ===============================
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Secret key files
+*.key
+*.secret
+*.pem
+
+# Local secret fallbacks
+Server/.openrouter.key
+Server/.deepseek.key
+Server/.secrets/*
+Server/secrets/*
+
+# OS / Editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
