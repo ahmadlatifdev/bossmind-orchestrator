@@ -2,95 +2,194 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 
+// ================================
+// BossMind Router (CJS ENFORCED)
+// ================================
+const {
+  routeModel,
+  assertBenefit,
+  ALLOWED_MODELS,
+  BENEFITS
+} = require("./core/modelRouter.cjs");
+
+// OpenRouter execution route
+const openRouterRoute = require("./routes/openrouter.chat.cjs");
+
 const app = express();
 const PORT = 5055;
 const HOST = "127.0.0.1";
 
-// Optional model defaults (can override via env)
-const OPENROUTER_MODEL_CHAT =
-  process.env.OPENROUTER_MODEL_CHAT || "deepseek/deepseek-chat";
-const OPENROUTER_MODEL_CODE =
-  process.env.OPENROUTER_MODEL_CODE || "deepseek/deepseek-coder";
-
-// --- KEY LOADING (ENV preferred, file fallback) ---
+/* =========================
+   KEY + TOKEN LOADING
+========================= */
 function loadOpenRouterKey() {
-  // 1) ENV (preferred)
   const envKey = process.env.OPENROUTER_API_KEY;
-  if (typeof envKey === "string" && envKey.trim()) return envKey.trim();
+  if (envKey && envKey.trim()) return envKey.trim();
 
-  // 2) File fallback: Server/.openrouter.key (plain text)
-  //    Path: D:\Shakhsy11\Bossmind-orchestrator\Server\.openrouter.key
   try {
     const keyPath = path.join(__dirname, ".openrouter.key");
     if (fs.existsSync(keyPath)) {
       const fileKey = fs.readFileSync(keyPath, "utf8");
-      if (typeof fileKey === "string" && fileKey.trim()) return fileKey.trim();
+      if (fileKey && fileKey.trim()) return fileKey.trim();
     }
-  } catch (e) {
-    // ignore file read errors; handled later
-  }
+  } catch (_) {}
 
   return "";
 }
 
-const OPENROUTER_API_KEY = loadOpenRouterKey();
+function loadAdminToken() {
+  const envTok = process.env.BOSSMIND_ADMIN_TOKEN;
+  if (envTok && envTok.trim()) return envTok.trim();
+  return "";
+}
 
-// Middleware
+const OPENROUTER_API_KEY = loadOpenRouterKey();
+const BOSSMIND_ADMIN_TOKEN = loadAdminToken();
+
+/* =========================
+   Middleware
+========================= */
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
-// CORS (your original behavior)
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-BossMind-Token");
   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   if (req.method === "OPTIONS") return res.sendStatus(200);
   next();
 });
 
-// Logger
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} ${req.method} ${req.url}`);
   next();
 });
 
 /* =========================
-   Router Logic
+   GLOBAL GUARD (PROTECT ALL /api/*)
+   Required header:
+   - X-BossMind-Token: <token>
+   OR Authorization: Bearer <token>
 ========================= */
-function chooseModel(reqBody) {
-  if (reqBody && typeof reqBody.model === "string" && reqBody.model.trim()) {
-    return reqBody.model.trim();
+function extractToken(req) {
+  const h1 = req.headers["x-bossmind-token"];
+  if (typeof h1 === "string" && h1.trim()) return h1.trim();
+
+  const auth = req.headers["authorization"];
+  if (typeof auth === "string" && auth.toLowerCase().startsWith("bearer ")) {
+    const t = auth.slice(7).trim();
+    if (t) return t;
+  }
+  return "";
+}
+
+app.use((req, res, next) => {
+  // keep health public
+  if (req.path === "/health") return next();
+
+  // protect everything under /api/
+  if (req.path.startsWith("/api/")) {
+    if (!BOSSMIND_ADMIN_TOKEN) {
+      return res.status(500).json({
+        ok: false,
+        error: "BOSSMIND_ADMIN_TOKEN missing in .env (guard cannot be enforced)."
+      });
+    }
+
+    const provided = extractToken(req);
+    if (!provided || provided !== BOSSMIND_ADMIN_TOKEN) {
+      return res.status(401).json({
+        ok: false,
+        error: "Unauthorized (missing/invalid BossMind token)."
+      });
+    }
   }
 
-  const messages = Array.isArray(reqBody?.messages) ? reqBody.messages : [];
-  const allText = messages
+  next();
+});
+
+/* =========================
+   Mount OpenRouter execution route
+========================= */
+app.use(openRouterRoute);
+
+/* =========================
+   INTENT DETECTION
+========================= */
+function detectIntent(body) {
+  const messages = Array.isArray(body?.messages) ? body.messages : [];
+  const text = messages
     .map((m) => (typeof m?.content === "string" ? m.content : ""))
     .join("\n")
     .toLowerCase();
 
-  const looksLikeCode =
-    allText.includes("```") ||
-    allText.includes("stack trace") ||
-    allText.includes("error:") ||
-    allText.includes("module_not_found") ||
-    allText.includes("syntaxerror") ||
-    allText.includes("express") ||
-    allText.includes("node.js") ||
-    allText.includes("powershell") ||
-    allText.includes("server.cjs") ||
-    allText.includes("api endpoint") ||
-    allText.includes("fix") ||
-    allText.includes("bug") ||
-    allText.includes("refactor");
+  const codeHints = [
+    "```",
+    "error",
+    "stack trace",
+    "bug",
+    "fix",
+    "refactor",
+    "express",
+    "node",
+    "powershell",
+    "server.cjs"
+  ];
 
-  return looksLikeCode ? OPENROUTER_MODEL_CODE : OPENROUTER_MODEL_CHAT;
+  return codeHints.some((k) => text.includes(k)) ? "code" : "chat";
 }
 
 /* =========================
-   OpenRouter Caller
+   APPROVAL HANDLING
+========================= */
+function getApprovedFiles(body) {
+  const raw = body?.approved_files || body?.approvedFiles || [];
+  if (!Array.isArray(raw)) return [];
+  return raw.map(String).map((x) => x.trim()).filter(Boolean);
+}
+
+function validateApprovedFiles(files) {
+  for (const f of files) {
+    if (f.includes("..")) {
+      throw new Error(`APPROVAL BLOCK: Path traversal detected: ${f}`);
+    }
+    if (/^[a-zA-Z]:\\/.test(f) || f.startsWith("/")) {
+      throw new Error(`APPROVAL BLOCK: Absolute path rejected: ${f}`);
+    }
+  }
+}
+
+/* =========================
+   MODEL SELECTION (FINAL)
+========================= */
+function chooseModel(body) {
+  if (body.model) {
+    throw new Error("ROUTER BLOCK: Manual model override is forbidden");
+  }
+
+  const intent = detectIntent(body);
+  const approvedFiles = getApprovedFiles(body);
+
+  if (intent === "code") {
+    validateApprovedFiles(approvedFiles);
+  }
+
+  const model = routeModel({ intent, approvedFiles });
+
+  if (intent === "code") {
+    assertBenefit(model, "canWriteCode");
+  } else {
+    assertBenefit(model, "canDecide");
+  }
+
+  return { model, intent, approvedFiles };
+}
+
+/* =========================
+   OPENROUTER CALL (BossMind Router Execution)
 ========================= */
 async function callOpenRouter({ model, messages }) {
-  const resp = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${OPENROUTER_API_KEY}`,
@@ -101,131 +200,72 @@ async function callOpenRouter({ model, messages }) {
     body: JSON.stringify({ model, messages })
   });
 
-  const text = await resp.text();
+  const text = await res.text();
 
-  if (!resp.ok) {
-    return { ok: false, status: resp.status, errorText: text };
+  if (!res.ok) {
+    return { ok: false, status: res.status, error: text };
   }
 
-  try {
-    return { ok: true, status: resp.status, data: JSON.parse(text) };
-  } catch {
-    return {
-      ok: false,
-      status: 502,
-      errorText: "OpenRouter returned non-JSON response",
-      raw: text
-    };
-  }
+  return { ok: true, data: JSON.parse(text) };
 }
 
 /* =========================
-   Health
+   HEALTH
 ========================= */
 app.get("/health", (req, res) => {
   res.json({
     status: "ok",
-    server: "BossMind Chat Server",
+    router: "ENFORCED",
+    allowed_models: ALLOWED_MODELS,
+    benefits: BENEFITS,
+    key_loaded: Boolean(OPENROUTER_API_KEY),
+    admin_token_loaded: Boolean(BOSSMIND_ADMIN_TOKEN),
     port: PORT,
-    openrouter_key_set: Boolean(OPENROUTER_API_KEY),
-    router_enabled: true,
-    models: {
-      chat_default: OPENROUTER_MODEL_CHAT,
-      code_default: OPENROUTER_MODEL_CODE
-    },
-    timestamp: new Date().toISOString(),
-    endpoints: {
-      health: "GET /health",
-      chat: "POST /api/deepseek/chat",
-      test: "GET /api/deepseek/test"
+    time: new Date().toISOString(),
+    routes: {
+      bossmind: "/api/deepseek/chat",
+      openrouter_exec: "/api/openrouter/chat"
     }
   });
 });
 
 /* =========================
-   Test
-========================= */
-app.get("/api/deepseek/test", (req, res) => {
-  res.json({
-    message: "Server is working!",
-    openrouter_key_set: Boolean(OPENROUTER_API_KEY),
-    router_enabled: true,
-    instructions:
-      "Send POST request to /api/deepseek/chat with JSON body {messages:[...]}",
-    example: {
-      method: "POST",
-      url: `http://${HOST}:${PORT}/api/deepseek/chat`,
-      headers: { "Content-Type": "application/json" },
-      body: {
-        messages: [{ role: "user", content: "Hello" }]
-      }
-    }
-  });
-});
-
-/* =========================
-   Main chat endpoint
+   CHAT ENDPOINT (BossMind enforced router -> OpenRouter)
 ========================= */
 app.post("/api/deepseek/chat", async (req, res) => {
   try {
-    console.log("=== Chat Request Received ===");
-    console.log("Body:", JSON.stringify(req.body, null, 2));
-
-    if (!req.body || typeof req.body !== "object") {
-      return res.status(400).json({
-        error: "Invalid request",
-        details: "Request body must be valid JSON object"
-      });
-    }
-
-    if (!req.body.messages || !Array.isArray(req.body.messages)) {
-      return res.status(400).json({
-        error: "Invalid request",
-        details: 'Request must contain "messages" array'
-      });
-    }
-
     if (!OPENROUTER_API_KEY) {
-      return res.status(500).json({
-        error: "Server not configured",
-        details:
-          "OpenRouter key is missing. Set OPENROUTER_API_KEY or create Server/.openrouter.key"
-      });
+      return res.status(500).json({ error: "OpenRouter key missing" });
     }
 
-    const selectedModel = chooseModel(req.body);
+    if (!Array.isArray(req.body?.messages)) {
+      return res.status(400).json({ error: "messages[] required" });
+    }
+
+    const { model, intent, approvedFiles } = chooseModel(req.body);
 
     const result = await callOpenRouter({
-      model: selectedModel,
+      model,
       messages: req.body.messages
     });
 
     if (!result.ok) {
-      console.error("=== OpenRouter Error ===");
-      console.error("Status:", result.status);
-      console.error("Body:", result.errorText || result.raw);
-
-      return res.status(result.status).json({
-        error: "OpenRouter error",
-        status: result.status,
-        model: selectedModel,
-        details: result.errorText || result.raw
-      });
+      return res.status(result.status).json({ error: result.error });
     }
 
-    const payload = result.data;
-    payload.bossmind = {
-      routed_model: selectedModel,
-      router_enabled: true,
-      routed_at: new Date().toISOString()
+    result.data.bossmind = {
+      routed_model: model,
+      intent,
+      approvals: approvedFiles.length,
+      enforced: true,
+      time: new Date().toISOString()
     };
 
-    return res.json(payload);
-  } catch (error) {
-    console.error("Error in /api/deepseek/chat:", error);
-    return res.status(500).json({
-      error: "Internal server error",
-      details: error.message
+    res.json(result.data);
+  } catch (err) {
+    res.status(403).json({
+      error: "BossMind enforcement block",
+      details: err.message
     });
   }
 });
@@ -234,65 +274,24 @@ app.post("/api/deepseek/chat", async (req, res) => {
    404
 ========================= */
 app.use((req, res) => {
-  res.status(404).json({
-    error: "Endpoint not found",
-    requested: req.originalUrl,
-    available_endpoints: ["GET /health", "GET /api/deepseek/test", "POST /api/deepseek/chat"]
-  });
+  res.status(404).json({ error: "Endpoint not found" });
 });
 
 /* =========================
-   Global error handler
-========================= */
-app.use((err, req, res, next) => {
-  console.error("Unhandled error:", err);
-  res.status(500).json({
-    error: "Internal server error",
-    message: "Something went wrong"
-  });
-});
-
-/* =========================
-   Start server
+   START SERVER
 ========================= */
 const server = app.listen(PORT, HOST, () => {
-  console.log("=".repeat(50));
-  console.log("✅ BOSS MIND SERVER STARTED SUCCESSFULLY");
-  console.log("=".repeat(50));
-  console.log(`🌐 URL: http://${HOST}:${PORT}`);
-  console.log(`📊 Health: http://${HOST}:${PORT}/health`);
-  console.log(`💬 Chat: POST http://${HOST}:${PORT}/api/deepseek/chat`);
-  console.log(`🧪 Test: GET http://${HOST}:${PORT}/api/deepseek/test`);
-  console.log(`🧭 Router: ENABLED`);
-  console.log(`🧠 Model (chat): ${OPENROUTER_MODEL_CHAT}`);
-  console.log(`🧠 Model (code): ${OPENROUTER_MODEL_CODE}`);
-  console.log(`🔑 OpenRouter key set: ${Boolean(OPENROUTER_API_KEY)}`);
-  console.log("=".repeat(50));
-  console.log("Press Ctrl+C to stop server");
-  console.log("=".repeat(50));
+  console.log("====================================");
+  console.log("✅ BOSS MIND SERVER RUNNING");
+  console.log(`🌐 http://${HOST}:${PORT}`);
+  console.log("🧠 Router: HARD ENFORCED");
+  console.log("🔒 API Guard: /api/* requires token");
+  console.log("====================================");
 });
 
-// Handle server errors
-server.on("error", (error) => {
-  if (error.code === "EADDRINUSE") {
-    console.error(`❌ ERROR: Port ${PORT} is already in use!`);
-    console.error("   Run this command to fix:");
-    console.error(
-      `   Get-NetTCPConnection -LocalPort ${PORT} | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }`
-    );
-  } else {
-    console.error("Server error:", error);
-  }
-  process.exit(1);
-});
-
-// Graceful shutdown
 process.on("SIGINT", () => {
-  console.log("\n🛑 Stopping server...");
-  server.close(() => {
-    console.log("✅ Server stopped");
-    process.exit(0);
-  });
+  console.log("\n🛑 Server stopping...");
+  server.close(() => process.exit(0));
 });
 
 module.exports = app;
