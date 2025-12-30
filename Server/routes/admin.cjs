@@ -1,4 +1,4 @@
-// admin.cjs
+// Server/routes/admin.cjs
 // BossMind Orchestrator – Admin Control Server (Railway entry)
 
 const express = require("express");
@@ -19,7 +19,7 @@ app.get("/", (req, res) => {
   });
 });
 
-// Activate (GET)
+// /admin/activate (GET)
 app.get("/admin/activate", (req, res) => {
   res.status(200).json({
     success: true,
@@ -29,7 +29,7 @@ app.get("/admin/activate", (req, res) => {
   });
 });
 
-// Activate (POST)
+// /admin/activate (POST)
 app.post("/admin/activate", (req, res) => {
   const payload = req.body || {};
   res.status(200).json({
@@ -40,7 +40,7 @@ app.post("/admin/activate", (req, res) => {
   });
 });
 
-// 404
+// 404 (keeps same style you saw)
 app.use((req, res) => {
   res.status(404).send(`Cannot ${req.method} ${req.originalUrl}`);
 });
