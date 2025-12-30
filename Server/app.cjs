@@ -1,20 +1,11 @@
 const express = require('express');
-const cors = require('cors');
 
 const app = express();
 
-/* ================================
-   CORE MIDDLEWARE
-================================ */
-app.use(express.json());
+app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
 
-/* ================================
-   ROUTES (EXPLICIT)
-================================ */
-
-// Health
+// Health (keep stable)
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
@@ -23,21 +14,19 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// ✅ ADMIN ACTIVATE (THIS WAS MISSING AT RUNTIME)
-app.use('/admin', require('./routes/admin.cjs'));
+// ✅ Hard-mount admin router (no abstractions)
+const adminRouter = require('./routes/admin.cjs');
 
-// Existing API routes
+// Mount in TWO places to guarantee reachability (no conflicts)
+app.use('/admin', adminRouter);
+app.use('/api/admin', adminRouter);
+
+// Existing API routes (keep)
 app.use('/api', require('./routes/index.cjs'));
 
-/* ================================
-   FALLBACK
-================================ */
+// 404
 app.use((req, res) => {
-  res.status(404).json({
-    error: 'Not Found',
-    method: req.method,
-    path: req.path,
-  });
+  res.status(404).send(`Cannot ${req.method} ${req.path}`);
 });
 
 module.exports = app;
