@@ -2,8 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { executionGuard } = require('../middleware/executionGuard.cjs');
 
-// ---- Phase runners (stubs / hooks) ----
-// Replace internals with your real logic if needed
+// ---- Phase runners (hooks / stubs) ----
 async function phase0_lockSafety() {
   return { phase: 0, status: 'ok', action: 'LOCK_EXISTING_PROJECTS' };
 }
@@ -26,7 +25,24 @@ async function phase6_verify() {
   return { phase: 6, status: 'ok', action: 'FINAL_VERIFICATION' };
 }
 
-// ---- Activate endpoint (guarded) ----
+/**
+ * GET probe (browser-friendly)
+ * This proves the route is mounted.
+ * It does NOT execute anything.
+ */
+router.get('/activate', (req, res) => {
+  res.json({
+    status: 'ready',
+    message: 'Route is mounted. Use POST /activate to run phases.',
+    mode: process.env.BOSSMIND_EXECUTION_MODE || 'NOT SET',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+/**
+ * POST /activate (guarded)
+ * This actually runs phases 0 -> 6.
+ */
 router.post('/activate', executionGuard, async (req, res) => {
   try {
     const results = [];
@@ -47,7 +63,7 @@ router.post('/activate', executionGuard, async (req, res) => {
   } catch (err) {
     res.status(500).json({
       status: 'failed',
-      error: err.message || 'Activation error',
+      error: err && err.message ? err.message : 'Activation error',
     });
   }
 });
