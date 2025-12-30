@@ -1,6 +1,7 @@
-// server.js (ROOT – Railway entry)
+// server.js (ROOT – Railway entry, ESM compatible)
 
-const express = require("express");
+import express from "express";
+
 const app = express();
 
 app.use(express.json());
