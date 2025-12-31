@@ -1,21 +1,20 @@
-// server.js (Railway entry)
-// BossMind Orchestrator API Server (ESM)
+// server.js (Railway entry - ESM)
+// BossMind Orchestrator API Server
 
 import express from "express";
 import cors from "cors";
 
 const app = express();
-const PORT = process.env.PORT || 8080;
 
-/* =========================
-   MIDDLEWARE
-========================= */
-app.use(cors({ origin: "*" }));
+// ==========================
+// Core Middleware
+// ==========================
+app.use(cors({ origin: "*", methods: ["GET", "POST"] }));
 app.use(express.json());
 
-/* =========================
-   HEALTH CHECK
-========================= */
+// ==========================
+// Health Check (REQUIRED)
+// ==========================
 app.get("/api/health", (req, res) => {
   res.json({
     success: true,
@@ -23,37 +22,41 @@ app.get("/api/health", (req, res) => {
     health: "OK",
     node: process.version,
     uptime_seconds: Math.floor(process.uptime()),
-    timestamp: new Date().toISOString(),
+    timestamp: new Date().toISOString()
   });
 });
 
-/* =========================
-   ADMIN ACTIVATE
-========================= */
+// ==========================
+// Admin Activate Endpoint
+// ==========================
 app.all("/admin/activate", (req, res) => {
   res.json({
     success: true,
     message: "BossMind Orchestrator is ACTIVE",
     source: req.method,
-    payload: req.body || null,
-    timestamp: new Date().toISOString(),
+    timestamp: new Date().toISOString()
   });
 });
 
-/* =========================
-   FALLBACK
-========================= */
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    error: "Route not found",
-    path: req.originalUrl,
+// ==========================
+// Safe Root
+// ==========================
+app.get("/", (req, res) => {
+  res.json({
+    service: "BossMind Orchestrator",
+    status: "running",
+    endpoints: [
+      "/api/health",
+      "/admin/activate"
+    ]
   });
 });
 
-/* =========================
-   START SERVER
-========================= */
+// ==========================
+// Boot
+// ==========================
+const PORT = process.env.PORT || 8080;
+
 app.listen(PORT, () => {
   console.log(`BossMind API Server running on port ${PORT}`);
 });
