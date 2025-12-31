@@ -1,36 +1,20 @@
-/**
- * server.js — BossMind Orchestrator (Railway ESM Entry)
- * Node.js 22+ | ES Modules ONLY
- */
+// server.js (Railway entry)
+// BossMind Orchestrator API Server (ESM)
 
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || 8080;
 
 /* =========================
-   BASIC MIDDLEWARE
+   MIDDLEWARE
 ========================= */
-app.use(cors({ origin: "*", methods: ["GET", "POST"] }));
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 /* =========================
-   ROOT CHECK
-========================= */
-app.get("/", (req, res) => {
-  res.json({
-    success: true,
-    service: "BossMind Orchestrator",
-    status: "RUNNING",
-    timestamp: new Date().toISOString(),
-  });
-});
-
-/* =========================
-   HEALTH ENDPOINT (REQUIRED)
+   HEALTH CHECK
 ========================= */
 app.get("/api/health", (req, res) => {
   res.json({
@@ -51,26 +35,25 @@ app.all("/admin/activate", (req, res) => {
     success: true,
     message: "BossMind Orchestrator is ACTIVE",
     source: req.method,
+    payload: req.body || null,
     timestamp: new Date().toISOString(),
   });
 });
 
 /* =========================
-   SAFE 404 HANDLER
+   FALLBACK
 ========================= */
 app.use((req, res) => {
   res.status(404).json({
     success: false,
-    error: "Endpoint not found",
+    error: "Route not found",
     path: req.originalUrl,
   });
 });
 
 /* =========================
-   SERVER START (RAILWAY)
+   START SERVER
 ========================= */
-const PORT = process.env.PORT || 8080;
-
 app.listen(PORT, () => {
   console.log(`BossMind API Server running on port ${PORT}`);
 });
