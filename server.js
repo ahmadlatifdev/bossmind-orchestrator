@@ -1,74 +1,76 @@
-// server.js (Railway entry) — ESM compatible (because package.json has "type":"module")
+/**
+ * server.js — BossMind Orchestrator (Railway ESM Entry)
+ * Node.js 22+ | ES Modules ONLY
+ */
 
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 
-app.use(cors({ origin: true }));
-app.use(express.json({ limit: "2mb" }));
-app.use(express.urlencoded({ extended: true }));
+/* =========================
+   BASIC MIDDLEWARE
+========================= */
+app.use(cors({ origin: "*", methods: ["GET", "POST"] }));
+app.use(express.json());
 
-const PORT = process.env.PORT || 8080;
-
-// In-memory activation flag (safe + simple)
-let ACTIVATED = false;
-let LAST_ACTIVATION = null;
-
-// Root
-app.get("/", (_req, res) => {
-  res.status(200).send("BossMind Orchestrator is running.");
-});
-
-// ✅ Health endpoint (your dashboard pings this)
-app.get("/api/health", (_req, res) => {
-  res.status(200).json({
-    ok: true,
-    service: "bossmind-orchestrator",
-    activated: ACTIVATED,
-    uptime_seconds: Math.round(process.uptime()),
+/* =========================
+   ROOT CHECK
+========================= */
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    service: "BossMind Orchestrator",
+    status: "RUNNING",
     timestamp: new Date().toISOString(),
-    node: process.version,
   });
 });
 
-// ✅ Admin Activate (GET)
-app.get("/admin/activate", (_req, res) => {
-  ACTIVATED = true;
-  LAST_ACTIVATION = { source: "GET", timestamp: new Date().toISOString() };
+/* =========================
+   HEALTH ENDPOINT (REQUIRED)
+========================= */
+app.get("/api/health", (req, res) => {
+  res.json({
+    success: true,
+    service: "BossMind Orchestrator",
+    health: "OK",
+    node: process.version,
+    uptime_seconds: Math.floor(process.uptime()),
+    timestamp: new Date().toISOString(),
+  });
+});
 
-  res.status(200).json({
+/* =========================
+   ADMIN ACTIVATE
+========================= */
+app.all("/admin/activate", (req, res) => {
+  res.json({
     success: true,
     message: "BossMind Orchestrator is ACTIVE",
-    source: "GET",
-    timestamp: LAST_ACTIVATION.timestamp,
-  });
-});
-
-// ✅ Admin Activate (POST)
-app.post("/admin/activate", (req, res) => {
-  ACTIVATED = true;
-
-  const phase = req?.body?.phase ?? "activate";
-  const source = req?.body?.source ?? "manual";
-
-  LAST_ACTIVATION = {
-    phase,
-    source: "POST",
-    received_source: source,
+    source: req.method,
     timestamp: new Date().toISOString(),
-  };
-
-  res.status(200).json({
-    success: true,
-    message: "BossMind activation accepted",
-    payload: { phase, source },
-    source: "POST",
-    timestamp: LAST_ACTIVATION.timestamp,
   });
 });
 
-// Start
+/* =========================
+   SAFE 404 HANDLER
+========================= */
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    error: "Endpoint not found",
+    path: req.originalUrl,
+  });
+});
+
+/* =========================
+   SERVER START (RAILWAY)
+========================= */
+const PORT = process.env.PORT || 8080;
+
 app.listen(PORT, () => {
   console.log(`BossMind API Server running on port ${PORT}`);
 });
