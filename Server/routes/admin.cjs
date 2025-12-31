@@ -1,110 +1,114 @@
 // admin.cjs
-// BossMind Orchestrator — Admin Control Server (Railway entry)
+// BossMind Orchestrator — Admin + Health API (Railway entry)
+// CommonJS (.cjs) so "require" works even if package.json sets "type":"module"
 
 const express = require("express");
 
 const app = express();
-app.use(express.json());
+
+// ---- Basic middleware ----
+app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));
 
-// --- CORS (safe simple) ---
+// Simple permissive CORS (no extra deps)
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Admin-Token");
   if (req.method === "OPTIONS") return res.sendStatus(204);
   next();
 });
 
-const PORT = process.env.PORT || 3000;
+// ---- Config ----
+const PORT = Number(process.env.PORT || 8080);
+const SERVICE_NAME = process.env.SERVICE_NAME || "bossmind-orchestrator";
+const ADMIN_TOKEN = process.env.ADMIN_TOKEN || ""; // optional
 
-// --- In-memory state ---
-const state = {
-  active: true,
-  lastActivation: null,
-  lastPayload: null,
-};
+function nowISO() {
+  return new Date().toISOString();
+}
 
-// --- Root ---
+function requireAdmin(req, res, next) {
+  // If no token set, allow (keeps your current behavior)
+  if (!ADMIN_TOKEN) return next();
+
+  const headerToken =
+    (req.headers["x-admin-token"] || req.headers["authorization"] || "")
+      .toString()
+      .replace(/^Bearer\s+/i, "")
+      .trim();
+
+  const queryToken = (req.query.token || "").toString().trim();
+
+  if (headerToken === ADMIN_TOKEN || queryToken === ADMIN_TOKEN) return next();
+
+  return res.status(401).json({
+    success: false,
+    error: "unauthorized",
+    message: "Missing/invalid admin token",
+    timestamp: nowISO(),
+  });
+}
+
+// ---- Root ----
 app.get("/", (req, res) => {
   res.status(200).json({
     ok: true,
-    service: "bossmind-orchestrator",
-    message: "BossMind Orchestrator Admin is running",
-    timestamp: new Date().toISOString(),
+    service: SERVICE_NAME,
+    message: "BossMind Orchestrator is running",
+    timestamp: nowISO(),
   });
 });
 
-// =====================================================
-// HEALTH ENDPOINTS (what your dashboard needs)
-// =====================================================
-
-// Primary health (the one you tried)
+// ---- Health (THIS is what your dashboard needs) ----
 app.get("/api/health", (req, res) => {
   res.status(200).json({
     ok: true,
-    service: "bossmind-orchestrator",
-    active: state.active,
-    lastActivation: state.lastActivation,
-    timestamp: new Date().toISOString(),
+    service: SERVICE_NAME,
+    status: "healthy",
+    timestamp: nowISO(),
+    env: {
+      hasDeepSeekKey: Boolean(process.env.DEEPSEEK_API_KEY),
+      model: process.env.DEEPSEEK_MODEL || null,
+    },
   });
 });
 
-// Backup alias (useful if you ever change dashboard)
+// Optional alias (nice for quick tests)
 app.get("/health", (req, res) => {
-  res.status(200).json({
-    ok: true,
-    service: "bossmind-orchestrator",
-    active: state.active,
-    lastActivation: state.lastActivation,
-    timestamp: new Date().toISOString(),
-  });
+  res.status(200).send("ok");
 });
 
-// =====================================================
-// ADMIN ACTIVATE (already working for you)
-// =====================================================
-
+// ---- Activation endpoint (GET + POST) ----
 app.get("/admin/activate", (req, res) => {
-  state.active = true;
-  state.lastActivation = new Date().toISOString();
-  state.lastPayload = { source: "GET" };
-
   res.status(200).json({
     success: true,
     message: "BossMind Orchestrator is ACTIVE",
     source: "GET",
-    timestamp: state.lastActivation,
+    timestamp: nowISO(),
   });
 });
 
-app.post("/admin/activate", (req, res) => {
-  const body = req.body || {};
-  state.active = true;
-  state.lastActivation = new Date().toISOString();
-  state.lastPayload = body;
-
+app.post("/admin/activate", requireAdmin, (req, res) => {
+  const payload = req.body || {};
   res.status(200).json({
     success: true,
     message: "BossMind activation accepted",
-    payload: body,
     source: "POST",
-    timestamp: state.lastActivation,
+    payload,
+    timestamp: nowISO(),
   });
 });
 
-// --- 404 ---
-app.use((req, res) => {
-  res.status(404).json({
-    ok: false,
-    error: "Not found",
-    path: req.originalUrl,
-    timestamp: new Date().toISOString(),
-  });
+// ---- Start ----
+const server = app.listen(PORT, () => {
+  console.log(`BossMind API Server running on port ${PORT}`);
 });
 
-// --- Start ---
-app.listen(PORT, () => {
-  console.log(`BossMind Admin Server running on port ${PORT}`);
-  console.log(`Health: http://localhost:${PORT}/api/health`);
+// ---- Graceful shutdown ----
+process.on("SIGTERM", () => {
+  server.close(() => process.exit(0));
+});
+process.on("SIGINT", () => {
+  server.close(() => process.exit(0));
 });
