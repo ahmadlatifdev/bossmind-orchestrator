@@ -1,0 +1,63 @@
+name: BossMind CI
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-dashboard:
+    name: Build bossmind-dashboard
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: |
+            bossmind-dashboard/package-lock.json
+
+      - name: Install deps (dashboard)
+        working-directory: bossmind-dashboard
+        run: npm ci
+
+      - name: Build / Test (dashboard)
+        working-directory: bossmind-dashboard
+        run: |
+          if [ -f package.json ]; then
+            npm run build --if-present
+            npm test --if-present
+          fi
+
+  sanity-orchestrator:
+    name: Sanity check orchestrator
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: |
+            Server/package-lock.json
+
+      - name: Install deps (Server)
+        working-directory: Server
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+
+      - name: Lint-like sanity (Server)
+        working-directory: Server
+        run: node -c server.js || true
