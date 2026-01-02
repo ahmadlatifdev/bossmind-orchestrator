@@ -21,21 +21,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
-          cache-dependency-path: |
-            bossmind-dashboard/package-lock.json
 
       - name: Install deps (dashboard)
         working-directory: bossmind-dashboard
-        run: npm ci
+        run: |
+          npm install --no-audit --no-fund
 
       - name: Build / Test (dashboard)
         working-directory: bossmind-dashboard
         run: |
-          if [ -f package.json ]; then
-            npm run build --if-present
-            npm test --if-present
-          fi
+          npm run build --if-present
+          npm test --if-present
 
   sanity-orchestrator:
     name: Sanity check orchestrator
@@ -49,15 +45,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
-          cache-dependency-path: |
-            Server/package-lock.json
 
       - name: Install deps (Server)
         working-directory: Server
         run: |
-          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+          if [ -f package-lock.json ]; then npm install --no-audit --no-fund; else npm install --no-audit --no-fund; fi
 
-      - name: Lint-like sanity (Server)
+      - name: Sanity (Server)
         working-directory: Server
         run: node -c server.js || true
+
