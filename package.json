@@ -3,14 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "type": "commonjs",
-  "main": "Server/server.cjs",
+  "main": "server.cjs",
   "engines": {
     "node": ">=20"
   },
   "scripts": {
-    "start": "node Server/server.cjs",
-    "worker": "RUN_WORKER=true node Server/server.cjs",
-    "dev": "node Server/server.cjs"
+    "start": "node server.cjs",
+    "dev": "node server.cjs"
   },
   "dependencies": {
     "express": "^4.19.2"
