@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "main": "server.js",
+  "main": "Server/server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
+    "start": "node Server/server.js",
+    "worker": "node Server/bossmind-worker.js",
+    "alerts": "node Server/bossmind-alerts-worker.js",
+    "dev": "node Server/server.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.89.0",
