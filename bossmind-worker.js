@@ -1,24 +1,24 @@
 'use strict';
 
 /**
- * BossMind – Railway Entry Worker
- * --------------------------------
- * This file MUST exist at repo root.
- * Railway Start Command points here.
- * Do NOT rename unless Start Command is changed.
+ * BossMind – Railway Entry Worker (ROOT)
+ * Loads the server entry from the most reliable locations.
  */
 
-function safeLoad(path) {
+function safeLoad(p) {
   try {
-    require(path);
-    console.log(`[BossMind] Loaded: ${path}`);
+    require(p);
+    console.log(`[BossMind] Loaded: ${p}`);
     return true;
-  } catch (err) {
+  } catch (e) {
     return false;
   }
 }
 
-// Try all known server entry locations (case-safe)
+// ✅ 1) Prefer root server.cjs (we will ensure it exists)
+if (safeLoad('./server.cjs')) process.exit(0);
+
+// ✅ 2) Fallbacks (folder variants)
 const started =
   safeLoad('./Server/server.cjs') ||
   safeLoad('./Server/server.js') ||
@@ -28,18 +28,6 @@ const started =
   safeLoad('./app/server.js');
 
 if (!started) {
-  console.error(`
-❌ BossMind failed to start.
-No server entry found.
-
-Expected one of:
-- /Server/server.cjs
-- /Server/server.js
-- /server/server.cjs
-- /server/server.js
-- /app/server.cjs
-- /app/server.js
-`);
+  console.error('❌ BossMind failed to start. No server entry found.');
   process.exit(1);
 }
-
