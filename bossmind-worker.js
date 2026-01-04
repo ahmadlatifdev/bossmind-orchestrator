@@ -1,42 +1,46 @@
-'use strict';
+// bossmind-worker.js (ESM-safe Railway entry)
+import path from "path";
+import { fileURLToPath } from "url";
+import { createRequire } from "module";
 
-/**
- * BossMind – Railway Entry Worker (ROOT)
- * Start command: node bossmind-worker.js
- * This worker loads the real server entry and keeps the process alive.
- */
+const require = createRequire(import.meta.url);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-function safeLoad(p) {
+function safeLoad(relPath) {
   try {
-    require(p);
-    console.log(`[BossMind] Loaded: ${p}`);
+    const abs = path.resolve(__dirname, relPath);
+    require(abs);
+    console.log(`[BossMind] Loaded: ${relPath}`);
     return true;
   } catch (e) {
+    // keep it quiet but visible in logs
+    console.warn(`[BossMind] Skipped: ${relPath}`);
     return false;
   }
 }
 
-// Prefer root server.cjs (the file we just fixed)
-if (safeLoad('./server.cjs')) {
-  // Do NOT exit — server.cjs must keep the process alive by listening on PORT
-  return;
-}
-
-// Fallbacks (case-safe / legacy)
-const tried = [
-  './Server/server.cjs',
-  './Server/server.js',
-  './server/server.cjs',
-  './server/server.js',
-  './app/server.cjs',
-  './app/server.js',
+// Try all likely locations (case + folder variants)
+const candidates = [
+  "./server.cjs",
+  "./server.js",
+  "./Server/server.cjs",
+  "./Server/server.js",
+  "./server/server.cjs",
+  "./server/server.js",
+  "./app/server.cjs",
+  "./app/server.js",
 ];
 
-for (const p of tried) {
-  if (safeLoad(p)) return;
+let started = false;
+for (const p of candidates) {
+  if (safeLoad(p)) {
+    started = true;
+    break;
+  }
 }
 
-console.error('❌ BossMind failed to start. No server entry found.');
-console.error('Expected one of:');
-console.error(['./server.cjs', ...tried].map(x => `- ${x}`).join('\n'));
-process.exit(1);
+if (!started) {
+  console.error("BossMind failed to start. No server entry found.");
+  process.exit(1);
+}
