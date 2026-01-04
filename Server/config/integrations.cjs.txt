@@ -1,0 +1,14 @@
+// Server/config/integrations.cjs
+
+module.exports = {
+  n8n: {
+    enabled: true,
+    webhookUrl: "https://elegancyart.app.n8n.cloud/webhook/41b9134b-27e0-44d9-9ef4-6fedabd495b3",
+    timeoutMs: 15000,
+    retry: {
+      enabled: true,
+      maxAttempts: 3,
+      delayMs: 2000,
+    },
+  },
+};

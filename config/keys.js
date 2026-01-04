@@ -1,7 +1,7 @@
 // DeepSeek API Keys - Replace with your ACTUAL keys
 
 export const DEEPSEEK_KEYS = {
-  CORE: "sk-e71b725308c044c381557823fc6b8b29",
+  CORE: "sk-5a46bee270d64a78b7019886b98c63e0",
   GENERATOR: "sk-fddee0bd1c774ffa9c47ce8834b5bc9b",
   REASONING: "sk-d5e9e325f82945549e73bc5b1715a38a",
   EMBEDDINGS: "sk-9f3286d012144fa080da5b5348804d",

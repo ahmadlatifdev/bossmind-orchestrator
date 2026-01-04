@@ -1,0 +1,11 @@
+{
+  "status": "ok",
+  "active_model": "openrouter",
+  "failures": 0,
+  "last_error": null,
+  "last_fix": null,
+  "last_restart": 0,
+  "restart_count_24h": 0,
+  "model_switches_5m": 0,
+  "lock": false
+}

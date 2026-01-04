@@ -1,0 +1,23 @@
+{
+  "orchestrator": "BossMind",
+  "projects": {
+    "elegancyart-ai": {
+      "type": "website-builder",
+      "supabase_project": "elegancyart-ai",
+      "status": "active",
+      "isolation": "strict"
+    },
+    "ai-video-generator": {
+      "type": "video-system",
+      "supabase_project": "ai-video-generator",
+      "status": "active",
+      "isolation": "strict"
+    },
+    "stocks-ai": {
+      "type": "trading-system",
+      "supabase_project": "stocks-ai",
+      "status": "pending",
+      "isolation": "strict"
+    }
+  }
+}

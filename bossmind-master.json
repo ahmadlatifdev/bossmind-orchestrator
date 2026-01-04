@@ -1,11 +1,30 @@
 {
-  "config_file": "bossmind-config.json",
-  "agents_file": "bossmind-agents.json",
-  "settings_file": "bossmind-settings.json",
-  "runtime_file": "bossmind-runtime.json",
-  "current_mission_file": "mission-1-elegancyart.json",
+  "bossmind": {
+    "role": "orchestrator",
+    "projects": {
+      "elegancyart-ai": {
+        "type": "ai-website-builder",
+        "supabase_project": "elegancyart-ai",
+        "status": "active",
+        "isolation": "strict"
+      },
+      "ai-video-generator": {
+        "type": "ai-video-generator",
+        "supabase_project": "ai-video-generator",
+        "status": "active",
+        "isolation": "strict"
+      },
+      "stocks-ai": {
+        "type": "quant-stocks",
+        "supabase_project": "stocks-ai",
+        "status": "planned",
+        "isolation": "strict"
+      }
+    }
+  },
   "active": true,
-"current_task_queue_file": "mission-1-tasks.json"
-"agent_progress_file": "mission-1-agents-progress.json"
-"products_file": "mission-1-products.json"
+  "activated_at": "2025-12-19T14:00:59.436Z",
+  "authorized_by": "system_admin",
+  "current_mission_file": "mission-1-elegancyart.json",
+  "mission_set_at": "2025-12-19T14:13:20.166Z"
 }
