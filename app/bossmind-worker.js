@@ -1,5 +1,5 @@
 // app/bossmind-worker.js
-// Safe fallback worker so the Railway service never crashes if worker logic isn't wired yet.
+// Safe fallback worker to keep Railway service alive
 
 let state = {
   running: false,
@@ -21,8 +21,7 @@ function startWorker() {
   state.startedAt = new Date().toISOString();
   state.lastError = null;
 
-  // lightweight heartbeat (won’t spam logs)
-  interval = setInterval(tick, 15_000);
+  interval = setInterval(tick, 15000);
   tick();
 
   return { ok: true, state };
@@ -31,7 +30,6 @@ function startWorker() {
 function stopWorker() {
   if (interval) clearInterval(interval);
   interval = null;
-
   state.running = false;
   return { ok: true, state };
 }
@@ -42,12 +40,10 @@ function getWorkerStatus() {
 
 process.on("uncaughtException", (err) => {
   state.lastError = String(err?.stack || err);
-  // Do not crash the process
 });
 
 process.on("unhandledRejection", (err) => {
   state.lastError = String(err?.stack || err);
-  // Do not crash the process
 });
 
 module.exports = {
