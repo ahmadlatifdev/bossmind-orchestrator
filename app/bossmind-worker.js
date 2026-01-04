@@ -1,34 +1,36 @@
-/**
- * BossMind Orchestrator – Safe Worker
- * Stable minimal runtime to prevent Railway crashes
- */
+// bossmind-worker.js (repo ROOT)
+// Purpose: Railway Start Command expects this entry file.
+// It loads your real server entry (CommonJS) from /server.
 
-const express = require("express");
+'use strict';
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+function tryRequire(p) {
+  try {
+    // eslint-disable-next-line import/no-dynamic-require, global-require
+    require(p);
+    console.log(`[bossmind-worker] Loaded: ${p}`);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
 
-/* =========================
-   Health Check (REQUIRED)
-========================= */
-app.get("/health", (req, res) => {
-  res.status(200).json({
-    status: "ok",
-    service: "bossmind-orchestrator",
-    time: new Date().toISOString(),
-  });
-});
+// Try common server entry locations (no crash until all fail)
+const ok =
+  tryRequire('./server/server.cjs') ||
+  tryRequire('./server/index.cjs') ||
+  tryRequire('./server/app.cjs') ||
+  tryRequire('./server/server.js') ||
+  tryRequire('./server/index.js');
 
-/* =========================
-   Root
-========================= */
-app.get("/", (req, res) => {
-  res.send("BossMind Orchestrator is running");
-});
-
-/* =========================
-   Safe Startup
-========================= */
-app.listen(PORT, () => {
-  console.log(`BossMind Orchestrator listening on port ${PORT}`);
-});
+if (!ok) {
+  console.error(
+    '[bossmind-worker] Could not find a server entry. Expected one of:\n' +
+      '- ./server/server.cjs\n' +
+      '- ./server/index.cjs\n' +
+      '- ./server/app.cjs\n' +
+      '- ./server/server.js\n' +
+      '- ./server/index.js\n'
+  );
+  process.exit(1);
+}
