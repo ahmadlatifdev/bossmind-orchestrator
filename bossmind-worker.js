@@ -1,46 +1,67 @@
-// bossmind-worker.js (ESM-safe Railway entry)
-import path from "path";
-import { fileURLToPath } from "url";
-import { createRequire } from "module";
+"use strict";
 
-const require = createRequire(import.meta.url);
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+/**
+ * BossMind Worker — Railway Safe Bootstrap
+ * If running on Railway (PORT is set), we directly start the real server entry
+ * instead of scanning/looping for files.
+ */
 
-function safeLoad(relPath) {
+function isRailwayRuntime() {
+  return Boolean(
+    process.env.RAILWAY_ENVIRONMENT ||
+      process.env.RAILWAY_SERVICE_ID ||
+      process.env.RAILWAY_PROJECT_ID ||
+      process.env.PORT
+  );
+}
+
+function tryRequire(p) {
   try {
-    const abs = path.resolve(__dirname, relPath);
-    require(abs);
-    console.log(`[BossMind] Loaded: ${relPath}`);
+    // eslint-disable-next-line import/no-dynamic-require, global-require
+    require(p);
+    console.log(`[BossMind] Started server via: ${p}`);
     return true;
   } catch (e) {
-    // keep it quiet but visible in logs
-    console.warn(`[BossMind] Skipped: ${relPath}`);
+    console.log(`[BossMind] Skip require: ${p}`);
     return false;
   }
 }
 
-// Try all likely locations (case + folder variants)
-const candidates = [
-  "./server.cjs",
-  "./server.js",
-  "./Server/server.cjs",
-  "./Server/server.js",
-  "./server/server.cjs",
-  "./server/server.js",
-  "./app/server.cjs",
-  "./app/server.js",
-];
+/**
+ * HARD GUARANTEE:
+ * On Railway, we start the server from known locations (no scanning).
+ */
+if (isRailwayRuntime()) {
+  console.log("[BossMind] Railway runtime detected — starting server directly...");
 
-let started = false;
-for (const p of candidates) {
-  if (safeLoad(p)) {
-    started = true;
-    break;
+  const candidates = [
+    "./Server/server.cjs",
+    "./Server/server.js",
+    "./server.cjs",
+    "./server.js",
+    "./app/server.cjs",
+    "./app/server.js",
+  ];
+
+  for (const p of candidates) {
+    if (tryRequire(p)) {
+      // If server module starts listening, we're done.
+      // Keep process alive.
+      setInterval(() => {}, 1 << 30);
+      break;
+    }
   }
-}
 
-if (!started) {
-  console.error("BossMind failed to start. No server entry found.");
+  console.error(
+    "[BossMind] FATAL: Could not start server from known entries. Check that Server/server.cjs exists and listens on process.env.PORT."
+  );
   process.exit(1);
 }
+
+/**
+ * Non-Railway: optional local/dev behavior
+ * If you still want scanning locally, keep it minimal and safe.
+ */
+console.log("[BossMind] Non-Railway runtime — nothing to do here.");
+console.log("[BossMind] Tip: run the server directly: node Server/server.cjs");
+process.exit(0);
