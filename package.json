@@ -2,21 +2,17 @@
   "name": "bossmind-orchestrator",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
-  "main": "Server/server.js",
+  "type": "commonjs",
+  "main": "Server/server.cjs",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
-    "start": "node Server/server.js",
-    "worker": "node Server/bossmind-worker.js",
-    "alerts": "node Server/bossmind-alerts-worker.js",
-    "dev": "node Server/server.js"
+    "start": "node Server/server.cjs",
+    "worker": "RUN_WORKER=true node Server/server.cjs",
+    "dev": "node Server/server.cjs"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.89.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.22.1",
-    "express-rate-limit": "^8.2.1",
-    "helmet": "^8.1.0",
-    "node-cron": "^4.2.1"
+    "express": "^4.19.2"
   }
 }
