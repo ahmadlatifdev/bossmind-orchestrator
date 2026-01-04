@@ -1,53 +1,34 @@
-// app/bossmind-worker.js
-// Safe fallback worker to keep Railway service alive
+/**
+ * BossMind Orchestrator – Safe Worker
+ * Stable minimal runtime to prevent Railway crashes
+ */
 
-let state = {
-  running: false,
-  startedAt: null,
-  lastTickAt: null,
-  lastError: null,
-};
+const express = require("express");
 
-let interval = null;
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-function tick() {
-  state.lastTickAt = new Date().toISOString();
-}
-
-function startWorker() {
-  if (state.running) return { ok: true, state };
-
-  state.running = true;
-  state.startedAt = new Date().toISOString();
-  state.lastError = null;
-
-  interval = setInterval(tick, 15000);
-  tick();
-
-  return { ok: true, state };
-}
-
-function stopWorker() {
-  if (interval) clearInterval(interval);
-  interval = null;
-  state.running = false;
-  return { ok: true, state };
-}
-
-function getWorkerStatus() {
-  return { ok: true, state };
-}
-
-process.on("uncaughtException", (err) => {
-  state.lastError = String(err?.stack || err);
+/* =========================
+   Health Check (REQUIRED)
+========================= */
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    service: "bossmind-orchestrator",
+    time: new Date().toISOString(),
+  });
 });
 
-process.on("unhandledRejection", (err) => {
-  state.lastError = String(err?.stack || err);
+/* =========================
+   Root
+========================= */
+app.get("/", (req, res) => {
+  res.send("BossMind Orchestrator is running");
 });
 
-module.exports = {
-  startWorker,
-  stopWorker,
-  getWorkerStatus,
-};
+/* =========================
+   Safe Startup
+========================= */
+app.listen(PORT, () => {
+  console.log(`BossMind Orchestrator listening on port ${PORT}`);
+});
