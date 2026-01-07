@@ -1,4 +1,10 @@
-/* Server/server.cjs */
+/**
+ * Server/server.cjs
+ * BossMind Orchestrator – Railway-safe HTTP server
+ * DO NOT hardcode PORT
+ * DO NOT override process.env.PORT
+ */
+
 'use strict';
 
 const http = require('http');
@@ -6,41 +12,65 @@ const express = require('express');
 
 const app = express();
 
-// Railway / proxy safe
+/* ======================================
+   Core Express Setup
+====================================== */
+
 app.set('trust proxy', 1);
 
-app.use(express.json());
+app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Health check (VERY important for Railway)
+/* ======================================
+   Health Check (Railway REQUIRED)
+====================================== */
+
 app.get('/health', (_req, res) => {
   res.status(200).json({ ok: true });
 });
 
-// Routes
+/* ======================================
+   Root Route (prevents 502 / blank page)
+====================================== */
+
+app.get('/', (_req, res) => {
+  res.status(200).json({
+    ok: true,
+    service: 'bossmind-orchestrator',
+    status: 'running',
+    time: new Date().toISOString(),
+  });
+});
+
+/* ======================================
+   Load API Routes (optional)
+====================================== */
+
 try {
   const routes = require('./routes/index.cjs');
   if (typeof routes === 'function') {
     app.use('/', routes);
-  } else if (routes?.router) {
+  } else if (routes && typeof routes.router === 'function') {
     app.use('/', routes.router);
   }
-} catch (e) {
-  console.warn('[BossMind] routes not loaded:', e.message);
+} catch (err) {
+  console.warn('[BossMind] routes not loaded:', err?.message || err);
 }
 
-// Fallback
+/* ======================================
+   404 Fallback
+====================================== */
+
 app.use((_req, res) => {
-  res.status(404).json({ error: 'Not Found' });
+  res.status(404).json({ ok: false, error: 'Not Found' });
 });
 
-/* ================================
-   CRITICAL PART (Railway-safe)
-================================ */
+/* ======================================
+   Railway-SAFE Server Boot
+====================================== */
 
-// Railway ALWAYS injects PORT
 if (!process.env.PORT) {
-  console.error('[BossMind] FATAL: process.env.PORT is missing');
+  console.error('[BossMind][FATAL] process.env.PORT is missing');
   process.exit(1);
 }
 
@@ -53,20 +83,37 @@ server.listen(PORT, HOST, () => {
   console.log(`[BossMind] server listening on http://${HOST}:${PORT}`);
 });
 
-// Graceful shutdown
-const shutdown = (sig) => {
-  console.log(`[BossMind] ${sig} received`);
+/* ======================================
+   Graceful Shutdown
+====================================== */
+
+function shutdown(signal) {
+  console.log(`[BossMind] ${signal} received, shutting down...`);
   server.close(() => process.exit(0));
   setTimeout(() => process.exit(1), 8000).unref();
-};
+}
 
 process.on('SIGTERM', () => shutdown('SIGTERM'));
 process.on('SIGINT', () => shutdown('SIGINT'));
 
-process.on('unhandledRejection', console.error);
-process.on('uncaughtException', (e) => {
-  console.error(e);
+/* ======================================
+   Safety Nets
+====================================== */
+
+process.on('unhandledRejection', (err) => {
+  console.error('[BossMind] unhandledRejection:', err);
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('[BossMind] uncaughtException:', err);
   process.exit(1);
 });
 
-module.exports = { app, server };
+/* ======================================
+   Exports (used by bossmind-worker.js)
+====================================== */
+
+module.exports = {
+  app,
+  server,
+};
