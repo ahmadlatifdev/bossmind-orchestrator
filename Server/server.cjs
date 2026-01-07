@@ -1,49 +1,51 @@
-/* Server/server.cjs (CommonJS) */
+/* Server/server.cjs */
 'use strict';
 
 const http = require('http');
 const express = require('express');
 
-// --- App ---
 const app = express();
 
-// Trust proxy (Railway/Reverse proxy)
+// Railway / proxy safe
 app.set('trust proxy', 1);
 
-// Basic middleware
-app.use(express.json({ limit: '2mb' }));
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Health (Railway needs fast, reliable response)
+// Health check (VERY important for Railway)
 app.get('/health', (_req, res) => {
-  res.status(200).json({
-    ok: true,
-    service: 'bossmind-orchestrator',
-    time: new Date().toISOString(),
-  });
+  res.status(200).json({ ok: true });
 });
 
-// Load routes (if present)
+// Routes
 try {
-  // Your logs show this exists: /app/Server/routes/index.cjs
   const routes = require('./routes/index.cjs');
   if (typeof routes === 'function') {
     app.use('/', routes);
-  } else if (routes && typeof routes.router === 'function') {
+  } else if (routes?.router) {
     app.use('/', routes.router);
   }
 } catch (e) {
-  console.warn('[BossMind] routes load skipped:', e?.message || e);
+  console.warn('[BossMind] routes not loaded:', e.message);
 }
 
 // Fallback
 app.use((_req, res) => {
-  res.status(404).json({ ok: false, error: 'Not Found' });
+  res.status(404).json({ error: 'Not Found' });
 });
 
-// --- Server (THIS is the critical part for Railway) ---
-const PORT = Number(process.env.PORT || 3000);
-const HOST = process.env.HOST || '0.0.0.0';
+/* ================================
+   CRITICAL PART (Railway-safe)
+================================ */
+
+// Railway ALWAYS injects PORT
+if (!process.env.PORT) {
+  console.error('[BossMind] FATAL: process.env.PORT is missing');
+  process.exit(1);
+}
+
+const PORT = Number(process.env.PORT);
+const HOST = '0.0.0.0';
 
 const server = http.createServer(app);
 
@@ -52,21 +54,18 @@ server.listen(PORT, HOST, () => {
 });
 
 // Graceful shutdown
-function shutdown(signal) {
-  console.log(`[BossMind] ${signal} received, shutting down...`);
+const shutdown = (sig) => {
+  console.log(`[BossMind] ${sig} received`);
   server.close(() => process.exit(0));
   setTimeout(() => process.exit(1), 8000).unref();
-}
+};
 
 process.on('SIGTERM', () => shutdown('SIGTERM'));
 process.on('SIGINT', () => shutdown('SIGINT'));
 
-// Don’t crash silently
-process.on('unhandledRejection', (err) => {
-  console.error('[BossMind] unhandledRejection:', err);
-});
-process.on('uncaughtException', (err) => {
-  console.error('[BossMind] uncaughtException:', err);
+process.on('unhandledRejection', console.error);
+process.on('uncaughtException', (e) => {
+  console.error(e);
   process.exit(1);
 });
 
