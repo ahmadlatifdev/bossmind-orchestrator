@@ -1,67 +1,68 @@
-"use strict";
-
 /**
- * BossMind Worker — Railway Safe Bootstrap
- * If running on Railway (PORT is set), we directly start the real server entry
- * instead of scanning/looping for files.
+ * bossmind-worker.js
+ * Railway may force this as the start command.
+ * This file MUST start the real web server and keep the process alive.
  */
 
-function isRailwayRuntime() {
-  return Boolean(
-    process.env.RAILWAY_ENVIRONMENT ||
-      process.env.RAILWAY_SERVICE_ID ||
-      process.env.RAILWAY_PROJECT_ID ||
-      process.env.PORT
-  );
+'use strict';
+
+const path = require('path');
+
+function log(...args) {
+  console.log('[BossMindWorker]', ...args);
 }
 
-function tryRequire(p) {
-  try {
-    // eslint-disable-next-line import/no-dynamic-require, global-require
-    require(p);
-    console.log(`[BossMind] Started server via: ${p}`);
-    return true;
-  } catch (e) {
-    console.log(`[BossMind] Skip require: ${p}`);
-    return false;
-  }
-}
-
-/**
- * HARD GUARANTEE:
- * On Railway, we start the server from known locations (no scanning).
- */
-if (isRailwayRuntime()) {
-  console.log("[BossMind] Railway runtime detected — starting server directly...");
-
-  const candidates = [
-    "./Server/server.cjs",
-    "./Server/server.js",
-    "./server.cjs",
-    "./server.js",
-    "./app/server.cjs",
-    "./app/server.js",
-  ];
-
-  for (const p of candidates) {
-    if (tryRequire(p)) {
-      // If server module starts listening, we're done.
-      // Keep process alive.
-      setInterval(() => {}, 1 << 30);
-      break;
-    }
-  }
-
-  console.error(
-    "[BossMind] FATAL: Could not start server from known entries. Check that Server/server.cjs exists and listens on process.env.PORT."
-  );
+function fatal(...args) {
+  console.error('[BossMindWorker][FATAL]', ...args);
   process.exit(1);
 }
 
-/**
- * Non-Railway: optional local/dev behavior
- * If you still want scanning locally, keep it minimal and safe.
- */
-console.log("[BossMind] Non-Railway runtime — nothing to do here.");
-console.log("[BossMind] Tip: run the server directly: node Server/server.cjs");
-process.exit(0);
+// Force safe defaults (Railway provides PORT automatically)
+process.env.HOST = process.env.HOST || '0.0.0.0';
+process.env.PORT = process.env.PORT || '3000';
+
+const serverEntry = path.join(__dirname, 'Server', 'server.cjs');
+
+try {
+  log('Booting real server entry:', serverEntry);
+
+  // IMPORTANT: Server/server.cjs must call server.listen(process.env.PORT, '0.0.0.0')
+  const exported = require(serverEntry);
+
+  // Optional: if Server/server.cjs exports a server, we can log its address after a short delay
+  setTimeout(() => {
+    try {
+      const srv = exported?.server;
+      if (srv && typeof srv.address === 'function') {
+        const addr = srv.address();
+        if (addr) log('Server address:', addr);
+      }
+    } catch (_) {}
+  }, 500);
+
+  log(`Expected listen on HOST=${process.env.HOST} PORT=${process.env.PORT}`);
+
+} catch (e) {
+  fatal('Failed to require Server/server.cjs:', e?.stack || e);
+}
+
+// Keep process alive (Railway expects a long-running process)
+setInterval(() => {
+  log('heartbeat', new Date().toISOString());
+}, 60_000).unref();
+
+// Graceful shutdown
+function shutdown(signal) {
+  log(`${signal} received, exiting...`);
+  process.exit(0);
+}
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));
+
+process.on('unhandledRejection', (err) => {
+  console.error('[BossMindWorker] unhandledRejection:', err);
+});
+process.on('uncaughtException', (err) => {
+  console.error('[BossMindWorker] uncaughtException:', err);
+  process.exit(1);
+});
