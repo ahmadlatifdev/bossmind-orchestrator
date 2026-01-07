@@ -1,6 +1,6 @@
 /**
  * Server/server.cjs
- * BossMind Orchestrator – Railway-safe HTTP server + Stripe webhook raw-body support
+ * BossMind Orchestrator — Railway-safe server + Stripe raw-body webhook support
  */
 
 'use strict';
@@ -13,13 +13,12 @@ const app = express();
 app.set('trust proxy', 1);
 
 /**
- * IMPORTANT (Stripe):
- * Stripe signature verification requires the RAW request body.
- * So we must use express.raw() on the webhook route BEFORE express.json().
+ * Stripe signature verification requires RAW body on this path.
+ * MUST be registered BEFORE express.json().
  */
 app.use('/webhooks/stripe', express.raw({ type: 'application/json' }));
 
-// Normal JSON for everything else
+// Normal JSON everywhere else
 app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -56,7 +55,7 @@ try {
 app.use((_req, res) => res.status(404).json({ ok: false, error: 'Not Found' }));
 
 /* =========================
-   Railway-safe listen
+   Railway-safe Listen
 ========================= */
 
 if (!process.env.PORT) {
@@ -74,7 +73,7 @@ server.listen(PORT, HOST, () => {
 });
 
 /* =========================
-   Shutdown + Safety
+   Graceful Shutdown + Safety
 ========================= */
 
 function shutdown(signal) {
