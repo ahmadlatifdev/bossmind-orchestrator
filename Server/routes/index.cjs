@@ -1,23 +1,18 @@
-const express = require("express");
+/**
+ * Server/routes/index.cjs
+ */
+
+'use strict';
+
+const express = require('express');
+const stripeRoutes = require('./stripe.cjs');
+
 const router = express.Router();
 
-/**
- * Health check
- * URL: http://localhost:5000/api/health
- */
-router.get("/health", (req, res) => {
-  res.json({ status: "OK" });
-});
+// quick sanity endpoint
+router.get('/ping', (_req, res) => res.status(200).json({ ok: true, pong: true }));
 
-/**
- * Root API check
- * URL: http://localhost:5000/api
- */
-router.get("/", (req, res) => {
-  res.json({
-    name: "BossMind Orchestrator",
-    status: "API is running",
-  });
-});
+// Stripe webhook endpoint (POST /webhooks/stripe)
+router.use('/webhooks/stripe', stripeRoutes);
 
 module.exports = router;
