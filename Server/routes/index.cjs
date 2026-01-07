@@ -1,21 +1,24 @@
-/**
- * Server/routes/index.cjs
- */
-
-'use strict';
-
-const express = require('express');
-const stripeRoutes = require('./stripe.cjs');
-const taxRoutes = require('./tax.cjs');
+import express from "express";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const router = express.Router();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-router.get('/ping', (_req, res) => res.status(200).json({ ok: true, pong: true }));
+const safeLoad = (file, mount) => {
+  const full = path.join(__dirname, file);
+  if (fs.existsSync(full)) {
+    router.use(mount, (await import(full)).default);
+    console.log(`[BossMind] route loaded: ${file}`);
+  } else {
+    console.log(`[BossMind] route skipped (missing): ${file}`);
+  }
+};
 
-// Stripe webhook endpoint
-router.use('/webhooks/stripe', stripeRoutes);
+await safeLoad("./health.cjs", "/health");
+await safeLoad("./stripe.cjs", "/webhooks/stripe");
+await safeLoad("./tax.cjs", "/tax");
+await safeLoad("./avalara.cjs", "/avalara");
 
-// Tax / Avalara status + manual retry endpoints
-router.use('/tax', taxRoutes);
-
-module.exports = router;
+export default router;
