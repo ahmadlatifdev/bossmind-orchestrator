@@ -5,15 +5,17 @@
 'use strict';
 
 const express = require('express');
+const stripeRoutes = require('./stripe.cjs');
+const taxRoutes = require('./tax.cjs');
 
 const router = express.Router();
 
-// quick sanity endpoint
 router.get('/ping', (_req, res) => res.status(200).json({ ok: true, pong: true }));
 
-// Stripe webhook route
-// IMPORTANT: This requires the file: Server/routes/stripe.cjs (same folder, same exact name)
-const stripeRoutes = require('./stripe.cjs');
+// Stripe webhook endpoint
 router.use('/webhooks/stripe', stripeRoutes);
+
+// Tax / Avalara status + manual retry endpoints
+router.use('/tax', taxRoutes);
 
 module.exports = router;
