@@ -1,114 +1,48 @@
+// Server/server.cjs
 "use strict";
-
-/* ================================
-   IMPORTS
-================================ */
 
 const express = require("express");
 const path = require("path");
 
-/* ================================
-   APP INIT
-================================ */
-
 const app = express();
-app.disable("x-powered-by");
 
-/* ================================
+/* ===============================
    GLOBAL MIDDLEWARE
-================================ */
-
+=============================== */
+app.disable("x-powered-by");
 app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: true, limit: "2mb" }));
 
-/* ================================
-   RUNTIME STATE
-================================ */
-
-const STARTED_AT = Date.now();
-
-/**
- * STRICT Railway-safe PORT handling
- * This is REQUIRED for Railway to stop crashing
- */
-const PORT_RAW = process.env.PORT;
-const PORT = PORT_RAW ? Number(PORT_RAW) : 8080;
-
-if (!PORT_RAW) {
-  console.warn(
-    "[BossMind] WARNING: process.env.PORT is missing. Falling back to 8080 (local only)."
-  );
-} else if (Number.isNaN(PORT)) {
-  console.error(
-    "[BossMind] ERROR: process.env.PORT is not a valid number:",
-    PORT_RAW
-  );
-  process.exit(1);
-} else {
-  console.log("[BossMind] Using Railway PORT:", PORT);
-}
-
-/* ================================
-   HEALTH CHECK (Railway compatible)
-================================ */
-
-app.get("/health", (_req, res) => {
+/* ===============================
+   HEALTH CHECK (Railway)
+=============================== */
+app.get("/", (req, res) => {
   res.status(200).json({
     status: "ok",
-    uptime: Math.floor((Date.now() - STARTED_AT) / 1000),
-    service: "bossmind-orchestrator",
-    timestamp: new Date().toISOString(),
+    service: "BossMind Orchestrator",
+    uptime: process.uptime()
   });
 });
 
-/* ================================
-   ROOT ROUTE
-================================ */
+/* ===============================
+   ROUTES (SAFE LOAD)
+=============================== */
+try {
+  require("../routes")(app);
+} catch (e) {
+  console.warn("[BossMind] Routes not loaded:", e.message);
+}
 
-app.get("/", (_req, res) => {
-  res.status(200).json({
-    name: "BossMind Orchestrator",
-    status: "running",
-    startedAt: STARTED_AT,
+/* ===============================
+   RAILWAY-CONTROLLED SERVER START
+   (BossMind auto-start DISABLED)
+=============================== */
+if (!global.__BOSSMIND_SERVER_STARTED__) {
+  global.__BOSSMIND_SERVER_STARTED__ = true;
+
+  const PORT = Number(process.env.PORT || 3000);
+
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`[BossMind] Listening on ${PORT}`);
   });
-});
-
-/* ================================
-   STRIPE WEBHOOK PLACEHOLDER
-   (endpoint exists, logic can be expanded later)
-================================ */
-
-app.post("/api/stripe/webhook", (req, res) => {
-  res.status(200).json({ received: true });
-});
-
-/* ================================
-   404 HANDLER
-================================ */
-
-app.use((req, res) => {
-  res.status(404).json({
-    error: "Not Found",
-    path: req.originalUrl,
-  });
-});
-
-/* ================================
-   ERROR HANDLER
-================================ */
-
-app.use((err, _req, res, _next) => {
-  console.error("[BossMind] Unhandled error:", err);
-  res.status(500).json({
-    error: "Internal Server Error",
-  });
-});
-
-/* ================================
-   START SERVER (Railway REQUIRED)
-================================ */
-
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`BossMind Orchestrator listening on :${PORT}`);
-});
-
+}
