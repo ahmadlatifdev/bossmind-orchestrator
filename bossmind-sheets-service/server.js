@@ -1,104 +1,70 @@
-/**
- * BossMind — Sheets Service (KokiDodi)
- * Fix: ensure /api/queue exists (GET + POST) so browser tests + Make POST both work.
- * Also logs every request so Railway HTTP logs show activity.
- */
-
-const express = require("express");
-const crypto = require("crypto");
+import express from "express";
+import cors from "cors";
 
 const app = express();
-
-// ---- config ----
-const PORT = process.env.PORT || 8080;
-
-// Optional auth: set BOSSMIND_WEBHOOK_SECRET in Railway (recommended)
-const WEBHOOK_SECRET =
-  process.env.BOSSMIND_WEBHOOK_SECRET ||
-  process.env.WEBHOOK_SECRET ||
-  "";
-
-// ---- middleware ----
+app.use(cors());
 app.use(express.json({ limit: "2mb" }));
 
-// Basic request logger (forces visible activity in logs)
-app.use((req, res, next) => {
-  const now = new Date().toISOString();
-  console.log(
-    `[${now}] ${req.method} ${req.originalUrl} ua="${req.headers["user-agent"] || ""}"`
-  );
-  next();
-});
+/**
+ * BossMind – Sheets Service (KokiDodi)
+ * Accepts Make / Apps Script jobs
+ * Writes logs so Railway HTTP logs show activity
+ */
 
-// ---- helpers ----
-function safeEqual(a, b) {
-  const aa = Buffer.from(String(a || ""));
-  const bb = Buffer.from(String(b || ""));
-  if (aa.length !== bb.length) return false;
-  return crypto.timingSafeEqual(aa, bb);
-}
+const PORT = process.env.PORT || 8080;
+const AUTH_TOKEN = process.env.BOSSMIND_SECRET || "bossmind";
 
-function checkAuth(req) {
-  if (!WEBHOOK_SECRET) return true; // no secret set => allow (dev)
-  const header =
-    req.headers["x-bossmind-secret"] ||
-    (req.headers.authorization || "").replace(/^Bearer\s+/i, "");
-  return safeEqual(header, WEBHOOK_SECRET);
-}
-
-// ---- routes ----
-app.get("/", (req, res) => {
-  res.status(200).send("BossMind sheets service is running.");
-});
-
+/* ============ HEALTH ============ */
 app.get("/health", (req, res) => {
-  res.json({ ok: true, state: process.env.BOSSMIND_STATE || "ACTIVE", time: new Date().toISOString() });
+  console.log("HEALTH_CHECK");
+  res.json({ ok: true, state: "ACTIVE", time: new Date().toISOString() });
 });
 
-// Browser test support (your GET was failing before)
+/* ============ QUEUE (GET for browser test) ============ */
 app.get("/queue", (req, res) => {
-  res.status(200).json({ ok: true, message: "Use POST /api/queue (JSON) to submit a job." });
+  console.log("GET /queue");
+  res.json({ ok: true, message: "Use POST /queue or POST /api/queue" });
 });
 
 app.get("/api/queue", (req, res) => {
-  res.status(200).json({ ok: true, message: "Use POST /api/queue (JSON) to submit a job." });
+  console.log("GET /api/queue");
+  res.json({ ok: true, message: "Use POST /queue or POST /api/queue" });
 });
 
-// Accept both paths (Make/Apps Script can target either)
-app.post("/queue", (req, res) => handleQueue(req, res));
-app.post("/api/queue", (req, res) => handleQueue(req, res));
+/* ============ QUEUE (POST) ============ */
+app.post("/queue", handleQueue);
+app.post("/api/queue", handleQueue);
 
 function handleQueue(req, res) {
-  // auth
-  if (!checkAuth(req)) {
+  console.log("QUEUE_REQUEST_HEADERS:", req.headers);
+  console.log("QUEUE_REQUEST_BODY:", JSON.stringify(req.body));
+
+  // simple auth
+  const token = req.headers["x-bossmind-key"];
+  if (token !== AUTH_TOKEN) {
     console.log("AUTH_FAIL");
     return res.status(401).json({ ok: false, error: "Unauthorized" });
   }
 
-  // body
   const { title, moral, theme, rowNumber } = req.body || {};
-  console.log("QUEUE_IN_BODY:", JSON.stringify({ title, moral, theme, rowNumber }));
 
-  if (!title || !moral || !theme) {
-    return res.status(400).json({
-      ok: false,
-      error: "Missing required fields: title, moral, theme",
-      got: { title: !!title, moral: !!moral, theme: !!theme, rowNumber: rowNumber ?? null },
-    });
+  if (!title || !rowNumber) {
+    console.log("INVALID_PAYLOAD");
+    return res.status(400).json({ ok: false, error: "Missing title or rowNumber" });
   }
 
-  // NOTE: This endpoint confirms reception.
-  // Your existing processing pipeline should run after receiving this request.
-  // For now we return success so you can see Railway HTTP logs immediately.
-  return res.status(200).json({
+  console.log("QUEUE_ACCEPTED:", { title, moral, theme, rowNumber });
+
+  // For now we just acknowledge — DeepSeek + Sheets logic can run here later
+  return res.json({
     ok: true,
-    received: { title, moral, theme, rowNumber: rowNumber ?? null },
-    time: new Date().toISOString(),
+    received: { title, moral, theme, rowNumber },
+    state: "QUEUED"
   });
 }
 
-// ---- start ----
+/* ============ START ============ */
 app.listen(PORT, () => {
-  console.log(`bossmind-sheets-service listening on ${PORT}`);
-  console.log(`BOSSMIND_STATE=${process.env.BOSSMIND_STATE || "ACTIVE"}`);
+  console.log("bossmind-sheets-service listening on", PORT);
+  console.log("BOSSMIND_STATE=ACTIVE");
 });
