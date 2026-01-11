@@ -324,7 +324,8 @@ export default function Dashboard() {
   }
 
   async function loadQueueHealth() {
-    const url = CONFIG.QUEUE_BASE_URL ? joinUrl(CONFIG.QUEUE_BASE_URL, "/health") : "/queue/health";
+    const url = CONFIG.QUEUE_BASE_URL ? joinUrl(CONFIG.QUEUE_BASE_URL, "/health") : "/health";
+
     const r = await safeFetchJSON(url);
     if (r.ok) {
       setQueueHealth({
