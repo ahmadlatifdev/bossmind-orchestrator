@@ -1,397 +1,510 @@
+'use strict';
+
 /**
- * BossMind — Queue API (Zero-Make-Mapping Mode)
- * Make sends ONLY: { rowNumber }
- * BossMind fetches Title/Moral/Theme from Google Sheet, validates READY, locks row to PROCESSING, then queues.
+ * BossMind Orchestrator — Sheets + Queue API (Unified)
+ * - Fixes 404 on /, /api/queue, /queue/run, /queue/tick
+ * - Keeps /health working
+ * - Adds safe enqueue endpoint for Make.com / HeroPage / Worker
  *
- * Endpoints:
- *  GET  /health
- *  POST /api/queue
- *  GET  /api/queue/next
- *  POST /api/queue/ack
- *
- * Required ENV:
- *  PORT
- *  BOSSMIND_WEBHOOK_SECRET
- *  GOOGLE_SHEET_ID
- *  GOOGLE_SHEET_NAME
- *
- * Optional ENV:
- *  BOSSMIND_MAINTENANCE=1
- *  BOSSMIND_MAX_INFLIGHT=3
- *  BOSSMIND_RATE_LIMIT_PER_MIN=60
- *  BOSSMIND_IDEMPOTENCY_TTL_MS=86400000
- *  BOSSMIND_JOB_TTL_MS=3600000
+ * Node: 18+
  */
 
-const express = require("express");
-const crypto = require("crypto");
+const express = require('express');
+const cors = require('cors');
+const crypto = require('crypto');
+
+// If your runtime is Node 18+, fetch exists globally.
+// If not, uncomment next line and add dependency: npm i node-fetch
+// const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+
+let google;
+let GoogleAuth;
+try {
+  ({ google } = require('googleapis'));
+  ({ GoogleAuth } = require('google-auth-library'));
+} catch (_) {
+  // google libs optional until you enable sheet pulling via env vars
+}
 
 const app = express();
+app.disable('x-powered-by');
 
-// ---------- Config ----------
-const PORT = Number(process.env.PORT || 3000);
+app.use(cors({ origin: true, credentials: true }));
+app.use(express.json({ limit: '2mb' }));
+app.use(express.urlencoded({ extended: true }));
 
-const SECRET = String(process.env.BOSSMIND_WEBHOOK_SECRET || "").trim();
-const MAINTENANCE = String(process.env.BOSSMIND_MAINTENANCE || "").trim() === "1";
+/* =========================
+   ENV + CONFIG
+========================= */
+const PORT = Number(process.env.PORT || 8080);
 
-const MAX_INFLIGHT = clampInt(process.env.BOSSMIND_MAX_INFLIGHT, 1, 50, 3);
-const RATE_LIMIT_PER_MIN = clampInt(process.env.BOSSMIND_RATE_LIMIT_PER_MIN, 5, 6000, 60);
+const BOSSMIND_STATE = process.env.BOSSMIND_STATE || process.env.BOSSMIND_MODE || 'ACTIVE';
+const BOSSMIND_SECRET = (process.env.BOSSMIND_SECRET || process.env.WEBHOOK_SECRET || '').trim();
 
-const IDEMPOTENCY_TTL_MS = clampInt(
-  process.env.BOSSMIND_IDEMPOTENCY_TTL_MS,
-  60_000,
-  7 * 24 * 3600_000,
-  24 * 3600_000
-);
-const JOB_TTL_MS = clampInt(process.env.BOSSMIND_JOB_TTL_MS, 60_000, 24 * 3600_000, 3600_000);
+// Optional: Make.com / external worker forwarding
+const WORKER_WEBHOOK_URL = (process.env.WORKER_WEBHOOK_URL || '').trim(); // e.g. https://worker-service.up.railway.app/worker/consume
+const WORKER_WEBHOOK_SECRET = (process.env.WORKER_WEBHOOK_SECRET || BOSSMIND_SECRET || '').trim();
 
-const GOOGLE_SHEET_ID = String(process.env.GOOGLE_SHEET_ID || "").trim();
-const GOOGLE_SHEET_NAME = String(process.env.GOOGLE_SHEET_NAME || "").trim();
+// Optional: Sheet pull settings (only used when configured)
+const GOOGLE_SERVICE_ACCOUNT_JSON = (process.env.GOOGLE_SERVICE_ACCOUNT_JSON || '').trim();
+const GOOGLE_SHEET_ID = (process.env.GOOGLE_SHEET_ID || '').trim();
+const GOOGLE_SHEET_NAME = (process.env.GOOGLE_SHEET_NAME || process.env.SHEET_NAME || 'KokiDodi-1').trim();
 
-if (!SECRET) {
-  console.error("❌ BOSSMIND_WEBHOOK_SECRET is missing.");
-  process.exit(1);
-}
-if (!GOOGLE_SHEET_ID || !GOOGLE_SHEET_NAME) {
-  console.error("❌ GOOGLE_SHEET_ID / GOOGLE_SHEET_NAME is missing.");
-  process.exit(1);
-}
+// Columns (1-based like Sheets UI). Default status column = E, error column = I
+const STATUS_COL = Number(process.env.STATUS_COL || 5);
+const ERROR_COL = Number(process.env.ERROR_COL || 9);
 
-// ---------- Middleware ----------
-app.disable("x-powered-by");
-app.use(express.json({ limit: "1mb" }));
+// Status values
+const STATUS_READY = (process.env.STATUS_READY || 'READY').trim();
+const STATUS_PROCESSING = (process.env.STATUS_PROCESSING || 'PROCESSING').trim();
+const STATUS_COMPLETED = (process.env.STATUS_COMPLETED || 'COMPLETED').trim();
+const STATUS_FAILED = (process.env.STATUS_FAILED || 'FAILED').trim();
 
-app.use((req, res, next) => {
-  req.bossmindId = crypto.randomBytes(8).toString("hex");
-  res.setHeader("X-BossMind-Request-Id", req.bossmindId);
-  next();
-});
+// Pull batch size per tick
+const PULL_BATCH = Number(process.env.PULL_BATCH || 25);
 
-// Rate limiter
-const rateBucket = new Map();
-app.use((req, res, next) => {
-  const key = (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "unknown").toString();
-  const now = Date.now();
-  const entry = rateBucket.get(key);
+// Internal
+const NOW = () => new Date().toISOString();
 
-  if (!entry || now > entry.resetAt) {
-    rateBucket.set(key, { count: 1, resetAt: now + 60_000 });
-    return next();
-  }
-
-  entry.count += 1;
-  if (entry.count > RATE_LIMIT_PER_MIN) {
-    return res.status(429).json({
-      ok: false,
-      error: "RATE_LIMIT",
-      requestId: req.bossmindId,
-      retryAfterSeconds: Math.ceil((entry.resetAt - now) / 1000),
-    });
-  }
-
-  next();
-});
-
-// Maintenance gate
-app.use((req, res, next) => {
-  if (!MAINTENANCE) return next();
-  if (req.path === "/health") return next();
-  return res.status(503).json({ ok: false, error: "MAINTENANCE_MODE", requestId: req.bossmindId });
-});
-
-// Secret validation
-function validateSecret(req) {
-  const headerSecret = String(req.headers["x-bossmind-secret"] || "").trim();
-  const querySecret = String(req.query.secret || "").trim();
-  const incoming = headerSecret || querySecret;
-  if (!incoming) return false;
-
-  const aa = Buffer.from(incoming);
-  const bb = Buffer.from(SECRET);
-  if (aa.length !== bb.length) return false;
-  return crypto.timingSafeEqual(aa, bb);
-}
-
-// ---------- In-memory queue ----------
+/* =========================
+   In-Memory Queue
+========================= */
 const queue = [];
-const jobsById = new Map();
-const idempotency = new Map(); // key -> { jobId, expiresAt }
-let inFlight = 0;
+const metrics = {
+  startedAt: NOW(),
+  inFlight: 0,
+  queued: 0,
+  processing: 0,
+  completed: 0,
+  failed: 0,
+  lastTickAt: null,
+  lastRunAt: null,
+};
 
-// ---------- Helpers ----------
-function clampInt(v, min, max, def) {
-  const n = Number(v);
-  if (!Number.isFinite(n)) return def;
-  return Math.max(min, Math.min(max, Math.floor(n)));
+function makeId() {
+  return crypto.randomBytes(12).toString('hex');
 }
 
-function cleanStr(v, maxLen) {
-  const s = String(v ?? "").replace(/\s+/g, " ").trim();
-  if (!s) return "";
-  return s.length > maxLen ? s.slice(0, maxLen) : s;
+function safeJson(obj) {
+  try { return JSON.stringify(obj); } catch { return '{"ok":false}'; }
 }
 
-function isIntLike(v) {
-  if (typeof v === "number" && Number.isInteger(v)) return true;
-  if (typeof v === "string" && v.trim() !== "" && Number.isInteger(Number(v))) return true;
-  return false;
-}
-function toInt(v) {
-  return typeof v === "number" ? v : Number(String(v).trim());
-}
-
-function nowISO() {
-  return new Date().toISOString();
+function getClientIp(req) {
+  return (
+    (req.headers['x-forwarded-for'] || '').toString().split(',')[0].trim() ||
+    req.socket?.remoteAddress ||
+    ''
+  );
 }
 
-function makeIdempotencyKey({ title, moral, theme, rowNumber }) {
-  const raw = `${rowNumber}::${title}::${theme}::${moral}`;
-  return crypto.createHash("sha256").update(raw).digest("hex");
-}
+function requireSecret(req) {
+  // Accept either header or query
+  const got =
+    (req.headers['x-bossmind-secret'] || req.headers['x-webhook-secret'] || req.query?.secret || '')
+      .toString()
+      .trim();
 
-function purgeExpired() {
-  const now = Date.now();
+  // If no secret configured, do not block (for easy bring-up).
+  if (!BOSSMIND_SECRET) return { ok: true };
 
-  for (const [k, v] of idempotency.entries()) {
-    if (now > v.expiresAt) idempotency.delete(k);
+  if (!got || got !== BOSSMIND_SECRET) {
+    return { ok: false, status: 401, error: 'UNAUTHORIZED' };
   }
+  return { ok: true };
+}
 
-  for (const job of queue) {
-    if (job.status !== "PROCESSING") continue;
-    if (now - job.updatedAt > JOB_TTL_MS) {
-      job.status = "FAILED";
-      job.updatedAt = now;
-      job.error = { code: "STUCK_PROCESSING_TIMEOUT", message: `Auto-failed after ${JOB_TTL_MS}ms in PROCESSING` };
-      inFlight = Math.max(0, inFlight - 1);
-    }
+async function fetchWithTimeout(url, options = {}, ms = 15000) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), ms);
+  try {
+    const res = await fetch(url, { ...options, signal: ctrl.signal });
+    return res;
+  } finally {
+    clearTimeout(t);
   }
 }
-setInterval(purgeExpired, 15_000).unref();
 
-// ---------- Google Sheets (BossMind reads the truth) ----------
+/* =========================
+   Google Sheets Helpers (Optional)
+========================= */
 async function getSheetsClient() {
-  // Uses Google ADC / Workload Identity if available in runtime.
-  // (No secrets stored in Make)
-  const { google } = require("googleapis");
-  const auth = new google.auth.GoogleAuth({
-    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+  if (!google || !GoogleAuth) throw new Error('GOOGLE_LIBS_MISSING');
+  if (!GOOGLE_SERVICE_ACCOUNT_JSON) throw new Error('GOOGLE_SERVICE_ACCOUNT_JSON_MISSING');
+  if (!GOOGLE_SHEET_ID) throw new Error('GOOGLE_SHEET_ID_MISSING');
+
+  let creds;
+  try {
+    creds = JSON.parse(GOOGLE_SERVICE_ACCOUNT_JSON);
+  } catch {
+    throw new Error('GOOGLE_SERVICE_ACCOUNT_JSON_INVALID');
+  }
+
+  const auth = new GoogleAuth({
+    credentials: creds,
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
   });
-  const sheets = google.sheets({ version: "v4", auth });
-  return sheets;
+
+  const client = await auth.getClient();
+  return google.sheets({ version: 'v4', auth: client });
 }
 
-async function fetchRowAndLockToProcessing(rowNumber) {
+function colToLetter(colNum1Based) {
+  let col = colNum1Based;
+  let letter = '';
+  while (col > 0) {
+    const mod = (col - 1) % 26;
+    letter = String.fromCharCode(65 + mod) + letter;
+    col = Math.floor((col - 1) / 26);
+  }
+  return letter;
+}
+
+async function pullReadyRowsFromSheet(limit = PULL_BATCH) {
+  // If sheet env not set, do nothing (still supports manual enqueue).
+  if (!GOOGLE_SERVICE_ACCOUNT_JSON || !GOOGLE_SHEET_ID) return [];
+
   const sheets = await getSheetsClient();
 
-  // We need Title(A), Moral(B), Theme(C), Status(E)
-  const range = `${GOOGLE_SHEET_NAME}!A${rowNumber}:E${rowNumber}`;
-
-  const getRes = await sheets.spreadsheets.values.get({
+  // Read A:I (9 cols) by default to include status and error.
+  const readRange = `${GOOGLE_SHEET_NAME}!A:I`;
+  const { data } = await sheets.spreadsheets.values.get({
     spreadsheetId: GOOGLE_SHEET_ID,
-    range,
-    valueRenderOption: "UNFORMATTED_VALUE",
+    range: readRange,
+    valueRenderOption: 'UNFORMATTED_VALUE',
   });
 
-  const values = (getRes.data && getRes.data.values && getRes.data.values[0]) || [];
-  const title = cleanStr(values[0], 140);
-  const moral = cleanStr(values[1], 500);
-  const theme = cleanStr(values[2], 140);
-  const status = cleanStr(values[4], 40).toUpperCase();
+  const values = data.values || [];
+  if (values.length <= 1) return [];
 
-  if (!title || !moral || !theme) {
-    return { ok: false, error: "SHEET_ROW_MISSING_FIELDS", message: "Row must have Title/Moral/Theme filled." };
+  // Assume row 1 is header.
+  const out = [];
+  for (let i = 1; i < values.length; i++) {
+    const row = values[i] || [];
+    const rowNumber = i + 1;
+
+    const status = (row[STATUS_COL - 1] || '').toString().trim();
+    if (status !== STATUS_READY) continue;
+
+    const title = (row[0] || '').toString().trim();
+    const moral = (row[1] || '').toString().trim();
+    const theme = (row[2] || '').toString().trim();
+
+    if (!title) continue;
+
+    out.push({ rowNumber, title, moral, theme });
+    if (out.length >= limit) break;
   }
-  if (status !== "READY") {
-    return { ok: false, error: "SHEET_ROW_NOT_READY", message: `Row status is "${status}", expected "READY".` };
-  }
 
-  // Lock row status -> PROCESSING (column E)
-  const updateRange = `${GOOGLE_SHEET_NAME}!E${rowNumber}`;
-  await sheets.spreadsheets.values.update({
-    spreadsheetId: GOOGLE_SHEET_ID,
-    range: updateRange,
-    valueInputOption: "RAW",
-    requestBody: { values: [["PROCESSING"]] },
-  });
-
-  return { ok: true, title, moral, theme };
+  return out;
 }
 
-// ---------- Routes ----------
-app.get("/health", (req, res) => {
-  purgeExpired();
-  res.status(200).json({
-    ok: true,
-    service: "bossmind-queue",
-    time: nowISO(),
-    maintenance: MAINTENANCE,
-    inFlight,
-    queued: queue.filter((j) => j.status === "QUEUED").length,
-    processing: queue.filter((j) => j.status === "PROCESSING").length,
-    completed: queue.filter((j) => j.status === "COMPLETED").length,
-    failed: queue.filter((j) => j.status === "FAILED").length,
+async function setSheetStatus(rowNumber, status, errorText = '') {
+  if (!GOOGLE_SERVICE_ACCOUNT_JSON || !GOOGLE_SHEET_ID) return;
+
+  const sheets = await getSheetsClient();
+
+  const statusColLetter = colToLetter(STATUS_COL);
+  const errorColLetter = colToLetter(ERROR_COL);
+
+  const statusRange = `${GOOGLE_SHEET_NAME}!${statusColLetter}${rowNumber}`;
+  const errorRange = `${GOOGLE_SHEET_NAME}!${errorColLetter}${rowNumber}`;
+
+  await sheets.spreadsheets.values.batchUpdate({
+    spreadsheetId: GOOGLE_SHEET_ID,
+    requestBody: {
+      valueInputOption: 'RAW',
+      data: [
+        { range: statusRange, values: [[status]] },
+        { range: errorRange, values: [[errorText || '']] },
+      ],
+    },
   });
-});
+}
 
-// Accepts either:
-//  A) Legacy payload: { title, moral, theme, rowNumber }
-//  B) Zero-Make-Mapping: { rowNumber }  (BossMind fetches the row)
-app.post("/api/queue", async (req, res) => {
-  if (!validateSecret(req)) {
-    return res.status(401).json({ ok: false, error: "UNAUTHORIZED", requestId: req.bossmindId });
-  }
-
-  const ct = String(req.headers["content-type"] || "");
-  if (!ct.includes("application/json")) {
-    return res.status(400).json({ ok: false, error: "INVALID_CONTENT_TYPE", requestId: req.bossmindId });
-  }
-
-  purgeExpired();
-  if (inFlight >= MAX_INFLIGHT) {
-    return res.status(429).json({
-      ok: false,
-      error: "MAX_INFLIGHT_REACHED",
-      requestId: req.bossmindId,
-      maxInFlight: MAX_INFLIGHT,
-    });
-  }
-
-  const body = req.body || {};
-
-  if (!isIntLike(body.rowNumber)) {
-    return res.status(400).json({ ok: false, error: "SCHEMA_ROWNUMBER", requestId: req.bossmindId });
-  }
-  const rowNumber = toInt(body.rowNumber);
-
-  let title = cleanStr(body.title, 140);
-  let moral = cleanStr(body.moral, 500);
-  let theme = cleanStr(body.theme, 140);
-
-  // Zero-Make-Mapping mode: fetch from sheet if missing
-  if (!title || !moral || !theme) {
-    try {
-      const fetched = await fetchRowAndLockToProcessing(rowNumber);
-      if (!fetched.ok) {
-        return res.status(400).json({
-          ok: false,
-          error: fetched.error,
-          message: fetched.message,
-          requestId: req.bossmindId,
-        });
-      }
-      title = fetched.title;
-      moral = fetched.moral;
-      theme = fetched.theme;
-    } catch (e) {
-      return res.status(500).json({
-        ok: false,
-        error: "SHEET_FETCH_FAILED",
-        message: String(e && e.message ? e.message : e),
-        requestId: req.bossmindId,
-      });
-    }
-  }
-
-  if (!title || !moral || !theme) {
-    return res.status(400).json({
-      ok: false,
-      error: "MISSING_FIELDS",
-      got: { title, moral, theme, rowNumber },
-      requestId: req.bossmindId,
-    });
-  }
-
-  const idemKey = makeIdempotencyKey({ title, moral, theme, rowNumber });
-  const existing = idempotency.get(idemKey);
-  if (existing && Date.now() <= existing.expiresAt) {
-    return res.status(200).json({ ok: true, deduped: true, jobId: existing.jobId, requestId: req.bossmindId });
-  }
-
-  const jobId = crypto.randomBytes(10).toString("hex");
-  const now = Date.now();
-
+/* =========================
+   Queue Core
+========================= */
+function enqueueJob(payload, meta = {}) {
   const job = {
-    jobId,
-    createdAt: now,
-    updatedAt: now,
-    status: "QUEUED",
-    title,
-    moral,
-    theme,
-    rowNumber,
+    id: makeId(),
+    createdAt: NOW(),
+    status: 'QUEUED',
+    payload: {
+      title: payload.title || '',
+      moral: payload.moral || '',
+      theme: payload.theme || '',
+      rowNumber: payload.rowNumber || null,
+      lang: payload.lang || null,
+      project: payload.project || 'AI Video Generator',
+      ...payload,
+    },
+    meta: {
+      source: meta.source || 'manual',
+      ip: meta.ip || '',
+      ua: meta.ua || '',
+      ...meta,
+    },
   };
 
   queue.push(job);
-  jobsById.set(jobId, job);
-  idempotency.set(idemKey, { jobId, expiresAt: now + IDEMPOTENCY_TTL_MS });
+  metrics.queued = queue.filter(j => j.status === 'QUEUED').length;
+  return job;
+}
 
-  return res.status(202).json({ ok: true, jobId, status: job.status, requestId: req.bossmindId });
-});
+function listQueue() {
+  const counts = {
+    queued: queue.filter(j => j.status === 'QUEUED').length,
+    processing: queue.filter(j => j.status === 'PROCESSING').length,
+    completed: queue.filter(j => j.status === 'COMPLETED').length,
+    failed: queue.filter(j => j.status === 'FAILED').length,
+  };
+  return { items: queue.slice(-200).reverse(), counts };
+}
 
-app.get("/api/queue/next", (req, res) => {
-  if (!validateSecret(req)) {
-    return res.status(401).json({ ok: false, error: "UNAUTHORIZED", requestId: req.bossmindId });
+async function forwardToWorker(job) {
+  if (!WORKER_WEBHOOK_URL) return { ok: false, skipped: true, reason: 'WORKER_WEBHOOK_URL_NOT_SET' };
+
+  const res = await fetchWithTimeout(
+    WORKER_WEBHOOK_URL,
+    {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-bossmind-secret': WORKER_WEBHOOK_SECRET,
+      },
+      body: safeJson({
+        jobId: job.id,
+        ...job.payload,
+      }),
+    },
+    20000
+  );
+
+  const text = await res.text().catch(() => '');
+  if (!res.ok) {
+    return { ok: false, status: res.status, body: text.slice(0, 400) };
+  }
+  return { ok: true, status: res.status, body: text.slice(0, 400) };
+}
+
+async function processOneQueuedJob() {
+  const job = queue.find(j => j.status === 'QUEUED');
+  if (!job) return { ok: true, empty: true };
+
+  job.status = 'PROCESSING';
+  job.startedAt = NOW();
+  metrics.inFlight = 1;
+  metrics.processing = queue.filter(j => j.status === 'PROCESSING').length;
+  metrics.queued = queue.filter(j => j.status === 'QUEUED').length;
+
+  // If linked to Sheets, mark sheet as PROCESSING
+  if (job.payload?.rowNumber) {
+    await setSheetStatus(job.payload.rowNumber, STATUS_PROCESSING, '');
   }
 
-  purgeExpired();
+  try {
+    const workerRes = await forwardToWorker(job);
 
-  const job = queue.find((j) => j.status === "QUEUED");
-  if (!job) return res.status(204).send();
+    // If no worker configured, we keep job as QUEUED? No — mark FAILED with clear reason.
+    if (workerRes.skipped) {
+      job.status = 'FAILED';
+      job.failedAt = NOW();
+      job.error = workerRes.reason;
 
-  job.status = "PROCESSING";
-  job.updatedAt = Date.now();
-  inFlight += 1;
+      if (job.payload?.rowNumber) {
+        await setSheetStatus(job.payload.rowNumber, STATUS_FAILED, workerRes.reason);
+      }
 
-  return res.status(200).json({
+      metrics.failed += 1;
+      return { ok: false, error: workerRes.reason };
+    }
+
+    // Worker accepted
+    job.status = 'COMPLETED';
+    job.completedAt = NOW();
+    job.worker = workerRes;
+
+    if (job.payload?.rowNumber) {
+      await setSheetStatus(job.payload.rowNumber, STATUS_COMPLETED, '');
+    }
+
+    metrics.completed += 1;
+    return { ok: true, jobId: job.id, worker: workerRes };
+  } catch (e) {
+    const msg = (e && e.message) ? e.message : 'WORKER_ERROR';
+
+    job.status = 'FAILED';
+    job.failedAt = NOW();
+    job.error = msg;
+
+    if (job.payload?.rowNumber) {
+      await setSheetStatus(job.payload.rowNumber, STATUS_FAILED, msg);
+    }
+
+    metrics.failed += 1;
+    return { ok: false, error: msg };
+  } finally {
+    metrics.inFlight = 0;
+    metrics.processing = queue.filter(j => j.status === 'PROCESSING').length;
+    metrics.queued = queue.filter(j => j.status === 'QUEUED').length;
+  }
+}
+
+/* =========================
+   ROUTES
+========================= */
+
+// Root (fixes GET / 404)
+app.get('/', (req, res) => {
+  res.status(200).json({
     ok: true,
-    job: { jobId: job.jobId, title: job.title, moral: job.moral, theme: job.theme, rowNumber: job.rowNumber },
-    requestId: req.bossmindId,
+    service: 'bossmind-sheets-service',
+    role: 'sheets+queue',
+    state: BOSSMIND_STATE,
+    time: NOW(),
+    routes: [
+      'GET /health',
+      'GET /api/queue',
+      'POST /api/queue',
+      'POST /queue/tick',
+      'POST /queue/run',
+    ],
   });
 });
 
-app.post("/api/queue/ack", (req, res) => {
-  if (!validateSecret(req)) {
-    return res.status(401).json({ ok: false, error: "UNAUTHORIZED", requestId: req.bossmindId });
-  }
-
-  const body = req.body || {};
-  const jobId = cleanStr(body.jobId, 64);
-  const ok = Boolean(body.ok);
-
-  if (!jobId) return res.status(400).json({ ok: false, error: "SCHEMA_JOBID", requestId: req.bossmindId });
-
-  const job = jobsById.get(jobId);
-  if (!job) return res.status(404).json({ ok: false, error: "JOB_NOT_FOUND", requestId: req.bossmindId });
-
-  if (job.status !== "PROCESSING") {
-    return res.status(409).json({
-      ok: false,
-      error: "INVALID_STATUS_TRANSITION",
-      currentStatus: job.status,
-      expected: "PROCESSING",
-      requestId: req.bossmindId,
-    });
-  }
-
-  job.updatedAt = Date.now();
-
-  if (ok) {
-    job.status = "COMPLETED";
-  } else {
-    job.status = "FAILED";
-    const code = cleanStr(body.errorCode || "WORKER_FAILED", 80);
-    const msg = cleanStr(body.errorMessage || "Worker reported failure", 500);
-    job.error = { code, message: msg };
-  }
-
-  inFlight = Math.max(0, inFlight - 1);
-
-  return res.status(200).json({ ok: true, jobId, status: job.status, requestId: req.bossmindId });
+// Health
+app.get('/health', (req, res) => {
+  const q = listQueue().counts;
+  res.status(200).json({
+    ok: true,
+    service: 'bossmind-queue',
+    time: NOW(),
+    maintenance: BOSSMIND_STATE !== 'ACTIVE',
+    inFlight: metrics.inFlight,
+    queued: q.queued,
+    processing: q.processing,
+    completed: q.completed,
+    failed: q.failed,
+  });
 });
 
-app.use((req, res) => res.status(404).json({ ok: false, error: "NOT_FOUND", requestId: req.bossmindId }));
+// Queue list (fixes GET /api/queue 404)
+app.get('/api/queue', (req, res) => {
+  const q = listQueue();
+  res.status(200).json({ ok: true, ...q });
+});
 
+// Enqueue (for Make.com / HeroPage / anything)
+app.post('/api/queue', (req, res) => {
+  const auth = requireSecret(req);
+  if (!auth.ok) return res.status(auth.status).json({ ok: false, error: auth.error });
+
+  const body = req.body || {};
+  const title = (body.title || '').toString().trim();
+  if (!title) return res.status(400).json({ ok: false, error: 'TITLE_REQUIRED' });
+
+  const job = enqueueJob(
+    {
+      title,
+      moral: (body.moral || '').toString(),
+      theme: (body.theme || '').toString(),
+      rowNumber: body.rowNumber ?? null,
+      project: body.project || 'AI Video Generator',
+      lang: body.lang ?? null,
+    },
+    {
+      source: body.source || 'api',
+      ip: getClientIp(req),
+      ua: (req.headers['user-agent'] || '').toString(),
+    }
+  );
+
+  res.status(201).json({ ok: true, jobId: job.id });
+});
+
+// Tick: Pull READY rows from sheet -> enqueue -> process 1 job
+app.post('/queue/tick', async (req, res) => {
+  const auth = requireSecret(req);
+  if (!auth.ok) return res.status(auth.status).json({ ok: false, error: auth.error });
+
+  if (BOSSMIND_STATE !== 'ACTIVE') {
+    return res.status(200).json({ ok: true, skipped: true, reason: 'BOSSMIND_NOT_ACTIVE' });
+  }
+
+  metrics.lastTickAt = NOW();
+
+  try {
+    const pulled = await pullReadyRowsFromSheet(PULL_BATCH);
+    const enqueued = [];
+
+    for (const r of pulled) {
+      const job = enqueueJob(
+        { ...r, project: 'AI Video Generator', source: 'sheet' },
+        { source: 'sheet', ip: getClientIp(req), ua: (req.headers['user-agent'] || '').toString() }
+      );
+      enqueued.push(job.id);
+    }
+
+    const processed = await processOneQueuedJob();
+    res.status(200).json({
+      ok: true,
+      pulled: pulled.length,
+      enqueued: enqueued.length,
+      processed,
+    });
+  } catch (e) {
+    const msg = (e && e.message) ? e.message : 'TICK_FAILED';
+    res.status(500).json({ ok: false, error: msg });
+  }
+});
+
+// Run: process jobs until queue empty OR max N
+app.post('/queue/run', async (req, res) => {
+  const auth = requireSecret(req);
+  if (!auth.ok) return res.status(auth.status).json({ ok: false, error: auth.error });
+
+  if (BOSSMIND_STATE !== 'ACTIVE') {
+    return res.status(200).json({ ok: true, skipped: true, reason: 'BOSSMIND_NOT_ACTIVE' });
+  }
+
+  metrics.lastRunAt = NOW();
+
+  const max = Number(req.body?.max || 10);
+  const results = [];
+
+  try {
+    // First pull from sheet (optional)
+    const pulled = await pullReadyRowsFromSheet(PULL_BATCH);
+    for (const r of pulled) {
+      enqueueJob(
+        { ...r, project: 'AI Video Generator', source: 'sheet' },
+        { source: 'sheet', ip: getClientIp(req), ua: (req.headers['user-agent'] || '').toString() }
+      );
+    }
+
+    for (let i = 0; i < max; i++) {
+      const r = await processOneQueuedJob();
+      results.push(r);
+      if (r && r.empty) break;
+    }
+
+    res.status(200).json({
+      ok: true,
+      pulled: pulled.length,
+      processed: results.length,
+      results,
+    });
+  } catch (e) {
+    const msg = (e && e.message) ? e.message : 'RUN_FAILED';
+    res.status(500).json({ ok: false, error: msg });
+  }
+});
+
+/* =========================
+   START
+========================= */
 app.listen(PORT, () => {
-  console.log(`✅ bossmind-sheets-service listening on ${PORT}`);
-  console.log(`BOSSMIND_STATE=ACTIVE`);
+  // Keep logs minimal (Railway)
+  console.log(`bossmind-sheets-service listening on ${PORT}`);
+  console.log(`BOSSMIND_STATE=${BOSSMIND_STATE}`);
 });
