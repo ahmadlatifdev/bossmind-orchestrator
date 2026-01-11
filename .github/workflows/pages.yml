@@ -2,16 +2,16 @@ name: Deploy BossMind HeroPage
 
 on:
   push:
-    branches:
-      - master
-    paths:
-      - "bossmind-dashboard/**"
-      - ".github/workflows/pages.yml"
+    branches: [ master ]
 
 permissions:
   contents: read
   pages: write
   id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -27,27 +27,28 @@ jobs:
           node-version: 18
 
       - name: Install
-        working-directory: bossmind-dashboard
-        run: npm install
+        run: |
+          cd bossmind-dashboard
+          npm install
 
       - name: Build HeroPage
-        working-directory: bossmind-dashboard
-        run: npm run build
+        run: |
+          cd bossmind-dashboard
+          npm run build
 
-      - name: Upload to GitHub Pages
+      - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: bossmind-dashboard/build
+          path: bossmind-dashboard/dist
 
   deploy:
-    needs: build
-    runs-on: ubuntu-latest
-
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
 
     steps:
-      - name: Deploy
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
