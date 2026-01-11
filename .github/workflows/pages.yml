@@ -2,7 +2,7 @@ name: Deploy BossMind HeroPage
 
 on:
   push:
-    branches: [ master ]
+    branches: [ "master" ]
 
 permissions:
   contents: read
@@ -10,7 +10,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: "pages"
   cancel-in-progress: false
 
 jobs:
@@ -26,15 +26,19 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install
+      - name: Install dashboard dependencies
         run: |
           cd bossmind-dashboard
           npm install
 
-      - name: Build HeroPage
+      - name: Build BossMind Dashboard
         run: |
           cd bossmind-dashboard
           npm run build
+
+      - name: Verify build output
+        run: |
+          ls -la bossmind-dashboard/dist || exit 1
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
