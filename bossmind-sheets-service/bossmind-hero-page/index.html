@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>BossMind — Hero Page</title>
+  <title>ResumeAI — Hero Page</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 24px; }
     .row { display:flex; gap:12px; flex-wrap:wrap; }
@@ -26,7 +26,7 @@
 <body>
   <div class="topbar">
     <div>
-      <div style="font-size:20px;font-weight:700;">BossMind Orchestrator — Hero Page</div>
+      <div style="font-size:20px;font-weight:700;">ResumeAI Orchestrator — Hero Page</div>
       <div class="muted">Live from Queue API</div>
     </div>
 
@@ -122,12 +122,12 @@
     debug: document.getElementById('debug'),
   };
 
-  let API = localStorage.getItem('BOSSMIND_API_BASE') || els.apiBase.value;
+  let API = localStorage.getItem('ResumeAI_API_BASE') || els.apiBase.value;
   els.apiBase.value = API;
 
   els.saveBtn.onclick = () => {
     API = els.apiBase.value.trim().replace(/\/+$/,'');
-    localStorage.setItem('BOSSMIND_API_BASE', API);
+    localStorage.setItem('ResumeAI_API_BASE', API);
     tick();
   };
 
@@ -192,3 +192,4 @@
 </script>
 </body>
 </html>
+

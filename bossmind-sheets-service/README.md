@@ -1,4 +1,4 @@
-# BossMind Sheets Service (Railway)
+# ResumeAI Sheets Service (Railway)
 
 ## What it does
 - GET /api/next-title
@@ -22,3 +22,4 @@
 ## Test
 - /health
 - /api/next-title
+
