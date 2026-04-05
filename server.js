@@ -9,51 +9,93 @@ const PORT = Number(process.env.PORT) || 3010;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-function getProjectStatuses() {
-  return [
+async function checkUrl(url) {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 4000);
+
+    const res = await fetch(url, {
+      method: "GET",
+      signal: controller.signal,
+      headers: {
+        "User-Agent": "BossMind-Master-Admin",
+        "Cache-Control": "no-cache",
+      },
+    });
+
+    clearTimeout(timeout);
+
+    return {
+      ok: res.ok,
+      statusCode: res.status,
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      statusCode: 0,
+    };
+  }
+}
+
+async function getProjectStatuses() {
+  const projects = [
     {
       key: "bossmind-master-admin",
       name: "BossMind Master Admin",
       status: "ACTIVE",
-      host: "Local Core",
+      host: "https://bossmind-orchestrator-production-bb91.up.railway.app/admin",
       role: "Master control dashboard",
     },
     {
       key: "bossmind-resumora",
       name: "Resumora",
       status: "PENDING",
-      host: "Not connected yet",
+      host: process.env.RESUMORA_URL || "Not connected yet",
       role: "Resume platform",
     },
     {
       key: "bossmind-elegancyart",
       name: "ElegancyArt",
       status: "PENDING",
-      host: "Not connected yet",
+      host: process.env.ELEGANCYART_URL || "Not connected yet",
       role: "E-commerce automation",
     },
     {
       key: "bossmind-ai-video-generator",
       name: "AI Video Generator",
       status: "PENDING",
-      host: "Not connected yet",
+      host: process.env.AI_VIDEO_GENERATOR_URL || "Not connected yet",
       role: "Long-form video automation",
     },
     {
       key: "bossmind-tiktok-ai",
       name: "TikTok AI",
       status: "PENDING",
-      host: "Not connected yet",
+      host: process.env.TIKTOK_AI_URL || "Not connected yet",
       role: "Short-form video automation",
     },
     {
       key: "bossmind-global-stock",
       name: "Global Stock",
       status: "PENDING",
-      host: "Not connected yet",
+      host: process.env.GLOBAL_STOCK_URL || "Not connected yet",
       role: "Stock automation",
     },
   ];
+
+  for (const project of projects) {
+    if (
+      project.key !== "bossmind-master-admin" &&
+      project.host &&
+      project.host !== "Not connected yet"
+    ) {
+      const check = await checkUrl(project.host);
+      project.status = check.ok ? "ACTIVE" : "OFFLINE";
+      project.statusCode = check.statusCode;
+    }
+  }
+
+  return projects;
 }
 
 app.get("/", (req, res) => {
@@ -103,14 +145,18 @@ app.get("/buffer/test", async (req, res) => {
   });
 });
 
-app.get("/api/projects", (req, res) => {
+app.get("/api/projects", async (req, res) => {
+  const projects = await getProjectStatuses();
+
   res.status(200).json({
     ok: true,
-    projects: getProjectStatuses(),
+    projects,
   });
 });
 
-app.get("/api/master-status", (req, res) => {
+app.get("/api/master-status", async (req, res) => {
+  const projects = await getProjectStatuses();
+
   res.status(200).json({
     ok: true,
     core: {
@@ -121,7 +167,7 @@ app.get("/api/master-status", (req, res) => {
       port: PORT,
       updatedAt: new Date().toISOString(),
     },
-    projects: getProjectStatuses(),
+    projects,
   });
 });
 
@@ -244,6 +290,11 @@ app.get("/admin", (req, res) => {
       background: rgba(212, 175, 55, 0.15);
       color: #d4af37;
       border: 1px solid rgba(212, 175, 55, 0.35);
+    }
+    .badge-offline {
+      background: rgba(255, 0, 0, 0.14);
+      color: #ff7a7a;
+      border: 1px solid rgba(255, 122, 122, 0.35);
     }
     .panel {
       padding: 18px;
@@ -388,6 +439,12 @@ app.get("/admin", (req, res) => {
       return await res.json();
     }
 
+    function getBadgeClass(status) {
+      if (status === "ACTIVE") return "badge badge-active";
+      if (status === "OFFLINE") return "badge badge-offline";
+      return "badge badge-pending";
+    }
+
     async function loadDashboard(updatePanel) {
       try {
         const master = await getJson("/api/master-status");
@@ -410,9 +467,7 @@ app.get("/admin", (req, res) => {
 
         let rows = "";
         master.projects.forEach(function(project) {
-          const badgeClass = project.status === "ACTIVE"
-            ? "badge badge-active"
-            : "badge badge-pending";
+          const badgeClass = getBadgeClass(project.status);
 
           rows +=
             "<tr>" +
@@ -440,7 +495,7 @@ app.get("/admin", (req, res) => {
 
     async function runBufferTest() {
       try {
-        const result = await getJson("/buffer/test");
+        await getJson("/buffer/test");
         const bufferData = await getJson("/buffer");
 
         document.getElementById("bufferCount").textContent =
