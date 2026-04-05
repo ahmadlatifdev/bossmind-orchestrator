@@ -1,5 +1,5 @@
 // src/panels/Mission2.jsx
-// Mission Control II – wired to BossMind API
+// Mission Control II – wired to ResumeAI API
 
 import { useState } from "react";
 
@@ -7,7 +7,7 @@ const operations = [
   {
     key: "tasks",
     label: "Run Sequence",
-    description: "Load mission-1-tasks.json from the BossMind engine.",
+    description: "Load mission-1-tasks.json from the ResumeAI engine.",
   },
   {
     key: "category-pages",
@@ -32,14 +32,14 @@ export default function Mission2() {
 
   async function runOperation(opKey) {
     setActiveKey(opKey);
-    setOutput("Loading from BossMind API…");
+    setOutput("Loading from ResumeAI API…");
 
     try {
       const res = await fetch(`http://localhost:5000/api/mission1/${opKey}`);
       const json = await res.json();
       setOutput(JSON.stringify(json, null, 2));
     } catch (err) {
-      setOutput("⚠ Failed to reach BossMind API on http://localhost:5000");
+      setOutput("⚠ Failed to reach ResumeAI API on http://localhost:5000");
     }
   }
 
@@ -53,7 +53,7 @@ export default function Mission2() {
     >
       <h2 style={{ fontSize: 32, marginBottom: 8 }}>Mission Control II</h2>
       <p style={{ marginBottom: 40 }}>
-        Execute &amp; monitor Bossmind AI tasks here.
+        Execute &amp; monitor ResumeAI AI tasks here.
       </p>
 
       {/* Operations panel */}
@@ -118,9 +118,10 @@ export default function Mission2() {
             whiteSpace: "pre-wrap",
           }}
         >
-          {output || "Select an operation to load JSON from the BossMind server."}
+          {output || "Select an operation to load JSON from the ResumeAI server."}
         </pre>
       </div>
     </div>
   );
 }
+

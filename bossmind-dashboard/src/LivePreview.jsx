@@ -46,7 +46,7 @@ export default function LivePreview() {
             boxShadow: "0 0 16px rgba(34,197,94,0.7)",
           }}
         />
-        Live BossMind Preview
+        Live ResumeAI Preview
       </div>
 
       <h1 style={{ fontSize: "26px", fontWeight: 600, marginTop: "8px" }}>
@@ -54,7 +54,7 @@ export default function LivePreview() {
       </h1>
 
       <p style={{ maxWidth: "520px", fontSize: "14px", opacity: 0.85 }}>
-        This is your local **BossMind** dashboard preview.  
+        This is your local **ResumeAI** dashboard preview.  
         The left sidebar will grow into missions and AI controls, and this
         panel will render the live state from DeepSeek, Supabase and your
         AI Builder.
@@ -66,3 +66,4 @@ export default function LivePreview() {
     </div>
   );
 }
+

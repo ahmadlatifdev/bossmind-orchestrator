@@ -1,4 +1,4 @@
-name: Deploy BossMind HeroPage
+name: Deploy ResumeAI HeroPage
 
 on:
   push:
@@ -28,22 +28,22 @@ jobs:
 
       - name: Install dashboard dependencies
         run: |
-          cd bossmind-dashboard
+          cd resumeai-dashboard
           npm install
 
-      - name: Build BossMind Dashboard
+      - name: Build ResumeAI Dashboard
         run: |
-          cd bossmind-dashboard
+          cd resumeai-dashboard
           npm run build
 
       - name: Verify build output
         run: |
-          ls -la bossmind-dashboard/dist || exit 1
+          ls -la resumeai-dashboard/dist || exit 1
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: bossmind-dashboard/dist
+          path: resumeai-dashboard/dist
 
   deploy:
     environment:
@@ -56,3 +56,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+

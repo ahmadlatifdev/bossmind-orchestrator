@@ -1,4 +1,4 @@
-// bossmind-worker.js (repo ROOT)
+// resumeai-worker.js (repo ROOT)
 // Purpose: Railway Start Command expects this entry file.
 // It loads your real server entry (CommonJS) from /server.
 
@@ -8,7 +8,7 @@ function tryRequire(p) {
   try {
     // eslint-disable-next-line import/no-dynamic-require, global-require
     require(p);
-    console.log(`[bossmind-worker] Loaded: ${p}`);
+    console.log(`[resumeai-worker] Loaded: ${p}`);
     return true;
   } catch (e) {
     return false;
@@ -25,7 +25,7 @@ const ok =
 
 if (!ok) {
   console.error(
-    '[bossmind-worker] Could not find a server entry. Expected one of:\n' +
+    '[resumeai-worker] Could not find a server entry. Expected one of:\n' +
       '- ./server/server.cjs\n' +
       '- ./server/index.cjs\n' +
       '- ./server/app.cjs\n' +
@@ -34,3 +34,4 @@ if (!ok) {
   );
   process.exit(1);
 }
+

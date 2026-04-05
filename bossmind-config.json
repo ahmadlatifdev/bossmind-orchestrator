@@ -1,5 +1,5 @@
 {
-  "system_name": "BossMind Orchestrator for Elegancyart",
+  "system_name": "ResumeAI Orchestrator for Elegancyart",
   "languages": ["en", "fr"],
 
   "categories": [
@@ -35,3 +35,5 @@
     "remittance_cycle": "quarterly"
   }
 }
+
+

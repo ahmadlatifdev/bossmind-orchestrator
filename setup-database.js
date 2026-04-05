@@ -8,7 +8,7 @@ console.log('=' .repeat(60));
 const setupDatabase = async () => {
   try {
     // Load credentials
-    const secretsData = await fs.readFile('bossmind-secrets.json', 'utf8');
+    const secretsData = await fs.readFile('resumeai-secrets.json', 'utf8');
     const secrets = JSON.parse(secretsData);
     const project = secrets.supabase_projects['elegancyart-ai'];
     
@@ -59,12 +59,12 @@ const setupDatabase = async () => {
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
       );`,
       
-      // System logs (for BossMind automation)
+      // System logs (for ResumeAI automation)
       `CREATE TABLE IF NOT EXISTS system_logs (
         id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
         level TEXT NOT NULL,
         message TEXT NOT NULL,
-        source TEXT DEFAULT 'bossmind',
+        source TEXT DEFAULT 'ResumeAI',
         metadata JSONB,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
       );`
@@ -125,7 +125,7 @@ const setupDatabase = async () => {
     console.log('   1. products - Product catalog');
     console.log('   2. categories - Product categories');
     console.log('   3. orders - Customer orders');
-    console.log('   4. system_logs - BossMind automation logs');
+    console.log('   4. system_logs - ResumeAI automation logs');
     
     return true;
     

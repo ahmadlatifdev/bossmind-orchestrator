@@ -1,6 +1,14 @@
-import React from "react";
-import Dashboard from "./Dashboard";
+import { Pool } from "pg";
 
-export default function App() {
-  return <Dashboard />;
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+  throw new Error("DATABASE_URL is missing");
 }
+
+export const pool = new Pool({
+  connectionString,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});

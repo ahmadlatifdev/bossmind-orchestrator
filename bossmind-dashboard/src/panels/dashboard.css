@@ -1,5 +1,5 @@
 /* src/panels/dashboard.css */
-/* Luxury dark theme for Bossmind Dashboard */
+/* Luxury dark theme for ResumeAI Dashboard */
 
 .dashboard-root {
   min-height: 100vh;
@@ -85,3 +85,4 @@
     max-width: 260px;
   }
 }
+

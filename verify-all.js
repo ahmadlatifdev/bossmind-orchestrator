@@ -2,15 +2,15 @@
 import fs from 'fs/promises';
 import { readdir } from 'fs/promises';
 
-console.log('🔍 BOSSMIND FULL SYSTEM VERIFICATION');
+console.log('🔍 ResumeAI FULL SYSTEM VERIFICATION');
 console.log('=' .repeat(50));
 
 const verify = async () => {
   const checks = [];
   
   try {
-    // 1. Check bossmind-master.json
-    const masterData = await fs.readFile('bossmind-master.json', 'utf8');
+    // 1. Check resumeai-master.json
+    const masterData = await fs.readFile('resumeai-master.json', 'utf8');
     const master = JSON.parse(masterData);
     
     checks.push({
@@ -21,11 +21,11 @@ const verify = async () => {
     
     // 2. Check all config files exist
     const requiredFiles = [
-      'bossmind-config.json',
-      'bossmind-agents.json', 
-      'bossmind-settings.json',
-      'bossmind-runtime.json',
-      'bossmind-projects.json',
+      'resumeai-config.json',
+      'resumeai-agents.json', 
+      'resumeai-settings.json',
+      'resumeai-runtime.json',
+      'resumeai-projects.json',
       master.current_mission_file
     ].filter(Boolean);
     
@@ -55,7 +55,7 @@ const verify = async () => {
     });
     
     // 4. Check if we can read/write
-    const testFile = 'bossmind-test-permissions.json';
+    const testFile = 'resumeai-test-permissions.json';
     const testData = { test: 'permissions', timestamp: new Date().toISOString() };
     
     await fs.writeFile(testFile, JSON.stringify(testData, null, 2));
@@ -89,7 +89,7 @@ const verify = async () => {
     console.log(`📈 SCORE: ${passed}/${total} checks passed`);
     
     if (passed === total) {
-      console.log('🎉 BOSSMIND FULLY AUTHORIZED AND READY');
+      console.log('🎉 ResumeAI FULLY AUTHORIZED AND READY');
     } else {
       console.log('⚠️  Some checks failed - review above');
     }

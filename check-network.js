@@ -7,7 +7,7 @@ console.log('=' .repeat(50));
 
 const diagnose = async () => {
   try {
-    const secretsData = await fs.readFile('bossmind-secrets.json', 'utf8');
+    const secretsData = await fs.readFile('resumeai-secrets.json', 'utf8');
     const secrets = JSON.parse(secretsData);
     const project = secrets.supabase_projects['elegancyart-ai'];
     
@@ -31,7 +31,7 @@ const diagnose = async () => {
       
       const response = await fetch(project.url, {
         signal: controller.signal,
-        headers: { 'User-Agent': 'BossMind-Test' }
+        headers: { 'User-Agent': 'resumeai-Test' }
       });
       clearTimeout(timeout);
       

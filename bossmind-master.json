@@ -1,5 +1,5 @@
 {
-  "bossmind": {
+  "ResumeAI": {
     "role": "orchestrator",
     "projects": {
       "elegancyart-ai": {
@@ -21,6 +21,17 @@
         "isolation": "strict"
       }
     }
+  },
+  "bossmind": {
+    "active": true,
+    "dispatcher": {
+      "poll_ms": 30000,
+      "retry": {
+        "max_attempts": 3,
+        "backoff_ms": 5000
+      }
+    },
+    "jobs": []
   },
   "active": true,
   "activated_at": "2025-12-19T14:00:59.436Z",

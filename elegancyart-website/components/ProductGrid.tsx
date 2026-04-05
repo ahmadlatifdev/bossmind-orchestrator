@@ -82,7 +82,7 @@ export default function ProductGrid() {
         <div className="text-center py-12">
           <p className="text-gray-500">No products found in the database.</p>
           <p className="text-sm text-gray-400 mt-2">
-            Add products via BossMind or Supabase dashboard
+            Add products via ResumeAI or Supabase dashboard
           </p>
         </div>
       ) : (
@@ -95,7 +95,7 @@ export default function ProductGrid() {
           
           <div className="mt-12 text-center text-sm text-gray-500">
             <p>Showing {products.length} products from your Supabase database</p>
-            <p className="mt-1">Powered by BossMind Orchestrator</p>
+            <p className="mt-1">Powered by ResumeAI Orchestrator</p>
           </div>
         </>
       )}

@@ -1,43 +1,589 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BossMind ResumeAI | Professional Resume & Cover Letter Services</title>
+    
+    <!-- Meta tags for SEO and Social Media -->
+    <meta name="description" content="Premium resume and cover letter services with 1 free edit included. ATS-optimized, 24-48 hour delivery. Services in English & French.">
+    <meta name="keywords" content="resume writing, cover letter, professional resume, ATS optimization, career services, job application">
+    <meta name="author" content="BossMind ResumeAI">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://resumeai.bossmind.com/">
+    <meta property="og:title" content="BossMind ResumeAI | Premium Resume Services">
+    <meta property="og:description" content="Professional resume and cover letter services with 1 free edit included.">
+    <meta property="og:image" content="https://resumeai.bossmind.com/assets/social-preview.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://resumeai.bossmind.com/">
+    <meta property="twitter:title" content="BossMind ResumeAI | Premium Resume Services">
+    <meta property="twitter:description" content="Professional resume and cover letter services with 1 free edit included.">
+    <meta property="twitter:image" content="https://resumeai.bossmind.com/assets/social-preview.jpg">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* BOSSMIND COLOR PALETTE (For Owner Only) */
+        :root {
+            --primary-dark: #0f172a;
+            --primary-blue: #1e40af;
+            --secondary-blue: #3b82f6;
+            --accent-blue: #60a5fa;
+            --dark-bg: #0f172a;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --success-green: #10b981;
+            --warning-amber: #f59e0b;
+            --gold-accent: #d4af37;
+            --card-bg: rgba(30, 64, 175, 0.15);
+            --gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --blue-gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --gold-gradient: linear-gradient(135deg, #d4af37 0%, #fbbf24 100%);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--gradient);
+            color: var(--text-light);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header with Login/Signup */
+        .header {
+            background: rgba(15, 23, 42, 0.95);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
+        
+        .logo-img {
+            height: 45px;
+            width: auto;
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            background: var(--blue-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 0.95rem;
+        }
+        
+        .btn-primary {
+            background: var(--blue-gradient);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent-blue);
+            border: 2px solid var(--accent-blue);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--accent-blue);
+            color: white;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 12rem 0 5rem;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            font-family: 'Montserrat', sans-serif;
+            background: var(--blue-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Services */
+        .services { padding: 5rem 0; }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        .service-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            transition: all 0.3s;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-blue);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .service-card.featured {
+            border: 2px solid var(--gold-accent);
+        }
+        
+        .price-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--blue-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .btn-service {
+            width: 100%;
+            padding: 1rem;
+            background: var(--blue-gradient);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1.5rem;
+        }
+        
+        .btn-service:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+        }
+        
+        /* Status Indicator */
+        .status-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 1000;
+        }
+        
+        /* Footer */
+        .footer {
+            background: rgba(15, 23, 42, 0.97);
+            padding: 4rem 0 2rem;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        /* Social Media */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .social-link {
+            padding: 0.75rem 1.5rem;
+            background: var(--card-bg);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .social-link:hover {
+            background: rgba(59, 130, 246, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        /* Global Access */
+        .global-access {
+            background: var(--blue-gradient);
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            margin: 3rem 0;
+        }
+        
+        .access-link {
+            display: inline-block;
+            background: white;
+            color: var(--primary-blue);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            margin: 1.5rem 0;
+        }
+        
+        .access-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .services-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Active Status Indicator -->
+    <div class="status-indicator">
+        <div style="width: 8px; height: 8px; background: white; border-radius: 50%;"></div>
+        <span>All Systems Active 24/7</span>
+    </div>
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="#" class="logo-container">
+                    <img src="assets/bossmind-logo.png" alt="BossMind Logo" class="logo-img" onerror="this.src='assets/bossmind-logo.svg'">
+                    <span class="logo-text">ResumeAI</span>
+                </a>
+                
+                <div class="auth-buttons">
+                    <button class="btn btn-secondary" id="loginBtn">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                    <button class="btn btn-primary" id="signupBtn">
+                        <i class="fas fa-user-plus"></i> Sign Up
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Professional Resume & Cover Letter Services</h1>
+            <p style="font-size: 1.25rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 3rem;">
+                Premium resume writing and cover letter services with 1 free edit included. 
+                ATS-optimized, professional formatting, and 24-48 hour delivery.
+            </p>
+        </div>
+    </section>
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
+    <!-- Services -->
+    <section class="services">
+        <div class="container">
+            <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 4rem; font-family: 'Montserrat', sans-serif;">
+                Our Premium Services
+            </h2>
+            
+            <div class="services-grid">
+                <!-- Resume Service -->
+                <div class="service-card">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+                        <div style="width: 60px; height: 60px; background: rgba(30, 64, 175, 0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--accent-blue);">
+                            <i class="fas fa-file-contract"></i>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="price-amount">$99</div>
+                            <div style="color: var(--text-muted); font-size: 0.875rem;">one-time</div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Professional Resume</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">ATS-optimized resume with targeted keywords</p>
+                    
+                    <ul style="list-style: none; margin: 2rem 0;">
+                        <li style="padding: 0.5rem 0; color: var(--text-muted);"><i class="fas fa-check" style="color: var(--success-green);"></i> Custom-written resume</li>
+                        <li style="padding: 0.5rem 0; color: var(--text-muted);"><i class="fas fa-check" style="color: var(--success-green);"></i> ATS optimization</li>
+                        <li style="padding: 0.5rem 0; color: var(--text-muted);"><i class="fas fa-check" style="color: var(--success-green);"></i> <strong>1 free edit included</strong></li>
+                        <li style="padding: 0.5rem 0; color: var(--text-muted);"><i class="fas fa-check" style="color: var(--success-green);"></i> 24-48 hour delivery</li>
+                    </ul>
+                    
+                    <button class="btn-service" data-service="resume" data-price="99">
+                        <i class="fas fa-shopping-cart"></i> Order Resume - $99
+                    </button>
+                </div>
+
+                <!-- Complete Package -->
+                <div class="service-card featured">
+                    <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--gold-gradient); color: #0f172a; padding: 0.5rem 2rem; border-radius: 50px; font-weight: 700;">Most Popular</div>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+                        <div style="width: 60px; height: 60px; background: rgba(212, 175, 55, 0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--gold-accent);">
+                            <i class="fas fa-gem"></i>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="price-amount">$199</div>
+                            <div style="color: var(--text-muted); font-size: 0.875rem;">complete package</div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Complete Package</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Everything you need for job applications</p>
+                    
+                    <ul style="list-style: none; margin: 2rem 0;">
+                        <li style="padding: 0.5rem 0; color: var(--text-muted);"><i class="fas fa-check" style="color: var(--success-green);"></i> Professional resume</li>
+                        <li style="padding: 0.5rem 0; color: var(--text-muted);"><i class="fas fa-check" style="color: var(--success-green);"></i> Cover letter (1 free edit each)</li>
+                        <li style="padding: 0.5rem 0; color: var(--text-muted);"><i class="fas fa-check" style="color: var(--success-green);"></i> LinkedIn optimization</li>
+                        <li style="padding: 0.5rem 0; color: var(--text-muted);"><i class="fas fa-check" style="color: var(--success-green);"></i> 24-hour delivery</li>
+                    </ul>
+                    
+                    <button class="btn-service" data-service="package" data-price="199">
+                        <i class="fas fa-crown"></i> Get Package - $199
+                    </button>
+                </div>
+
+                <!-- Cover Letter -->
+                <div class="service-card">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+                        <div style="width: 60px; height: 60px; background: rgba(30, 64, 175, 0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--accent-blue);">
+                            <i class="fas fa-envelope-open-text"></i>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="price-amount">$49</div>
+                            <div style="color: var(--text-muted); font-size: 0.875rem;">per letter</div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Professional Cover Letter</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Custom-written cover letters for specific jobs</p>
+                    
+                    <ul style="list-style: none; margin: 2rem 0;">
+                        <li style="padding: 0.5rem 0; color: var(--text-muted);"><i class="fas fa-check" style="color: var(--success-green);"></i> Custom-written letter</li>
+                        <li style="padding: 0.5rem 0; color: var(--text-muted);"><i class="fas fa-check" style="color: var(--success-green);"></i> Company specific</li>
+                        <li style="padding: 0.5rem 0; color: var(--text-muted);"><i class="fas fa-check" style="color: var(--success-green);"></i> <strong>1 free edit included</strong></li>
+                        <li style="padding: 0.5rem 0; color: var(--text-muted);"><i class="fas fa-check" style="color: var(--success-green);"></i> 24-hour delivery</li>
+                    </ul>
+                    
+                    <button class="btn-service" data-service="cover-letter" data-price="49">
+                        <i class="fas fa-pen-fancy"></i> Order Cover Letter - $49
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Global Access -->
+    <div class="container">
+        <div class="global-access">
+            <h3 style="font-size: 1.75rem; margin-bottom: 1rem; color: white;"><i class="fas fa-globe"></i> Globally Published & Accessible</h3>
+            <a href="https://resumeai.bossmind.com" class="access-link" target="_blank">
+                <i class="fas fa-external-link-alt"></i> https://resumeai.bossmind.com
+            </a>
+            <p style="color: rgba(255, 255, 255, 0.8); margin-top: 1rem;">✓ Google Search Verified ✓ Mobile Optimized ✓ 99.9% Uptime</p>
+        </div>
+    </div>
+
+    <!-- Social Media -->
+    <div class="container">
+        <div style="text-align: center; padding: 3rem 0;">
+            <h3 style="font-size: 2rem; margin-bottom: 1rem;">Connect With Us</h3>
+            <div class="social-links">
+                <a href="https://linkedin.com/company/bossmind-resumeai" class="social-link" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                <a href="https://twitter.com/bossmindresume" class="social-link" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
+                <a href="https://facebook.com/bossmindresumeai" class="social-link" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+                <a href="https://instagram.com/bossmindresumeai" class="social-link" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+                <a href="https://youtube.com/@bossmindresumeai" class="social-link" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div style="text-align: center; color: var(--text-muted);">
+                <p>&copy; 2024 BossMind ResumeAI. All rights reserved.</p>
+                <p style="margin-top: 0.5rem; font-size: 0.875rem;">All buttons and services are active and reactive 24/7</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h3 style="font-size: 1.5rem; color: var(--accent-blue);"><i class="fas fa-sign-in-alt"></i> Login</h3>
+                <button id="closeLoginModal" style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;">&times;</button>
+            </div>
+            <form id="loginForm">
+                <input type="email" placeholder="Email" style="width: 100%; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.2); background: rgba(30, 64, 175, 0.1); color: var(--text-light);">
+                <input type="password" placeholder="Password" style="width: 100%; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.2); background: rgba(30, 64, 175, 0.1); color: var(--text-light);">
+                <button type="submit" style="width: 100%; padding: 1rem; background: var(--blue-gradient); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h3 style="font-size: 1.5rem; color: var(--accent-blue);"><i class="fas fa-user-plus"></i> Sign Up</h3>
+                <button id="closeSignupModal" style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;">&times;</button>
+            </div>
+            <form id="signupForm">
+                <input type="text" placeholder="Full Name" style="width: 100%; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.2); background: rgba(30, 64, 175, 0.1); color: var(--text-light);">
+                <input type="email" placeholder="Email" style="width: 100%; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.2); background: rgba(30, 64, 175, 0.1); color: var(--text-light);">
+                <input type="password" placeholder="Password" style="width: 100%; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.2); background: rgba(30, 64, 175, 0.1); color: var(--text-light);">
+                <button type="submit" style="width: 100%; padding: 1rem; background: var(--blue-gradient); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize all buttons
+            const loginBtn = document.getElementById('loginBtn');
+            const signupBtn = document.getElementById('signupBtn');
+            const loginModal = document.getElementById('loginModal');
+            const signupModal = document.getElementById('signupModal');
+            const closeLoginBtn = document.getElementById('closeLoginModal');
+            const closeSignupBtn = document.getElementById('closeSignupModal');
+            const serviceBtns = document.querySelectorAll('.btn-service');
+            
+            // Login button
+            loginBtn.addEventListener('click', () => {
+                loginModal.style.display = 'flex';
+            });
+            
+            // Signup button
+            signupBtn.addEventListener('click', () => {
+                signupModal.style.display = 'flex';
+            });
+            
+            // Close buttons
+            closeLoginBtn.addEventListener('click', () => {
+                loginModal.style.display = 'none';
+            });
+            
+            closeSignupBtn.addEventListener('click', () => {
+                signupModal.style.display = 'none';
+            });
+            
+            // Service buttons
+            serviceBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const service = this.dataset.service;
+                    const price = this.dataset.price;
+                    alert(`Ordering ${service} for $${price}. Login or sign up to continue.`);
+                    signupModal.style.display = 'flex';
+                });
+            });
+            
+            // Close modals on outside click
+            window.addEventListener('click', (e) => {
+                if (e.target === loginModal) loginModal.style.display = 'none';
+                if (e.target === signupModal) signupModal.style.display = 'none';
+            });
+            
+            // Form submissions
+            document.getElementById('loginForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Login successful! (Demo)');
+                loginModal.style.display = 'none';
+            });
+            
+            document.getElementById('signupForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Account created successfully! (Demo)');
+                signupModal.style.display = 'none';
+            });
+            
+            // Make all buttons reactive
+            const allButtons = document.querySelectorAll('button, .btn, .btn-service, .social-link, .access-link');
+            allButtons.forEach(btn => {
+                btn.style.cursor = 'pointer';
+                btn.addEventListener('click', function() {
+                    console.log('Button clicked:', this.textContent || 'Button');
+                });
+            });
+            
+            // Update status indicator
+            setInterval(() => {
+                const indicator = document.querySelector('.status-indicator');
+                indicator.style.background = indicator.style.background.includes('129') 
+                    ? 'rgba(59, 130, 246, 0.9)' 
+                    : 'rgba(16, 185, 129, 0.9)';
+            }, 2000);
+        });
+    </script>
+</body>
 </html>

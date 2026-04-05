@@ -1,10 +1,10 @@
-// src/Components/BossmindTester.jsx
-// Simple test panel to call the BossMind Orchestrator on Railway
+// src/Components/ResumeAITester.jsx
+// Simple test panel to call the ResumeAI Orchestrator on Railway
 
 import React, { useState } from "react";
-import { checkBossmindHealth, sendDeepseekChat } from "../services/bossmindApi";
+import { checkResumeAIHealth, sendDeepseekChat } from "../services/ResumeAIApi";
 
-function BossmindTester() {
+function ResumeAITester() {
   const [healthStatus, setHealthStatus] = useState(null);
   const [question, setQuestion] = useState("Give me a short status summary.");
   const [answer, setAnswer] = useState("");
@@ -16,7 +16,7 @@ function BossmindTester() {
     try {
       setError("");
       setLoadingHealth(true);
-      const data = await checkBossmindHealth();
+      const data = await checkResumeAIHealth();
       setHealthStatus(data);
     } catch (err) {
       setError(err.message || "Health check failed.");
@@ -35,7 +35,7 @@ function BossmindTester() {
         {
           role: "system",
           content:
-            "You are the BossMind Orchestrator assistant. Reply briefly and clearly.",
+            "You are the ResumeAI Orchestrator assistant. Reply briefly and clearly.",
         },
         {
           role: "user",
@@ -71,13 +71,13 @@ function BossmindTester() {
       }}
     >
       <h2 style={{ marginBottom: "10px", fontSize: "20px" }}>
-        BossMind Orchestrator Tester
+        ResumeAI Orchestrator Tester
       </h2>
       <p style={{ fontSize: "14px", color: "#9ca3af", marginBottom: "16px" }}>
         This panel talks to your live Railway backend:
         <br />
         <code style={{ fontSize: "12px", color: "#38bdf8" }}>
-          https://bossmind-orchestrator-production.up.railway.app
+          https://resumeai-orchestrator-production.up.railway.app
         </code>
       </p>
 
@@ -207,4 +207,5 @@ function BossmindTester() {
   );
 }
 
-export default BossmindTester;
+export default ResumeAITester;
+

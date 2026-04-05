@@ -1,6 +1,6 @@
 {
   "agents": {
-    "BossMind_Orchestrator": "Central brain that coordinates all other agents, reads targets, assigns tasks, and ensures full system compliance.",
+    "ResumeAI_Orchestrator": "Central brain that coordinates all other agents, reads targets, assigns tasks, and ensures full system compliance.",
     "Product_Selector_AI": "Manages product sourcing, selection, validation, category limits, weekly refresh, and supplier criteria.",
     "UI_Designer_AI": "Designs luxury layouts, sliders, EN/FR language switcher, and all visual components.",
     "Frontend_Engineer_AI": "Builds all Next.js + Tailwind pages, registration forms, product sliders, footer, and layout components.",
@@ -11,3 +11,4 @@
     "Analytics_Reporter_AI": "Generates daily/weekly/monthly summaries, sales reports, alerts, and insights for system improvement."
   }
 }
+

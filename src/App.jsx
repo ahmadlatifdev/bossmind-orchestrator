@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { checkBossmindHealth, sendDeepseekChat } from "./bossmindApi";
-import BossmindTester from "./Components/BossmindTester";
+import { checkResumeAIHealth, sendDeepseekChat } from "./ResumeAIApi";
+import ResumeAITester from "./Components/ResumeAITester";
 import LivePreviewPanel from "./Components/LivePreviewPanel";
 
 export default function App() {
@@ -10,7 +10,7 @@ export default function App() {
   // Trigger health check
   const handleHealthCheck = async () => {
     try {
-      const data = await checkBossmindHealth();
+      const data = await checkResumeAIHealth();
       setHealthStatus(JSON.stringify(data, null, 2));
     } catch (err) {
       setHealthStatus("❌ Health check failed — see console");
@@ -21,7 +21,7 @@ export default function App() {
   const handleAskDeepSeek = async () => {
     try {
       const reply = await sendDeepseekChat([
-        { role: "user", content: "Hello BossMind, are you connected?" }
+        { role: "user", content: "Hello ResumeAI, are you connected?" }
       ]);
       setChatResponse(JSON.stringify(reply, null, 2));
     } catch (err) {
@@ -37,7 +37,7 @@ export default function App() {
       minHeight: "100vh",
       fontFamily: "Arial"
     }}>
-      <h1>BOSSMIND ORCHESTRATOR — FRONTEND TESTER</h1>
+      <h1>ResumeAI ORCHESTRATOR — FRONTEND TESTER</h1>
 
       {/* HEALTH CHECK */}
       <button onClick={handleHealthCheck} style={buttonStyle}>
@@ -57,7 +57,7 @@ export default function App() {
 
       {/* COMPONENT TESTING AREA */}
       <div style={{ marginTop: "30px" }}>
-        <BossmindTester />
+        <ResumeAITester />
         <LivePreviewPanel />
       </div>
     </div>
@@ -82,3 +82,4 @@ const outputBox = {
   borderRadius: "8px",
   whiteSpace: "pre-wrap"
 };
+

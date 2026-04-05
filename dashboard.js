@@ -2,19 +2,19 @@
 import { createClient } from '@supabase/supabase-js';
 import fs from 'fs/promises';
 
-console.log('📊 BOSSMIND SIMPLE DASHBOARD');
+console.log('📊 ResumeAI SIMPLE DASHBOARD');
 console.log('=' .repeat(60));
 
 const showDashboard = async () => {
   try {
-    const secretsData = await fs.readFile('bossmind-secrets.json', 'utf8');
+    const secretsData = await fs.readFile('resumeai-secrets.json', 'utf8');
     const secrets = JSON.parse(secretsData);
     const project = secrets.supabase_projects['elegancyart-ai'];
     
     const supabase = createClient(project.url, project.service_role_key);
     
     console.log('\n🤖 SYSTEM STATUS:');
-    console.log('   BossMind: ✅ ACTIVE');
+    console.log('   ResumeAI: ✅ ACTIVE');
     console.log(`   Project: ${project.url}`);
     console.log(`   Mission: Elegancyart Dropshipping Setup`);
     

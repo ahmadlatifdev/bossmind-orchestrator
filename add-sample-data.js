@@ -7,7 +7,7 @@ console.log('=' .repeat(60));
 
 const addData = async () => {
   try {
-    const secretsData = await fs.readFile('bossmind-secrets.json', 'utf8');
+    const secretsData = await fs.readFile('resumeai-secrets.json', 'utf8');
     const secrets = JSON.parse(secretsData);
     const project = secrets.supabase_projects['elegancyart-ai'];
     
@@ -102,8 +102,8 @@ const addData = async () => {
       .from('system_logs')
       .insert([{
         level: 'info',
-        message: 'Sample data populated by BossMind',
-        source: 'bossmind',
+        message: 'Sample data populated by ResumeAI',
+        source: 'ResumeAI',
         metadata: { 
           products_added: products.length, 
           categories_added: categories.length 

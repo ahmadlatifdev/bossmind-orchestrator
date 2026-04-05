@@ -1,17 +1,46 @@
 {
   "name": "bossmind-orchestrator",
   "version": "1.0.0",
-  "private": true,
-  "type": "commonjs",
-  "main": "server.cjs",
-  "engines": {
-    "node": ">=20"
-  },
+  "description": "BossMind Orchestrator Core Backup + Automation System",
+  "main": "server.js",
   "scripts": {
-    "start": "node server.cjs",
-    "dev": "node server.cjs"
+    "build": "tsc",
+    "start": "node server.js",
+    "backup": "node backup-engine.js"
   },
   "dependencies": {
-    "express": "^4.19.2"
-  }
+    "@aws-sdk/client-s3": "^3.994.0",
+    "@aws-sdk/s3-request-presigner": "^3.994.0",
+    "@neondatabase/serverless": "^1.0.2",
+    "@supabase/supabase-js": "^2.97.0",
+    "archiver": "^7.0.1",
+    "axios": "^1.14.0",
+    "compression": "^1.8.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.0",
+    "express": "^5.2.1",
+    "glob": "^13.0.5",
+    "helmet": "^8.1.0",
+    "nodemailer": "^8.0.2",
+    "openai": "^6.27.0",
+    "pg": "^8.20.0"
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahmadlatifdev/bossmind-orchestrator.git"
+  },
+  "keywords": [
+    "bossmind",
+    "backup",
+    "automation"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ahmadlatifdev/bossmind-orchestrator/issues"
+  },
+  "homepage": "https://github.com/ahmadlatifdev/bossmind-orchestrator#readme"
 }

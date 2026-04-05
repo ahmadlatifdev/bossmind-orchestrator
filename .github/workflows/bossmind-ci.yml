@@ -1,4 +1,4 @@
-name: BossMind CI
+name: ResumeAI CI
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   build-dashboard:
-    name: Build bossmind-dashboard
+    name: Build resumeai-dashboard
     runs-on: ubuntu-latest
 
     steps:
@@ -23,12 +23,12 @@ jobs:
           node-version: "20"
 
       - name: Install deps (dashboard)
-        working-directory: bossmind-dashboard
+        working-directory: resumeai-dashboard
         run: |
           npm install --no-audit --no-fund
 
       - name: Build dashboard (ignore ESLint warnings)
-        working-directory: bossmind-dashboard
+        working-directory: resumeai-dashboard
         env:
           CI: false
         run: |
@@ -55,3 +55,4 @@ jobs:
       - name: Sanity (Server)
         working-directory: Server
         run: node -c server.js || true
+

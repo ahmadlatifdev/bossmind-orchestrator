@@ -1,4 +1,4 @@
-/*  BossMind HeroPage / Admin Dashboard — Dashboard.jsx (FULL FILE)
+/*  ResumeAI HeroPage / Admin Dashboard — Dashboard.jsx (FULL FILE)
     - Luxury dark UI (Header / Footer / Sidebar)
     - Categories → Subcategories → Products (dynamic if API available, built-in safe fallback)
     - Live wiring panels:
@@ -31,8 +31,8 @@ function readEnv(key, fallback = "") {
   } catch (_) {}
 
   try {
-    if (typeof window !== "undefined" && window.__BOSSMIND__ && window.__BOSSMIND__[key]) {
-      const v = window.__BOSSMIND__[key];
+    if (typeof window !== "undefined" && window.__ResumeAI__ && window.__ResumeAI__[key]) {
+      const v = window.__ResumeAI__[key];
       if (v !== undefined && v !== null && String(v).trim() !== "") return String(v);
     }
   } catch (_) {}
@@ -41,12 +41,12 @@ function readEnv(key, fallback = "") {
 }
 
 const CONFIG = {
-  // You can set these in your deployment env or inject window.__BOSSMIND__ = { ... }
+  // You can set these in your deployment env or inject window.__ResumeAI__ = { ... }
   QUEUE_BASE_URL: readEnv("VITE_QUEUE_BASE_URL", readEnv("QUEUE_BASE_URL", "")), // ex: https://queue.yourdomain.com
   WORKER_BASE_URL: readEnv("VITE_WORKER_BASE_URL", readEnv("WORKER_BASE_URL", "")), // ex: https://worker.yourdomain.com
   API_BASE_URL: readEnv("VITE_API_BASE_URL", readEnv("API_BASE_URL", "")), // optional unified API (if you have)
   ADMIN_EMAIL: readEnv("VITE_ADMIN_EMAIL", readEnv("ADMIN_EMAIL", "")), // optional gate
-  DASH_TITLE: readEnv("VITE_DASH_TITLE", readEnv("DASH_TITLE", "BossMind HeroPage")),
+  DASH_TITLE: readEnv("VITE_DASH_TITLE", readEnv("DASH_TITLE", "ResumeAI HeroPage")),
 };
 
 /* =========================
@@ -138,8 +138,8 @@ const FALLBACK_CATALOG = [
     ],
   },
   {
-    id: "cat_bossmind",
-    name: "BossMind Control",
+    id: "cat_ResumeAI",
+    name: "ResumeAI Control",
     icon: "🧠",
     subcategories: [
       {
@@ -210,7 +210,7 @@ function useAdminGate() {
   const adminEmail = (CONFIG.ADMIN_EMAIL || "").trim().toLowerCase();
   const [email, setEmail] = useState(() => {
     try {
-      return (localStorage.getItem("bossmind_email") || "").trim();
+      return (localStorage.getItem("ResumeAI_email") || "").trim();
     } catch (_) {
       return "";
     }
@@ -221,7 +221,7 @@ function useAdminGate() {
   const saveEmail = (v) => {
     setEmail(v);
     try {
-      localStorage.setItem("bossmind_email", v);
+      localStorage.setItem("ResumeAI_email", v);
     } catch (_) {}
   };
 
@@ -955,7 +955,7 @@ function Footer() {
   return (
     <div className="border-t border-white/10 bg-black/30">
       <div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-3 px-4 py-6 text-xs text-white/60">
-        <div>© {new Date().getFullYear()} BossMind • HeroPage</div>
+        <div>© {new Date().getFullYear()} ResumeAI • HeroPage</div>
         <div className="text-white/50">Queue → Worker → HeroPage • Luxury Dark • Safe Mode Ready</div>
       </div>
     </div>
@@ -1094,3 +1094,4 @@ function Style() {
     `}</style>
   );
 }
+

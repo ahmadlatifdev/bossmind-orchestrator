@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 /**
- * BossMind Admin Dashboard (React JSX)
+ * ResumeAI Admin Dashboard (React JSX)
  * - ElegancyArt is FIRST project
- * - Polls BossMind Orchestrator: GET {API_BASE}/health
+ * - Polls ResumeAI Orchestrator: GET {API_BASE}/health
  * - Your backend mounts health route at "/health"
  */
 
@@ -24,8 +24,8 @@ function getEnv(key) {
 
 // ✅ Match your server defaults: process.env.PORT || 5000
 const API_BASE =
-  getEnv("VITE_BOSSMIND_API_BASE") ||
-  getEnv("REACT_APP_BOSSMIND_API_BASE") ||
+  getEnv("VITE_ResumeAI_API_BASE") ||
+  getEnv("REACT_APP_ResumeAI_API_BASE") ||
   "http://localhost:5000";
 
 const POLL_MS = 30_000;
@@ -38,8 +38,8 @@ const PROJECTS = [
     badge: "Primary",
   },
   {
-    key: "bossmind-orchestrator",
-    title: "BossMind Orchestrator",
+    key: "resumeai-orchestrator",
+    title: "ResumeAI Orchestrator",
     subtitle: "Automation engine • Policies • Self-healing control",
     badge: "Core",
   },
@@ -157,10 +157,10 @@ export default function Dashboard() {
       detail,
     });
     return [
-      mk(4, "bossmind-orchestrator", "Policy guard loaded", "success", "No-keys preference enforced"),
+      mk(4, "resumeai-orchestrator", "Policy guard loaded", "success", "No-keys preference enforced"),
       mk(11, "ai-video-generator", "Queue watcher idle", "info", "Waiting for new rows"),
       mk(18, "elegancyart", "UI lock verified", "success", "Appearance stability maintained"),
-      mk(26, "bossmind-orchestrator", "Health probe scheduled", "info", `Polling every ${POLL_MS / 1000}s`),
+      mk(26, "resumeai-orchestrator", "Health probe scheduled", "info", `Polling every ${POLL_MS / 1000}s`),
     ];
   });
 
@@ -212,7 +212,7 @@ export default function Dashboard() {
       setHealth(normalized);
 
       pushActivity(
-        "bossmind-orchestrator",
+        "resumeai-orchestrator",
         normalized.ok ? "Health check OK" : "Health check failed",
         normalized.ok ? "success" : "error",
         normalized.ok ? "Orchestrator responded" : "Orchestrator returned ok=false"
@@ -220,7 +220,7 @@ export default function Dashboard() {
     } catch (e) {
       const msg = e?.message || "Health check error";
       setLastError(msg);
-      pushActivity("bossmind-orchestrator", "Health check error", "error", msg);
+      pushActivity("resumeai-orchestrator", "Health check error", "error", msg);
     } finally {
       setLoading(false);
     }
@@ -263,7 +263,7 @@ export default function Dashboard() {
           <div className="bm-card bm-sidebar-card">
             <div className="bm-head">
               <div>
-                <div className="bm-kicker">BossMind</div>
+                <div className="bm-kicker">ResumeAI</div>
                 <div className="bm-title">Admin Dashboard</div>
               </div>
               <ToneBadge tone={derived.overall.tone}>{derived.overall.text}</ToneBadge>
@@ -351,7 +351,7 @@ export default function Dashboard() {
                 className="bm-action"
                 onClick={() => {
                   fetchHealth();
-                  pushActivity("bossmind-orchestrator", "Manual health refresh", "info", "User requested refresh");
+                  pushActivity("resumeai-orchestrator", "Manual health refresh", "info", "User requested refresh");
                 }}
               >
                 <Icon name="log" /> Refresh
@@ -453,7 +453,7 @@ export default function Dashboard() {
                   <div className="bm-panel-title">Controls</div>
                   <div className="bm-muted">UI controls. Wire to Orchestrator endpoints when ready.</div>
                 </div>
-                <button className="bm-small" onClick={() => { fetchHealth(); pushActivity("bossmind-orchestrator", "Controls: health refresh", "info", "Manual refresh"); }}>
+                <button className="bm-small" onClick={() => { fetchHealth(); pushActivity("resumeai-orchestrator", "Controls: health refresh", "info", "Manual refresh"); }}>
                   Refresh Health
                 </button>
               </div>
@@ -488,7 +488,7 @@ export default function Dashboard() {
                 <div className="bm-setting">
                   <div className="bm-setting-title">API Base</div>
                   <div className="bm-muted">Set via environment variable:</div>
-                  <div className="bm-code">VITE_BOSSMIND_API_BASE or REACT_APP_BOSSMIND_API_BASE</div>
+                  <div className="bm-code">VITE_ResumeAI_API_BASE or REACT_APP_ResumeAI_API_BASE</div>
                   <div className="bm-muted">Current:</div>
                   <div className="bm-code">{API_BASE}</div>
                 </div>
@@ -505,7 +505,7 @@ export default function Dashboard() {
                     className="bm-big"
                     onClick={() => {
                       fetchHealth();
-                      pushActivity("bossmind-orchestrator", "Settings: connection test", "info", "Health fetched");
+                      pushActivity("resumeai-orchestrator", "Settings: connection test", "info", "Health fetched");
                     }}
                   >
                     Test /health
@@ -515,7 +515,7 @@ export default function Dashboard() {
             </div>
           )}
 
-          <div className="bm-foot">BossMind Admin Dashboard • Stable UI • Reactive status</div>
+          <div className="bm-foot">ResumeAI Admin Dashboard • Stable UI • Reactive status</div>
         </main>
       </div>
     </div>
@@ -582,11 +582,11 @@ function normalizeHealth(data) {
     ok,
     timeISO,
     env: data?.env || {},
-    service: data?.service || "BossMind Orchestrator",
+    service: data?.service || "ResumeAI Orchestrator",
     status: serviceStatus,
     projects: {
       elegancyart: mk("online", "UI layer responding"),
-      "bossmind-orchestrator": mk(ok ? "online" : "degraded", "Orchestrator /health responding"),
+      "resumeai-orchestrator": mk(ok ? "online" : "degraded", "Orchestrator /health responding"),
       "ai-video-generator": mk("degraded", "Wire queue/publish probes next"),
     },
   };
@@ -860,3 +860,4 @@ const STYLES = `
     letter-spacing:0.04em;
   }
 `;
+

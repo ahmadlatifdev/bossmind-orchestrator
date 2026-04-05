@@ -7,7 +7,7 @@ console.log('=' .repeat(40));
 const setMission = async () => {
   try {
     // Read current config
-    const data = await fs.readFile('bossmind-master.json', 'utf8');
+    const data = await fs.readFile('resumeai-master.json', 'utf8');
     const config = JSON.parse(data);
     
     console.log('📋 BEFORE:');
@@ -18,7 +18,7 @@ const setMission = async () => {
     config.mission_set_at = new Date().toISOString();
     
     // Save updated config
-    await fs.writeFile('bossmind-master.json', JSON.stringify(config, null, 2));
+    await fs.writeFile('resumeai-master.json', JSON.stringify(config, null, 2));
     
     console.log('\n📋 AFTER:');
     console.log(`   Mission file: ${config.current_mission_file}`);

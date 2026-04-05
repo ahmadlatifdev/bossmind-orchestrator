@@ -11,7 +11,7 @@
     "Plan deployment, tax, and analytics connections."
   ],
   "assigned_agents": [
-    "BossMind_Orchestrator",
+    "ResumeAI_Orchestrator",
     "Product_Selector_AI",
     "UI_Designer_AI",
     "Frontend_Engineer_AI",
@@ -22,3 +22,4 @@
     "Analytics_Reporter_AI"
   ]
 }
+

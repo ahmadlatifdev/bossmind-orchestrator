@@ -7,7 +7,7 @@ console.log('=' .repeat(50));
 
 const testWithHttps = async () => {
   try {
-    const secretsData = await fs.readFile('bossmind-secrets.json', 'utf8');
+    const secretsData = await fs.readFile('resumeai-secrets.json', 'utf8');
     const secrets = JSON.parse(secretsData);
     const project = secrets.supabase_projects['elegancyart-ai'];
     
@@ -23,7 +23,7 @@ const testWithHttps = async () => {
       method: 'GET',
       timeout: 5000,
       headers: {
-        'User-Agent': 'BossMind',
+        'User-Agent': 'ResumeAI',
         'Accept': 'application/json'
       }
     };

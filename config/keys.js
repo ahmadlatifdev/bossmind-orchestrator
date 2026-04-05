@@ -25,7 +25,7 @@ export const BACKEND_CONFIG = {
 
 // System Configuration
 export const SYSTEM_CONFIG = {
-  APP_NAME: "Bossmind Orchestrator",
+  APP_NAME: "ResumeAI Orchestrator",
   VERSION: "3.0.0",
   DEEPSEEK_API_VERSION: "v1",
   

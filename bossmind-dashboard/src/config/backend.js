@@ -1,5 +1,5 @@
 // ======================================================
-// BossMind Backend Connection Config
+// ResumeAI Backend Connection Config
 // This tells the dashboard where your backend lives
 // ======================================================
 
@@ -8,3 +8,4 @@ export const BACKEND_CONFIG = {
     PORT: 5000,
     ACTIVE: true
 };
+

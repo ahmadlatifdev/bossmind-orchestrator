@@ -1,12 +1,12 @@
-// bossmind-automation.js
+// resumeai-automation.js
 import { createClient } from "@supabase/supabase-js";
 import fs from "fs/promises";
 import cron from "node-cron";
 
-console.log("🤖 BOSSMIND AUTOMATION ENGINE");
+console.log("🤖 ResumeAI AUTOMATION ENGINE");
 console.log("=".repeat(60));
 
-class BossMindAutomation {
+class ResumeAIAutomation {
   constructor() {
     this.supabase = null;
 
@@ -30,16 +30,16 @@ class BossMindAutomation {
         process.env.SUPABASE_SERVICE_KEY ||
         process.env.SUPABASE_KEY ||
         "",
-      healthCron: process.env.BOSSMIND_HEALTH_CRON || "*/5 * * * *", // every 5 minutes
-      syncCron: process.env.BOSSMIND_SYNC_CRON || "0 * * * *", // every hour
+      healthCron: process.env.ResumeAI_HEALTH_CRON || "*/5 * * * *", // every 5 minutes
+      syncCron: process.env.ResumeAI_SYNC_CRON || "0 * * * *", // every hour
 
       // Guardian controls (code-defaults; safe even if DB only stores booleans)
       guardianDefaultEnabled: true,
-      guardianMaxFailures: Number(process.env.BOSSMIND_GUARDIAN_MAX_FAILURES || 3),
+      guardianMaxFailures: Number(process.env.ResumeAI_GUARDIAN_MAX_FAILURES || 3),
     };
 
     // Tables
-    this.LOG_TABLE = "bossmind_job_runs";
+    this.LOG_TABLE = "ResumeAI_job_runs";
     this.SWITCH_TABLE = "system_switches";
   }
 
@@ -49,11 +49,11 @@ class BossMindAutomation {
 
     this.supabase = createClient(this.config.supabaseUrl, this.config.supabaseServiceKey, {
       auth: { persistSession: false, autoRefreshToken: false },
-      global: { headers: { "X-Client-Info": "bossmind-automation" } },
+      global: { headers: { "X-Client-Info": "resumeai-automation" } },
     });
 
     console.log(`✅ Connected to: ${this.config.supabaseUrl}`);
-    console.log("✅ BossMind Automation Initialized\n");
+    console.log("✅ ResumeAI Automation Initialized\n");
   }
 
   validateEnv() {
@@ -322,7 +322,7 @@ class BossMindAutomation {
   }
 
   async syncProducts() {
-    const cachePath = process.env.BOSSMIND_PRODUCTS_CACHE || "./bossmind-products-cache.json";
+    const cachePath = process.env.ResumeAI_PRODUCTS_CACHE || "./resumeai-products-cache.json";
 
     try {
       await fs.access(cachePath);
@@ -357,18 +357,19 @@ class BossMindAutomation {
       });
     });
 
-    console.log("📌 BossMind Automation is running in the background...\n");
+    console.log("📌 ResumeAI Automation is running in the background...\n");
   }
 }
 
 // ---------- Run ----------
 (async () => {
   try {
-    const engine = new BossMindAutomation();
+    const engine = new ResumeAIAutomation();
     await engine.init();
     engine.start();
   } catch (e) {
-    console.error("❌ BossMind failed to start:", e?.stack || e?.message || e);
+    console.error("❌ ResumeAI failed to start:", e?.stack || e?.message || e);
     process.exit(1);
   }
 })();
+

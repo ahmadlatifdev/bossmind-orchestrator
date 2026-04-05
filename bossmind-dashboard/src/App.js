@@ -5,9 +5,9 @@ import React, { useState } from "react";
 import Dashboard from "./Dashboard";
 
 export default function App() {
-  // Intentionally reserved for future BossMind control layers
+  // Intentionally reserved for future ResumeAI control layers
   const [bozemski] = useState(null);
-  const [intelligence] = useState("BossMind");
+  const [intelligence] = useState("ResumeAI");
   const [security] = useState("locked");
   const [aiResponse] = useState(null);
   const [loading] = useState(false);
@@ -19,3 +19,4 @@ export default function App() {
 
   return <Dashboard />;
 }
+

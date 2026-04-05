@@ -6,7 +6,7 @@ console.log('=' .repeat(50));
 
 const test = async () => {
   try {
-    const secretsData = await fs.readFile('bossmind-secrets.json', 'utf8');
+    const secretsData = await fs.readFile('resumeai-secrets.json', 'utf8');
     const secrets = JSON.parse(secretsData);
     const url = secrets.supabase_projects['elegancyart-ai'].url;
     
@@ -27,7 +27,7 @@ const test = async () => {
       clearTimeout(timeout);
       
       console.log('✅ SUCCESS! Status:', response.status);
-      console.log('✅ BossMind CAN reach Supabase');
+      console.log('✅ ResumeAI CAN reach Supabase');
       
     } catch (fetchError) {
       console.log('❌ FETCH ERROR:', fetchError.message);

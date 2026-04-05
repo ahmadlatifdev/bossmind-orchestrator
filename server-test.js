@@ -1,5 +1,5 @@
 // server-test.js
-// BossMind DeepSeek Orchestrator (ES Module)
+// ResumeAI DeepSeek Orchestrator (ES Module)
 // - Runs on http://localhost:5001
 // - Health: GET  /api/health
 // - Chat:   POST /api/deepseek/chat
@@ -54,7 +54,7 @@ app.get('/api/health', (req, res) => {
     ok: true,
     status: 'running',
     timestamp: new Date().toISOString(),
-    server: 'BossMind DeepSeek Orchestrator',
+    server: 'ResumeAI DeepSeek Orchestrator',
     port: PORT,
     nodeVersion: process.version,
     deepseek: {
@@ -223,7 +223,7 @@ app.post('/api/deepseek/chat', async (req, res) => {
       model: DEEPSEEK_MODEL,
       meta: {
         note:
-          'BossMind Orchestrator: this endpoint validates JSON, calls DeepSeek, and echoes messages.',
+          'ResumeAI Orchestrator: this endpoint validates JSON, calls DeepSeek, and echoes messages.',
       },
       raw: deepseekResult.raw, // you can remove this in production if too large
     });
@@ -258,7 +258,7 @@ app.use((err, req, res, next) => {
 // --------- START SERVER ---------
 const server = app.listen(PORT, () => {
   console.log('=========================================');
-  console.log(`BossMind test server listening on http://localhost:${PORT}`);
+  console.log(`ResumeAI test server listening on http://localhost:${PORT}`);
   console.log(`Health check: GET  http://localhost:${PORT}/api/health`);
   console.log(`Chat test:   POST http://localhost:${PORT}/api/deepseek/chat`);
   console.log('=========================================');
@@ -266,9 +266,10 @@ const server = app.listen(PORT, () => {
 
 // graceful shutdown
 process.on('SIGINT', () => {
-  console.log('\nShutting down BossMind DeepSeek server...');
+  console.log('\nShutting down ResumeAI DeepSeek server...');
   server.close(() => {
     console.log('Server closed.');
     process.exit(0);
   });
 });
+

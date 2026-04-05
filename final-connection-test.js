@@ -8,7 +8,7 @@ console.log('=' .repeat(60));
 const finalTest = async () => {
   try {
     // Load the updated secrets
-    const secretsData = await fs.readFile('bossmind-secrets.json', 'utf8');
+    const secretsData = await fs.readFile('resumeai-secrets.json', 'utf8');
     const secrets = JSON.parse(secretsData);
     const project = secrets.supabase_projects['elegancyart-ai'];
     
@@ -28,13 +28,13 @@ const finalTest = async () => {
       if (error.code === '42P01') {
         console.log('✅ CONNECTION SUCCESSFUL!');
         console.log('ℹ️  Table "products" doesn\'t exist yet (expected)');
-        console.log('✅ BossMind ↔ Supabase is WORKING!');
+        console.log('✅ ResumeAI ↔ Supabase is WORKING!');
       } else {
         console.log(`📝 Connection error: ${error.message}`);
       }
     } else {
       console.log(`✅ CONNECTION SUCCESSFUL! Found ${data.length} products`);
-      console.log('✅ BossMind ↔ Supabase is WORKING!');
+      console.log('✅ ResumeAI ↔ Supabase is WORKING!');
     }
     
     // Test 2: Quick ping to verify
@@ -64,7 +64,7 @@ const finalTest = async () => {
 finalTest().then(success => {
   if (success) {
     console.log('\n' + '=' .repeat(60));
-    console.log('🎉 BOSSMIND IS NOW CONNECTED TO SUPABASE!');
+    console.log('🎉 ResumeAI IS NOW CONNECTED TO SUPABASE!');
     console.log('✅ Authorization: FULL');
     console.log('✅ Supabase: CONNECTED');
     console.log('✅ Mission: ACTIVE');

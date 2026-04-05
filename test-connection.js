@@ -8,7 +8,7 @@ console.log('=' .repeat(50));
 const testConnection = async () => {
   try {
     // Load fresh secrets every time
-    const secretsData = await fs.readFile('bossmind-secrets.json', 'utf8');
+    const secretsData = await fs.readFile('resumeai-secrets.json', 'utf8');
     const secrets = JSON.parse(secretsData);
     
     const project = secrets.supabase_projects['elegancyart-ai'];

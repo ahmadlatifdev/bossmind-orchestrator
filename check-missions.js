@@ -20,8 +20,8 @@ const checkMissions = async () => {
       console.log(`   - ${file}`);
     });
     
-    // Check bossmind-master.json for current mission
-    const masterData = await fs.readFile('bossmind-master.json', 'utf8');
+    // Check resumeai-master.json for current mission
+    const masterData = await fs.readFile('resumeai-master.json', 'utf8');
     const master = JSON.parse(masterData);
     
     console.log('\n📋 CURRENT CONFIG:');

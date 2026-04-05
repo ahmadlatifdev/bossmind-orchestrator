@@ -26,7 +26,7 @@ app.use(express.json({ limit: "2mb" }));
 app.get("/health", (req, res) => {
   res.status(200).json({
     ok: true,
-    service: "BossMind",
+    service: "ResumeAI",
     time: new Date().toISOString(),
   });
 });
@@ -45,7 +45,7 @@ app.post("/api/deepseek/chat", async (req, res) => {
       ok: true,
       mode: "fallback",
       reply:
-        "BossMind is live. Add a real handler to connect DeepSeek/OpenRouter.",
+        "ResumeAI is live. Add a real handler to connect DeepSeek/OpenRouter.",
     });
   } catch (err) {
     return res.status(500).json({
@@ -90,7 +90,7 @@ async function boot() {
       addr && typeof addr === "object" ? addr.port : PORT;
 
     console.log(
-      `BossMind listening on http://${HOST}:${actualPort}`
+      `ResumeAI listening on http://${HOST}:${actualPort}`
     );
     console.log(
       `Local: http://127.0.0.1:${actualPort}`
@@ -138,3 +138,4 @@ if (require.main === module) {
 }
 
 module.exports = { boot };
+

@@ -1,91 +1,47 @@
-'use strict';
+require("./core/supervisor_loader.js");
+const buffer = require("./core/buffer");
 
 const express = require("express");
-
-let supervisor;
-
-try {
-  supervisor = require("../core/supervisor_loader.js");
-} catch (e) {
-  console.log("Supervisor load error:", e.message);
-}
-
 const app = express();
-const PORT = Number(process.env.PORT) || 8080;
+
+const PORT = Number(process.env.PORT) || 3010;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+// ROOT
 app.get("/", (req, res) => {
-  res.json({
+  res.status(200).json({
     status: "BossMind ACTIVE",
+    host: "127.0.0.1",
+    port: PORT
   });
 });
 
-app.get("/test-supervisor", async (req, res) => {
-  try {
-    if (!supervisor) {
-      return res.json({
-        supervisor: "ERROR",
-        message: "Supervisor not loaded",
-      });
-    }
+// ADD TASK
+app.get("/task/log/:type", (req, res) => {
+  const { type } = req.params;
+  const { priority } = req.query;
 
-    return res.json({
-      supervisor: "OK",
-      message: "Supervisor connected",
-    });
-  } catch (err) {
-    return res.json({
-      supervisor: "ERROR",
-      message: err.message,
-    });
-  }
-});
+  const task = {
+    type: "log",
+    payload: type
+  };
 
-app.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
-});'use strict';
+  buffer.addTask(task, priority || "low");
 
-const express = require("express");
-
-let supervisor;
-
-try {
-  supervisor = require("../core/supervisor_loader.js");
-} catch (e) {
-  console.log("Supervisor load error:", e.message);
-}
-
-const app = express();
-const PORT = Number(process.env.PORT) || 8080;
-
-app.use(express.json());
-
-app.get("/", (req, res) => {
   res.json({
-    status: "BossMind ACTIVE",
+    status: "Task added",
+    task
   });
 });
 
-app.get("/test-supervisor", async (req, res) => {
-  try {
-    if (!supervisor) {
-      return res.json({
-        supervisor: "ERROR",
-        message: "Supervisor not loaded",
-      });
-    }
-
-    return res.json({
-      supervisor: "OK",
-      message: "Supervisor connected",
-    });
-  } catch (err) {
-    return res.json({
-      supervisor: "ERROR",
-      message: err.message,
-    });
-  }
+// BUFFER STATUS
+app.get("/buffer/status", (req, res) => {
+  res.json({
+    queue_length: buffer.getQueueLength(),
+    is_processing: buffer.isProcessing()
+  });
 });
 
 app.listen(PORT, () => {

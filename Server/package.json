@@ -1,5 +1,5 @@
 {
-  "name": "bossmind-orchestrator",
+  "name": "resumeai-orchestrator",
   "version": "1.0.0",
   "private": true,
   "type": "commonjs",
@@ -7,6 +7,12 @@
     "start": "node routes/admin.cjs"
   },
   "dependencies": {
-    "express": "^4.19.2"
+    "@auth/prisma-adapter": "^2.11.1",
+    "express": "^4.19.2",
+    "next-auth": "^4.24.13",
+    "nodemailer": "^7.0.13"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^7.0.9"
   }
 }

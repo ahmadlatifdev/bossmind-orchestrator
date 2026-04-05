@@ -1,4 +1,4 @@
-// bossmind-authorization.js
+// resumeai-authorization.js
 import fs from 'fs/promises';
 
 console.log('🔐 BOSSMIIND AUTHORIZATION CHECK');
@@ -7,19 +7,19 @@ console.log('=' .repeat(40));
 // Simple authorization check
 const checkAuthorization = async () => {
   try {
-    // Check if bossmind-master.json exists
-    const configExists = await fs.access('bossmind-master.json').then(() => true).catch(() => false);
+    // Check if resumeai-master.json exists
+    const configExists = await fs.access('resumeai-master.json').then(() => true).catch(() => false);
     
     if (configExists) {
-      console.log('✅ BossMind master file found');
+      console.log('✅ ResumeAI master file found');
       
       // Read config
-      const configData = await fs.readFile('bossmind-master.json', 'utf8');
+      const configData = await fs.readFile('resumeai-master.json', 'utf8');
       const config = JSON.parse(configData);
       
-      // Check if BossMind is active
+      // Check if ResumeAI is active
       if (config.active === true) {
-        console.log('✅ BossMind is ACTIVE');
+        console.log('✅ ResumeAI is ACTIVE');
         console.log('✅ Authorization: GRANTED');
         console.log('📁 Current mission:', config.current_mission_file);
         
@@ -32,7 +32,7 @@ const checkAuthorization = async () => {
         
         return true;
       } else {
-        console.log('❌ BossMind is INACTIVE');
+        console.log('❌ ResumeAI is INACTIVE');
         return false;
       }
     } else {
@@ -52,6 +52,6 @@ checkAuthorization().then(authorized => {
     console.log('🚀 READY FOR NEXT STEP');
     console.log('=' .repeat(40));
   } else {
-    console.log('\n❌ Please activate BossMind first');
+    console.log('\n❌ Please activate ResumeAI first');
   }
 });

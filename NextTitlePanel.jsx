@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { pickNextTitle, markTitleUsed } from "./bossmindRailwayClient";
+import { pickNextTitle, markTitleUsed } from "./ResumeAIRailwayClient";
 
 export default function NextTitlePanel({ railwayBaseUrl }) {
   const [loading, setLoading] = useState(false);
@@ -71,4 +71,5 @@ export default function NextTitlePanel({ railwayBaseUrl }) {
     </div>
   );
 }
+
 

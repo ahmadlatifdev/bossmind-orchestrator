@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'ElegancyArt - AI-Powered Dropshipping',
-  description: 'Luxury art and home decor curated by AI, powered by Supabase and BossMind',
+  description: 'Luxury art and home decor curated by AI, powered by Supabase and ResumeAI',
 }
 
 export default function RootLayout({
@@ -28,7 +28,7 @@ export default function RootLayout({
             <div className="flex justify-center space-x-6 text-sm text-gray-400">
               <div>
                 <p className="font-medium">Powered By</p>
-                <p>Supabase • Next.js • BossMind</p>
+                <p>Supabase • Next.js • ResumeAI</p>
               </div>
               <div>
                 <p className="font-medium">Database</p>

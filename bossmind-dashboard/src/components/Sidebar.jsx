@@ -12,7 +12,7 @@ export default function Sidebar({ onSelect, active }) {
       }}
     >
 
-      <h2 style={{ textAlign: "center", marginBottom: "25px" }}>BossMind</h2>
+      <h2 style={{ textAlign: "center", marginBottom: "25px" }}>ResumeAI</h2>
 
       <button
         onClick={() => onSelect("missions")}
@@ -32,3 +32,4 @@ export default function Sidebar({ onSelect, active }) {
     </div>
   );
 }
+

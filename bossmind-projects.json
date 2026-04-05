@@ -1,5 +1,5 @@
 {
-  "orchestrator": "BossMind",
+  "orchestrator": "ResumeAI",
   "projects": {
     "elegancyart-ai": {
       "type": "website-builder",
@@ -21,3 +21,4 @@
     }
   }
 }
+

@@ -37,7 +37,7 @@ export default function Mission1({ apiBase, apiStatus, onRunMission }) {
   return (
     <div className="mission1-panel">
       <h2>🎯 Mission Control I</h2>
-      <p className="panel-description">Test live data fetch from BossMind API</p>
+      <p className="panel-description">Test live data fetch from ResumeAI API</p>
       
       <div className="connection-status">
         <div className={`status-indicator ${apiStatus}`}>
