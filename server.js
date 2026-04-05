@@ -388,7 +388,7 @@ app.get("/admin", (req, res) => {
       return await res.json();
     }
 
-    async function loadDashboard() {
+    async function loadDashboard(updatePanel) {
       try {
         const master = await getJson("/api/master-status");
         const supervisor = await getJson("/supervisor");
@@ -426,7 +426,10 @@ app.get("/admin", (req, res) => {
         document.getElementById("projectsTable").innerHTML = rows;
         document.getElementById("footerNote").textContent =
           "BossMind dashboard refreshed successfully at " + new Date().toLocaleString();
-        setOutput("Dashboard refreshed", master);
+
+        if (updatePanel === true) {
+          setOutput("Dashboard refreshed", master);
+        }
       } catch (error) {
         document.getElementById("actionStatus").textContent = "Dashboard load failed";
         document.getElementById("actionOutput").textContent = error.message;
@@ -438,17 +441,13 @@ app.get("/admin", (req, res) => {
     async function runBufferTest() {
       try {
         const result = await getJson("/buffer/test");
-        setOutput("Buffer test executed", result);
-
         const bufferData = await getJson("/buffer");
+
         document.getElementById("bufferCount").textContent =
           "Queue Count: " + bufferData.count;
 
-        document.getElementById("actionStatus").textContent = "Buffer JSON loaded";
-        document.getElementById("actionOutput").textContent =
-          JSON.stringify(bufferData, null, 2);
-
-        await loadDashboard();
+        setOutput("Buffer JSON loaded", bufferData);
+        await loadDashboard(false);
       } catch (error) {
         document.getElementById("actionStatus").textContent = "Buffer test failed";
         document.getElementById("actionOutput").textContent = error.message;
@@ -486,15 +485,18 @@ app.get("/admin", (req, res) => {
     }
 
     document.addEventListener("DOMContentLoaded", function() {
-      document.getElementById("btn-dashboard").addEventListener("click", loadDashboard);
+      document.getElementById("btn-dashboard").addEventListener("click", function() {
+        loadDashboard(true);
+      });
       document.getElementById("btn-buffer-test").addEventListener("click", runBufferTest);
       document.getElementById("btn-health").addEventListener("click", showHealth);
       document.getElementById("btn-buffer").addEventListener("click", showBuffer);
       document.getElementById("btn-supervisor").addEventListener("click", showSupervisor);
-      document.getElementById("btn-refresh").addEventListener("click", loadDashboard);
+      document.getElementById("btn-refresh").addEventListener("click", function() {
+        loadDashboard(true);
+      });
 
-      loadDashboard();
-      setInterval(loadDashboard, 15000);
+      loadDashboard(false);
     });
   </script>
 </body>
