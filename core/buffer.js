@@ -8,6 +8,7 @@ function addTask(task) {
     status: "pending",
     retries: 0,
   });
+
   processQueue();
 }
 
@@ -15,24 +16,20 @@ async function processQueue() {
   if (processing) return;
   processing = true;
 
-  while (queue.length > 0) {
-    const item = queue[0];
+  const item = queue.shift();
 
-    try {
-      item.status = "running";
-      await item.task();
-      item.status = "done";
-      queue.shift();
-    } catch (err) {
-      item.retries += 1;
+  if (!item) {
+    processing = false;
+    return;
+  }
 
-      if (item.retries >= 3) {
-        item.status = "failed";
-        queue.shift();
-      } else {
-        item.status = "retrying";
-      }
-    }
+  try {
+    item.status = "running";
+    await item.task();
+    item.status = "done";
+  } catch (err) {
+    item.retries += 1;
+    item.status = "failed";
   }
 
   processing = false;
