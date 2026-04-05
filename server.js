@@ -98,6 +98,7 @@ app.get("/buffer/test", async (req, res) => {
   res.status(200).json({
     ok: true,
     message: "Test task added to buffer",
+    count: buffer.getQueue().length,
     time: new Date().toISOString(),
   });
 });
@@ -132,42 +133,34 @@ app.get("/admin", (req, res) => {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BossMind Master Admin</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
       background: #050505;
       color: #f5f5f5;
     }
-
     .layout {
       display: grid;
-      grid-template-columns: 250px 1fr;
+      grid-template-columns: 220px 1fr;
       min-height: 100vh;
     }
-
     .sidebar {
       background: #0b0b0b;
       border-right: 1px solid #252525;
-      padding: 22px;
+      padding: 18px;
     }
-
     .brand {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 700;
       color: #d4af37;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
-
     .subbrand {
       font-size: 13px;
       color: #d0d0d0;
       margin-bottom: 24px;
     }
-
     .nav-item {
       display: block;
       width: 100%;
@@ -176,27 +169,18 @@ app.get("/admin", (req, res) => {
       color: #ffffff;
       border: 1px solid #2b2b2b;
       border-radius: 12px;
-      padding: 14px 14px;
+      padding: 14px;
       margin-bottom: 12px;
       cursor: pointer;
       font-size: 15px;
-      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
     }
-
     .nav-item:hover {
       border-color: #d4af37;
       background: #171717;
-      transform: translateY(-1px);
     }
-
-    .nav-item:active {
-      transform: translateY(0);
-    }
-
     .main {
-      padding: 24px;
+      padding: 22px;
     }
-
     .topbar {
       display: flex;
       justify-content: space-between;
@@ -205,13 +189,11 @@ app.get("/admin", (req, res) => {
       margin-bottom: 22px;
       flex-wrap: wrap;
     }
-
     .title {
       font-size: 26px;
       font-weight: 700;
       color: #d4af37;
     }
-
     .refresh-btn {
       background: #d4af37;
       color: #111111;
@@ -221,37 +203,30 @@ app.get("/admin", (req, res) => {
       font-weight: 700;
       cursor: pointer;
     }
-
-    .refresh-btn:hover {
-      opacity: 0.92;
-    }
-
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 18px;
       margin-bottom: 24px;
     }
-
-    .card {
+    .card, .panel, .table-wrap {
       background: #0d0d0d;
       border: 1px solid #262626;
       border-radius: 18px;
+    }
+    .card {
       padding: 18px;
     }
-
-    .card h3 {
+    .card h3, .panel-title {
       margin: 0 0 12px 0;
       color: #d4af37;
       font-size: 18px;
     }
-
     .stat {
       font-size: 15px;
       margin: 8px 0;
       color: #f0f0f0;
     }
-
     .badge {
       display: inline-block;
       padding: 6px 10px;
@@ -260,46 +235,25 @@ app.get("/admin", (req, res) => {
       font-weight: 700;
       margin-top: 8px;
     }
-
     .badge-active {
       background: rgba(0, 128, 0, 0.18);
       color: #7CFC00;
       border: 1px solid rgba(124, 252, 0, 0.35);
     }
-
     .badge-pending {
       background: rgba(212, 175, 55, 0.15);
       color: #d4af37;
       border: 1px solid rgba(212, 175, 55, 0.35);
     }
-
-    .section-title {
-      font-size: 22px;
-      margin: 30px 0 14px;
-      color: #ffffff;
-    }
-
     .panel {
-      background: #0d0d0d;
-      border: 1px solid #262626;
-      border-radius: 18px;
       padding: 18px;
       margin-bottom: 22px;
     }
-
-    .panel-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: #d4af37;
-      margin-bottom: 12px;
-    }
-
     .panel-status {
       font-size: 14px;
       color: #d6d6d6;
       margin-bottom: 10px;
     }
-
     pre {
       margin: 0;
       white-space: pre-wrap;
@@ -313,46 +267,35 @@ app.get("/admin", (req, res) => {
       padding: 16px;
       min-height: 140px;
     }
-
-    .table-wrap {
-      background: #0d0d0d;
-      border: 1px solid #262626;
-      border-radius: 18px;
-      overflow: hidden;
+    .section-title {
+      font-size: 22px;
+      margin: 30px 0 14px;
+      color: #ffffff;
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
     }
-
     th, td {
       padding: 14px 16px;
       border-bottom: 1px solid #202020;
       text-align: left;
       font-size: 14px;
     }
-
     th {
       background: #0a0a0a;
       color: #d4af37;
     }
-
     tr:last-child td {
       border-bottom: none;
     }
-
     .footer-note {
       margin-top: 16px;
       color: #aaaaaa;
       font-size: 13px;
     }
-
     @media (max-width: 900px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-
+      .layout { grid-template-columns: 1fr; }
       .sidebar {
         border-right: none;
         border-bottom: 1px solid #252525;
@@ -366,17 +309,17 @@ app.get("/admin", (req, res) => {
       <div class="brand">BossMind</div>
       <div class="subbrand">Master Admin Dashboard</div>
 
-      <button class="nav-item" onclick="loadDashboard()">Dashboard</button>
-      <button class="nav-item" onclick="runBufferTest()">Run Buffer Test</button>
-      <button class="nav-item" onclick="showHealth()">Open Health JSON</button>
-      <button class="nav-item" onclick="showBuffer()">Open Buffer JSON</button>
-      <button class="nav-item" onclick="showSupervisor()">Open Supervisor JSON</button>
+      <button id="btn-dashboard" class="nav-item" type="button">Dashboard</button>
+      <button id="btn-buffer-test" class="nav-item" type="button">Run Buffer Test</button>
+      <button id="btn-health" class="nav-item" type="button">Open Health JSON</button>
+      <button id="btn-buffer" class="nav-item" type="button">Open Buffer JSON</button>
+      <button id="btn-supervisor" class="nav-item" type="button">Open Supervisor JSON</button>
     </aside>
 
     <main class="main">
       <div class="topbar">
         <div class="title">BossMind Admin Master Dashboard</div>
-        <button class="refresh-btn" onclick="loadDashboard()">Refresh Now</button>
+        <button id="btn-refresh" class="refresh-btn" type="button">Refresh Now</button>
       </div>
 
       <div class="grid">
@@ -437,17 +380,18 @@ app.get("/admin", (req, res) => {
       document.getElementById("actionOutput").textContent = JSON.stringify(data, null, 2);
     }
 
-    async function fetchJson(url, title) {
-      var res = await fetch(url);
-      var data = await res.json();
-      setOutput(title, data);
-      return data;
+    async function getJson(url) {
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) {
+        throw new Error("Request failed: " + url + " (" + res.status + ")");
+      }
+      return await res.json();
     }
 
     async function loadDashboard() {
       try {
-        var master = await fetchJson("/api/master-status", "Dashboard refreshed");
-        var supervisor = await fetchJson("/supervisor", "Supervisor loaded");
+        const master = await getJson("/api/master-status");
+        const supervisor = await getJson("/supervisor");
 
         document.getElementById("coreService").textContent =
           "Service: " + master.core.service + " (" + master.core.status + ")";
@@ -464,10 +408,9 @@ app.get("/admin", (req, res) => {
         document.getElementById("bufferCount").textContent =
           "Queue Count: " + master.core.bufferQueueCount;
 
-        var rows = "";
-
+        let rows = "";
         master.projects.forEach(function(project) {
-          var badgeClass = project.status === "ACTIVE"
+          const badgeClass = project.status === "ACTIVE"
             ? "badge badge-active"
             : "badge badge-pending";
 
@@ -483,6 +426,7 @@ app.get("/admin", (req, res) => {
         document.getElementById("projectsTable").innerHTML = rows;
         document.getElementById("footerNote").textContent =
           "BossMind dashboard refreshed successfully at " + new Date().toLocaleString();
+        setOutput("Dashboard refreshed", master);
       } catch (error) {
         document.getElementById("actionStatus").textContent = "Dashboard load failed";
         document.getElementById("actionOutput").textContent = error.message;
@@ -493,8 +437,17 @@ app.get("/admin", (req, res) => {
 
     async function runBufferTest() {
       try {
-        await fetchJson("/buffer/test", "Buffer test executed");
-        await showBuffer();
+        const result = await getJson("/buffer/test");
+        setOutput("Buffer test executed", result);
+
+        const bufferData = await getJson("/buffer");
+        document.getElementById("bufferCount").textContent =
+          "Queue Count: " + bufferData.count;
+
+        document.getElementById("actionStatus").textContent = "Buffer JSON loaded";
+        document.getElementById("actionOutput").textContent =
+          JSON.stringify(bufferData, null, 2);
+
         await loadDashboard();
       } catch (error) {
         document.getElementById("actionStatus").textContent = "Buffer test failed";
@@ -504,7 +457,8 @@ app.get("/admin", (req, res) => {
 
     async function showHealth() {
       try {
-        await fetchJson("/health", "Health JSON loaded");
+        const data = await getJson("/health");
+        setOutput("Health JSON loaded", data);
       } catch (error) {
         document.getElementById("actionStatus").textContent = "Health load failed";
         document.getElementById("actionOutput").textContent = error.message;
@@ -513,7 +467,8 @@ app.get("/admin", (req, res) => {
 
     async function showBuffer() {
       try {
-        await fetchJson("/buffer", "Buffer JSON loaded");
+        const data = await getJson("/buffer");
+        setOutput("Buffer JSON loaded", data);
       } catch (error) {
         document.getElementById("actionStatus").textContent = "Buffer load failed";
         document.getElementById("actionOutput").textContent = error.message;
@@ -522,15 +477,25 @@ app.get("/admin", (req, res) => {
 
     async function showSupervisor() {
       try {
-        await fetchJson("/supervisor", "Supervisor JSON loaded");
+        const data = await getJson("/supervisor");
+        setOutput("Supervisor JSON loaded", data);
       } catch (error) {
         document.getElementById("actionStatus").textContent = "Supervisor load failed";
         document.getElementById("actionOutput").textContent = error.message;
       }
     }
 
-    loadDashboard();
-    setInterval(loadDashboard, 5000);
+    document.addEventListener("DOMContentLoaded", function() {
+      document.getElementById("btn-dashboard").addEventListener("click", loadDashboard);
+      document.getElementById("btn-buffer-test").addEventListener("click", runBufferTest);
+      document.getElementById("btn-health").addEventListener("click", showHealth);
+      document.getElementById("btn-buffer").addEventListener("click", showBuffer);
+      document.getElementById("btn-supervisor").addEventListener("click", showSupervisor);
+      document.getElementById("btn-refresh").addEventListener("click", loadDashboard);
+
+      loadDashboard();
+      setInterval(loadDashboard, 15000);
+    });
   </script>
 </body>
 </html>`);
