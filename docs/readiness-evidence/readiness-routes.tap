@@ -1,0 +1,106 @@
+TAP version 13
+# Subtest: missing existing authentication, service or CSRF hooks prevents mounting
+ok 1 - missing existing authentication, service or CSRF hooks prevents mounting
+  ---
+  duration_ms: 1.405962
+  type: 'test'
+  ...
+# Subtest: unauthenticated polling and page access are refused before service reads
+ok 2 - unauthenticated polling and page access are refused before service reads
+  ---
+  duration_ms: 0.685622
+  type: 'test'
+  ...
+# Subtest: ordinary authenticated polling only reads evidence, never enqueues work
+ok 3 - ordinary authenticated polling only reads evidence, never enqueues work
+  ---
+  duration_ms: 0.782005
+  type: 'test'
+  ...
+# Subtest: disabled extension fails closed after authentication, with zero tool work
+ok 4 - disabled extension fails closed after authentication, with zero tool work
+  ---
+  duration_ms: 0.383878
+  type: 'test'
+  ...
+# Subtest: machine sessions, missing CSRF and missing authenticated identity cannot enqueue
+ok 5 - machine sessions, missing CSRF and missing authenticated identity cannot enqueue
+  ---
+  duration_ms: 0.370346
+  type: 'test'
+  ...
+# Subtest: owner-CSRF authorized run passes trusted session context to existing service
+ok 6 - owner-CSRF authorized run passes trusted session context to existing service
+  ---
+  duration_ms: 0.554796
+  type: 'test'
+  ...
+# Subtest: browser cannot choose a command, target, identity, grant or schedule frequency
+ok 7 - browser cannot choose a command, target, identity, grant or schedule frequency
+  ---
+  duration_ms: 1.356184
+  type: 'test'
+  ...
+# Subtest: schedules stay blocked without the existing approved schedule hook
+ok 8 - schedules stay blocked without the existing approved schedule hook
+  ---
+  duration_ms: 0.209953
+  type: 'test'
+  ...
+# Subtest: HTML bootstrap is inert JSON, nonce bound and read-only without session bootstrap
+ok 9 - HTML bootstrap is inert JSON, nonce bound and read-only without session bootstrap
+  ---
+  duration_ms: 1.33902
+  type: 'test'
+  ...
+# Subtest: UI uses safe DOM APIs and disables controls when integration is unverified
+ok 10 - UI uses safe DOM APIs and disables controls when integration is unverified
+  ---
+  duration_ms: 0.468299
+  type: 'test'
+  ...
+# Subtest: service failures do not leak secrets or raw commands into HTTP responses
+ok 11 - service failures do not leak secrets or raw commands into HTTP responses
+  ---
+  duration_ms: 0.423205
+  type: 'test'
+  ...
+# Subtest: evidence reader rejects anonymous access before calling the existing store
+ok 12 - evidence reader rejects anonymous access before calling the existing store
+  ---
+  duration_ms: 0.214324
+  type: 'test'
+  ...
+# Subtest: machine read capability retrieves JSON evidence through trusted grant context
+ok 13 - machine read capability retrieves JSON evidence through trusted grant context
+  ---
+  duration_ms: 0.244504
+  type: 'test'
+  ...
+# Subtest: evidence IDs reject path traversal and nonconfigured identifier shapes
+ok 14 - evidence IDs reject path traversal and nonconfigured identifier shapes
+  ---
+  duration_ms: 0.294613
+  type: 'test'
+  ...
+# Subtest: evidence reads remain blocked without the existing redacted evidence hook
+ok 15 - evidence reads remain blocked without the existing redacted evidence hook
+  ---
+  duration_ms: 0.122894
+  type: 'test'
+  ...
+# Subtest: evidence service grant refusal is preserved without exposing raw report data
+ok 16 - evidence service grant refusal is preserved without exposing raw report data
+  ---
+  duration_ms: 0.204475
+  type: 'test'
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 23.008633

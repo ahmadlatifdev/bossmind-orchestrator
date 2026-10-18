@@ -1,0 +1,227 @@
+{
+  "schemaVersion": 1,
+  "enabled": false,
+  "profiles": [
+    {
+      "id": "bossmind",
+      "repository": "ahmadlatifdev/bossmind-orchestrator",
+      "commit": null,
+      "repositoryPath": null,
+      "environment": "staging",
+      "scope": {
+        "plans": [],
+        "languages": [
+          "unconfirmed"
+        ],
+        "browsers": [
+          "chromium"
+        ],
+        "markets": [
+          "unconfirmed"
+        ]
+      },
+      "allowedTargets": [],
+      "approvedFiles": [],
+      "approvedFileHashes": {},
+      "testPolicy": {
+        "syntheticOnly": true,
+        "allowLocalFixture": false
+      },
+      "limits": {
+        "maxDurationMs": 120000,
+        "maxOutputBytes": 131072,
+        "maxVus": 2,
+        "maxRequestsPerSecond": 2,
+        "retentionDays": 14
+      },
+      "checks": [
+        {
+          "id": "customer-journeys",
+          "tool": "playwright",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Authorized synthetic signup, authentication, entitlement, output and download outcomes pass; checkout stays test-only."
+        },
+        {
+          "id": "dependencies-and-secrets",
+          "tool": "trivy",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Fresh vulnerability database; no unresolved HIGH/CRITICAL dependencies, exposed credentials or severe configuration findings."
+        },
+        {
+          "id": "asvs-1.1.4",
+          "tool": "asvs",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Document trust boundaries, components and significant data flows.",
+          "manual": true,
+          "standardVersion": "4.0.3",
+          "requirementId": "v4.0.3-1.1.4"
+        },
+        {
+          "id": "asvs-1.4.1",
+          "tool": "asvs",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Verify server-side trusted access-control enforcement.",
+          "manual": true,
+          "standardVersion": "4.0.3",
+          "requirementId": "v4.0.3-1.4.1"
+        },
+        {
+          "id": "asvs-1.6.1",
+          "tool": "asvs",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Review cryptographic key lifecycle and management policy.",
+          "manual": true,
+          "standardVersion": "4.0.3",
+          "requirementId": "v4.0.3-1.6.1"
+        },
+        {
+          "id": "asvs-1.8.1",
+          "tool": "asvs",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Identify and classify sensitive data protection levels.",
+          "manual": true,
+          "standardVersion": "4.0.3",
+          "requirementId": "v4.0.3-1.8.1"
+        },
+        {
+          "id": "passive-staging-baseline",
+          "tool": "zap",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Approved staging baseline has no unresolved critical findings.",
+          "mode": "passive-baseline"
+        },
+        {
+          "id": "bounded-staging-load",
+          "tool": "k6",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Approved safe GET endpoint meets p95 latency and failure thresholds under <=2 VUs and <=2 requests/second.",
+          "mode": "read-only"
+        }
+      ],
+      "blockedReason": "Current Windows runtime and DBOS/auth/lease integration are unavailable in this workspace; staging scope is unapproved."
+    },
+    {
+      "id": "resumora",
+      "repository": "ahmadlatifdev/bossmind-resumora",
+      "commit": null,
+      "repositoryPath": null,
+      "environment": "staging",
+      "scope": {
+        "plans": [
+          "Basic",
+          "Pro",
+          "Business",
+          "Enterprise"
+        ],
+        "languages": [
+          "EN",
+          "FR",
+          "ES"
+        ],
+        "browsers": [
+          "chromium",
+          "firefox",
+          "webkit"
+        ],
+        "markets": [
+          "unconfirmed"
+        ]
+      },
+      "allowedTargets": [],
+      "approvedFiles": [],
+      "approvedFileHashes": {},
+      "testPolicy": {
+        "syntheticOnly": true,
+        "allowLocalFixture": false
+      },
+      "limits": {
+        "maxDurationMs": 120000,
+        "maxOutputBytes": 131072,
+        "maxVus": 2,
+        "maxRequestsPerSecond": 2,
+        "retentionDays": 14
+      },
+      "checks": [
+        {
+          "id": "customer-journeys",
+          "tool": "playwright",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Authorized synthetic signup, authentication, entitlement, output and download outcomes pass; checkout stays test-only."
+        },
+        {
+          "id": "dependencies-and-secrets",
+          "tool": "trivy",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Fresh vulnerability database; no unresolved HIGH/CRITICAL dependencies, exposed credentials or severe configuration findings."
+        },
+        {
+          "id": "asvs-1.1.4",
+          "tool": "asvs",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Document trust boundaries, components and significant data flows.",
+          "manual": true,
+          "standardVersion": "4.0.3",
+          "requirementId": "v4.0.3-1.1.4"
+        },
+        {
+          "id": "asvs-1.4.1",
+          "tool": "asvs",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Verify server-side trusted access-control enforcement.",
+          "manual": true,
+          "standardVersion": "4.0.3",
+          "requirementId": "v4.0.3-1.4.1"
+        },
+        {
+          "id": "asvs-1.6.1",
+          "tool": "asvs",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Review cryptographic key lifecycle and management policy.",
+          "manual": true,
+          "standardVersion": "4.0.3",
+          "requirementId": "v4.0.3-1.6.1"
+        },
+        {
+          "id": "asvs-1.8.1",
+          "tool": "asvs",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Identify and classify sensitive data protection levels.",
+          "manual": true,
+          "standardVersion": "4.0.3",
+          "requirementId": "v4.0.3-1.8.1"
+        },
+        {
+          "id": "passive-staging-baseline",
+          "tool": "zap",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Approved staging baseline has no unresolved critical findings.",
+          "mode": "passive-baseline"
+        },
+        {
+          "id": "bounded-staging-load",
+          "tool": "k6",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Approved safe GET endpoint meets p95 latency and failure thresholds under <=2 VUs and <=2 requests/second.",
+          "mode": "read-only"
+        }
+      ],
+      "blockedReason": "Production HOLD. No authorized test account, isolated payment environment or approved staging target is available."
+    }
+  ]
+}

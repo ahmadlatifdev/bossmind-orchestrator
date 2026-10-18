@@ -1,0 +1,1780 @@
+{
+  "schemaVersion": 1,
+  "archiveSha256": "e24b1c51293c1b15e4ba8d45bbc7891ba053f90278ec2698f3562c993e145fe7",
+  "distribution": "https://github.com/aquasecurity/trivy/releases/tag/v0.76.0",
+  "databaseRepository": "ghcr.io/aquasecurity/trivy-db:2",
+  "reports": [
+    {
+      "id": "bossmind-source-snapshot",
+      "scope": "LOCAL_SOURCE_SNAPSHOT_ONLY",
+      "description": "Old base fb31c84 plus uncommitted readiness extension; NOT the current Windows deployment.",
+      "productionAcceptance": false,
+      "observedAt": "2026-10-18T00:38:18.925Z",
+      "testedBaseCommit": "fb31c84093f8cf148696c7847a3201bfd3336946",
+      "dirtySourceSnapshot": true,
+      "sourceManifestScope": "Code/config/dependency files excluding .git, node_modules and docs; generated reports are not source inputs.",
+      "sourceManifestHash": "49df3537391acd57628609b7b6e37024082b3c64d0c92b39c8cfb8566b3fb313",
+      "manifestFileCount": 115,
+      "command": "trivy",
+      "args": [
+        "fs",
+        "--format=json",
+        "--scanners=vuln,secret,misconfig",
+        "--severity=UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL",
+        "--exit-code=0",
+        "--disable-telemetry",
+        "--skip-version-check",
+        "--offline-scan",
+        "--skip-db-update",
+        "--skip-java-db-update",
+        "--skip-check-update",
+        "--secret-config",
+        "<generated-empty-config>",
+        "--cache-dir",
+        "/workspace/work/readiness-trivy-cache",
+        "--config",
+        "<generated-empty-config>",
+        "--ignorefile",
+        "<generated-empty-ignore>",
+        "/workspace/work/bossmind-readiness"
+      ],
+      "configuration": {
+        "scanners": [
+          "vuln",
+          "secret",
+          "misconfig"
+        ],
+        "severity": [
+          "UNKNOWN",
+          "LOW",
+          "MEDIUM",
+          "HIGH",
+          "CRITICAL"
+        ],
+        "blockingPolicy": "HIGH/CRITICAL dependencies; every secret and failed misconfiguration",
+        "offline": true,
+        "maxDurationMs": 120000,
+        "maxOutputBytes": 2097152
+      },
+      "tool": "trivy",
+      "toolVersion": "0.76.0",
+      "environment": "fixture",
+      "dbUpdatedAt": "2026-10-17T18:34:28.174Z",
+      "exitCode": 0,
+      "durationMs": 853,
+      "stdoutBytes": 1734616,
+      "stderrBytes": 1706,
+      "status": "FAIL",
+      "findings": {
+        "vulnerabilities": [
+          {
+            "id": "CVE-2026-12590",
+            "severity": "LOW",
+            "blocking": false,
+            "package": "body-parser",
+            "installed": "1.20.4",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-4867",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "path-to-regexp",
+            "installed": "0.1.12",
+            "fixed": "0.1.13"
+          },
+          {
+            "id": "CVE-2026-90711",
+            "severity": "CRITICAL",
+            "blocking": true,
+            "package": "proxy-addr",
+            "installed": "2.0.7",
+            "fixed": "2.0.8"
+          },
+          {
+            "id": "CVE-2025-15284",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "qs",
+            "installed": "6.14.0",
+            "fixed": "6.14.1"
+          },
+          {
+            "id": "CVE-2026-82417",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "qs",
+            "installed": "6.14.0",
+            "fixed": "6.16.0"
+          },
+          {
+            "id": "CVE-2026-8723",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "qs",
+            "installed": "6.14.0",
+            "fixed": "6.15.2"
+          },
+          {
+            "id": "CVE-2026-2391",
+            "severity": "LOW",
+            "blocking": false,
+            "package": "qs",
+            "installed": "6.14.0",
+            "fixed": "6.14.2"
+          },
+          {
+            "id": "CVE-2026-49356",
+            "severity": "LOW",
+            "blocking": false,
+            "package": "@babel/core",
+            "installed": "7.28.5",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-44728",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "@babel/plugin-transform-modules-systemjs",
+            "installed": "7.28.5",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-3449",
+            "severity": "LOW",
+            "blocking": false,
+            "package": "@tootallnate/once",
+            "installed": "1.1.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2025-69873",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "ajv",
+            "installed": "6.12.6",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2025-69873",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "ajv",
+            "installed": "8.17.1",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-45819",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "baseline-browser-mapping",
+            "installed": "2.9.4",
+            "fixed": "2.11.0"
+          },
+          {
+            "id": "CVE-2026-12590",
+            "severity": "LOW",
+            "blocking": false,
+            "package": "body-parser",
+            "installed": "1.20.4",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-102276",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "brace-expansion",
+            "installed": "1.1.12",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-102278",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "brace-expansion",
+            "installed": "1.1.12",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-13149",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "brace-expansion",
+            "installed": "1.1.12",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-14257",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "brace-expansion",
+            "installed": "1.1.12",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-69152",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "brace-expansion",
+            "installed": "1.1.12",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-102277",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "brace-expansion",
+            "installed": "1.1.12",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-33750",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "brace-expansion",
+            "installed": "1.1.12",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-102276",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "brace-expansion",
+            "installed": "2.0.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-102278",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "brace-expansion",
+            "installed": "2.0.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-13149",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "brace-expansion",
+            "installed": "2.0.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-14257",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "brace-expansion",
+            "installed": "2.0.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-69152",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "brace-expansion",
+            "installed": "2.0.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-102277",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "brace-expansion",
+            "installed": "2.0.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-33750",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "brace-expansion",
+            "installed": "2.0.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-93687",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "braces",
+            "installed": "3.0.3",
+            "fixed": "unknown"
+          },
+          {
+            "id": "CVE-2026-73088",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "browserslist",
+            "installed": "4.28.1",
+            "fixed": "4.28.7"
+          },
+          {
+            "id": "CVE-2026-73089",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "browserslist",
+            "installed": "4.28.1",
+            "fixed": "4.28.7"
+          },
+          {
+            "id": "CVE-2026-85062",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "colord",
+            "installed": "2.9.3",
+            "fixed": "2.9.4"
+          },
+          {
+            "id": "CVE-2026-87776",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "compression",
+            "installed": "1.8.1",
+            "fixed": "1.8.2"
+          },
+          {
+            "id": "CVE-2026-13676",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "fast-uri",
+            "installed": "3.1.0",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-16221",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "fast-uri",
+            "installed": "3.1.0",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-18446",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "fast-uri",
+            "installed": "3.1.0",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-6321",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "fast-uri",
+            "installed": "3.1.0",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-6322",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "fast-uri",
+            "installed": "3.1.0",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-75975",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "fast-uri",
+            "installed": "3.1.0",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-76172",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "fast-uri",
+            "installed": "3.1.0",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-84292",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "fast-uri",
+            "installed": "3.1.0",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-86472",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "fast-uri",
+            "installed": "3.1.0",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-32141",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "flatted",
+            "installed": "3.3.3",
+            "fixed": "3.4.0"
+          },
+          {
+            "id": "CVE-2026-33228",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "flatted",
+            "installed": "3.3.3",
+            "fixed": "3.4.2"
+          },
+          {
+            "id": "GHSA-r4q5-vmmm-2653",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "follow-redirects",
+            "installed": "1.15.11",
+            "fixed": "1.16.0"
+          },
+          {
+            "id": "CVE-2026-12143",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "form-data",
+            "installed": "3.0.4",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-55602",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "http-proxy-middleware",
+            "installed": "2.0.9",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-59869",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "js-yaml",
+            "installed": "3.14.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-84375",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "js-yaml",
+            "installed": "3.14.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "GHSA-5p4m-2wfm-xmqj",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "js-yaml",
+            "installed": "3.14.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-53550",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "js-yaml",
+            "installed": "3.14.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-59869",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "js-yaml",
+            "installed": "4.1.1",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-84375",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "js-yaml",
+            "installed": "4.1.1",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "GHSA-5p4m-2wfm-xmqj",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "js-yaml",
+            "installed": "4.1.1",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-53550",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "js-yaml",
+            "installed": "4.1.1",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-1615",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "jsonpath",
+            "installed": "1.1.1",
+            "fixed": "1.3.0"
+          },
+          {
+            "id": "CVE-2025-61140",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "jsonpath",
+            "installed": "1.1.1",
+            "fixed": "1.2.0"
+          },
+          {
+            "id": "CVE-2026-53632",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "launch-editor",
+            "installed": "2.12.0",
+            "fixed": "2.14.1"
+          },
+          {
+            "id": "CVE-2026-4800",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "lodash",
+            "installed": "4.17.21",
+            "fixed": "4.18.0"
+          },
+          {
+            "id": "CVE-2025-13465",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "lodash",
+            "installed": "4.17.21",
+            "fixed": "4.17.23"
+          },
+          {
+            "id": "CVE-2026-2950",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "lodash",
+            "installed": "4.17.21",
+            "fixed": "4.18.0"
+          },
+          {
+            "id": "CVE-2026-26996",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "minimatch",
+            "installed": "3.1.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-27903",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "minimatch",
+            "installed": "3.1.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-27904",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "minimatch",
+            "installed": "3.1.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-26996",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "minimatch",
+            "installed": "5.1.6",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-27903",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "minimatch",
+            "installed": "5.1.6",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-27904",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "minimatch",
+            "installed": "5.1.6",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-67213",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "nanoid",
+            "installed": "3.3.11",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-67214",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "nanoid",
+            "installed": "3.3.11",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-73086",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "nanoid",
+            "installed": "3.3.11",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-33891",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "node-forge",
+            "installed": "1.3.3",
+            "fixed": "1.4.0"
+          },
+          {
+            "id": "CVE-2026-33894",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "node-forge",
+            "installed": "1.3.3",
+            "fixed": "1.4.0"
+          },
+          {
+            "id": "CVE-2026-33895",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "node-forge",
+            "installed": "1.3.3",
+            "fixed": "1.4.0"
+          },
+          {
+            "id": "CVE-2026-33896",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "node-forge",
+            "installed": "1.3.3",
+            "fixed": "1.4.0"
+          },
+          {
+            "id": "CVE-2026-85393",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "node-forge",
+            "installed": "1.3.3",
+            "fixed": "unknown"
+          },
+          {
+            "id": "CVE-2021-3803",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "nth-check",
+            "installed": "1.0.2",
+            "fixed": "2.0.1"
+          },
+          {
+            "id": "CVE-2026-4867",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "path-to-regexp",
+            "installed": "0.1.12",
+            "fixed": "0.1.13"
+          },
+          {
+            "id": "CVE-2026-33671",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "picomatch",
+            "installed": "2.3.1",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-33672",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "picomatch",
+            "installed": "2.3.1",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-33671",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "picomatch",
+            "installed": "4.0.3",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-33672",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "picomatch",
+            "installed": "4.0.3",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-45623",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "postcss",
+            "installed": "7.0.39",
+            "fixed": "8.5.12"
+          },
+          {
+            "id": "CVE-2026-73646",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "postcss",
+            "installed": "7.0.39",
+            "fixed": "8.5.18"
+          },
+          {
+            "id": "CVE-2023-44270",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "postcss",
+            "installed": "7.0.39",
+            "fixed": "8.4.31"
+          },
+          {
+            "id": "CVE-2026-41305",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "postcss",
+            "installed": "7.0.39",
+            "fixed": "8.5.10"
+          },
+          {
+            "id": "CVE-2026-69153",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "postcss",
+            "installed": "7.0.39",
+            "fixed": "8.5.23"
+          },
+          {
+            "id": "CVE-2026-45623",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "postcss",
+            "installed": "8.5.6",
+            "fixed": "8.5.12"
+          },
+          {
+            "id": "CVE-2026-73646",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "postcss",
+            "installed": "8.5.6",
+            "fixed": "8.5.18"
+          },
+          {
+            "id": "CVE-2026-41305",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "postcss",
+            "installed": "8.5.6",
+            "fixed": "8.5.10"
+          },
+          {
+            "id": "CVE-2026-69153",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "postcss",
+            "installed": "8.5.6",
+            "fixed": "8.5.23"
+          },
+          {
+            "id": "CVE-2026-104844",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "postcss-selector-parser",
+            "installed": "6.1.2",
+            "fixed": "7.1.6"
+          },
+          {
+            "id": "CVE-2026-9358",
+            "severity": "LOW",
+            "blocking": false,
+            "package": "postcss-selector-parser",
+            "installed": "6.1.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-104844",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "postcss-selector-parser",
+            "installed": "7.1.1",
+            "fixed": "7.1.6"
+          },
+          {
+            "id": "CVE-2026-9358",
+            "severity": "LOW",
+            "blocking": false,
+            "package": "postcss-selector-parser",
+            "installed": "7.1.1",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-90711",
+            "severity": "CRITICAL",
+            "blocking": true,
+            "package": "proxy-addr",
+            "installed": "2.0.7",
+            "fixed": "2.0.8"
+          },
+          {
+            "id": "CVE-2025-15284",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "qs",
+            "installed": "6.14.0",
+            "fixed": "6.14.1"
+          },
+          {
+            "id": "CVE-2026-82417",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "qs",
+            "installed": "6.14.0",
+            "fixed": "6.16.0"
+          },
+          {
+            "id": "CVE-2026-8723",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "qs",
+            "installed": "6.14.0",
+            "fixed": "6.15.2"
+          },
+          {
+            "id": "CVE-2026-2391",
+            "severity": "LOW",
+            "blocking": false,
+            "package": "qs",
+            "installed": "6.14.0",
+            "fixed": "6.14.2"
+          },
+          {
+            "id": "CVE-2026-21884",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "react-router",
+            "installed": "7.10.1",
+            "fixed": "7.12.0"
+          },
+          {
+            "id": "CVE-2026-22029",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "react-router",
+            "installed": "7.10.1",
+            "fixed": "7.12.0"
+          },
+          {
+            "id": "CVE-2026-33245",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "react-router",
+            "installed": "7.10.1",
+            "fixed": "7.13.2"
+          },
+          {
+            "id": "CVE-2026-34077",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "react-router",
+            "installed": "7.10.1",
+            "fixed": "7.14.0"
+          },
+          {
+            "id": "CVE-2026-42211",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "react-router",
+            "installed": "7.10.1",
+            "fixed": "7.14.2"
+          },
+          {
+            "id": "CVE-2026-42342",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "react-router",
+            "installed": "7.10.1",
+            "fixed": "7.15.0"
+          },
+          {
+            "id": "CVE-2026-55685",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "react-router",
+            "installed": "7.10.1",
+            "fixed": "7.18.0"
+          },
+          {
+            "id": "CVE-2026-22030",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "react-router",
+            "installed": "7.10.1",
+            "fixed": "7.12.0"
+          },
+          {
+            "id": "CVE-2026-33244",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "react-router",
+            "installed": "7.10.1",
+            "fixed": "7.13.2"
+          },
+          {
+            "id": "CVE-2026-40181",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "react-router",
+            "installed": "7.10.1",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-53666",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "react-router",
+            "installed": "7.10.1",
+            "fixed": "7.18.0"
+          },
+          {
+            "id": "CVE-2026-53668",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "react-router",
+            "installed": "7.10.1",
+            "fixed": "7.13.0"
+          },
+          {
+            "id": "CVE-2026-53669",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "react-router",
+            "installed": "7.10.1",
+            "fixed": "7.18.0"
+          },
+          {
+            "id": "CVE-2026-27606",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "rollup",
+            "installed": "2.79.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "GHSA-5c6j-r48x-rmvq",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "serialize-javascript",
+            "installed": "4.0.0",
+            "fixed": "7.0.3"
+          },
+          {
+            "id": "GHSA-5c6j-r48x-rmvq",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "serialize-javascript",
+            "installed": "6.0.2",
+            "fixed": "7.0.3"
+          },
+          {
+            "id": "CVE-2026-34043",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "serialize-javascript",
+            "installed": "6.0.2",
+            "fixed": "7.0.5"
+          },
+          {
+            "id": "CVE-2026-9277",
+            "severity": "CRITICAL",
+            "blocking": true,
+            "package": "shell-quote",
+            "installed": "1.8.3",
+            "fixed": "1.8.4"
+          },
+          {
+            "id": "CVE-2026-13311",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "shell-quote",
+            "installed": "1.8.3",
+            "fixed": "1.9.0"
+          },
+          {
+            "id": "CVE-2026-93749",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "source-map-js",
+            "installed": "1.2.1",
+            "fixed": "1.2.2"
+          },
+          {
+            "id": "CVE-2026-73650",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "svgo",
+            "installed": "1.3.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-84370",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "svgo",
+            "installed": "1.3.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-84369",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "svgo",
+            "installed": "1.3.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-29074",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "svgo",
+            "installed": "2.8.0",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-73650",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "svgo",
+            "installed": "2.8.0",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-84370",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "svgo",
+            "installed": "2.8.0",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-84369",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "svgo",
+            "installed": "2.8.0",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-27601",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "underscore",
+            "installed": "1.12.1",
+            "fixed": "1.13.8"
+          },
+          {
+            "id": "CVE-2026-41907",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "uuid",
+            "installed": "8.3.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2025-68157",
+            "severity": "LOW",
+            "blocking": false,
+            "package": "webpack",
+            "installed": "5.103.0",
+            "fixed": "5.104.0"
+          },
+          {
+            "id": "CVE-2025-68458",
+            "severity": "LOW",
+            "blocking": false,
+            "package": "webpack",
+            "installed": "5.103.0",
+            "fixed": "5.104.1"
+          },
+          {
+            "id": "CVE-2026-76844",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "webpack-dev-middleware",
+            "installed": "5.3.4",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2025-30359",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "webpack-dev-server",
+            "installed": "4.15.2",
+            "fixed": "5.2.1"
+          },
+          {
+            "id": "CVE-2025-30360",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "webpack-dev-server",
+            "installed": "4.15.2",
+            "fixed": "5.2.1"
+          },
+          {
+            "id": "CVE-2026-14620",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "webpack-dev-server",
+            "installed": "4.15.2",
+            "fixed": "5.2.6"
+          },
+          {
+            "id": "CVE-2026-14631",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "webpack-dev-server",
+            "installed": "4.15.2",
+            "fixed": "5.2.6"
+          },
+          {
+            "id": "CVE-2026-6402",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "webpack-dev-server",
+            "installed": "4.15.2",
+            "fixed": "5.2.4"
+          },
+          {
+            "id": "CVE-2026-9595",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "webpack-dev-server",
+            "installed": "4.15.2",
+            "fixed": "5.2.5"
+          },
+          {
+            "id": "CVE-2026-54466",
+            "severity": "CRITICAL",
+            "blocking": true,
+            "package": "websocket-driver",
+            "installed": "0.7.4",
+            "fixed": "0.7.5"
+          },
+          {
+            "id": "CVE-2026-54490",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "websocket-driver",
+            "installed": "0.7.4",
+            "fixed": "0.7.5"
+          },
+          {
+            "id": "CVE-2026-48779",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "ws",
+            "installed": "7.5.10",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-48779",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "ws",
+            "installed": "8.18.3",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-45736",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "ws",
+            "installed": "8.18.3",
+            "fixed": "8.20.1"
+          },
+          {
+            "id": "CVE-2026-33532",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "yaml",
+            "installed": "1.10.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-33532",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "yaml",
+            "installed": "2.8.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-101898",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "1.20.0"
+          },
+          {
+            "id": "CVE-2026-101901",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "1.20.0"
+          },
+          {
+            "id": "CVE-2026-25639",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-42033",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-42035",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-42043",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-42264",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "1.15.2"
+          },
+          {
+            "id": "CVE-2026-44486",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-44487",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-44488",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "1.16.0"
+          },
+          {
+            "id": "CVE-2026-44494",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "1.16.0"
+          },
+          {
+            "id": "CVE-2026-44495",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-44496",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2025-62718",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-101900",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "1.20.0"
+          },
+          {
+            "id": "CVE-2026-101902",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-101904",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "1.20.0"
+          },
+          {
+            "id": "CVE-2026-101908",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "1.20.0"
+          },
+          {
+            "id": "CVE-2026-40175",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-42034",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-42036",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-42037",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "1.15.1"
+          },
+          {
+            "id": "CVE-2026-42038",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-42039",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-42041",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-42042",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-42044",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "1.15.2"
+          },
+          {
+            "id": "CVE-2026-44490",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-67312",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-67313",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-67316",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-67317",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "1.18.0"
+          },
+          {
+            "id": "CVE-2026-67318",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "1.18.0"
+          },
+          {
+            "id": "CVE-2026-67319",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-42040",
+            "severity": "LOW",
+            "blocking": false,
+            "package": "axios",
+            "installed": "1.13.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-12590",
+            "severity": "LOW",
+            "blocking": false,
+            "package": "body-parser",
+            "installed": "1.20.4",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-102276",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "brace-expansion",
+            "installed": "1.1.12",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-102278",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "brace-expansion",
+            "installed": "1.1.12",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-13149",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "brace-expansion",
+            "installed": "1.1.12",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-14257",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "brace-expansion",
+            "installed": "1.1.12",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-69152",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "brace-expansion",
+            "installed": "1.1.12",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-102277",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "brace-expansion",
+            "installed": "1.1.12",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-33750",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "brace-expansion",
+            "installed": "1.1.12",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-93687",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "braces",
+            "installed": "3.0.3",
+            "fixed": "unknown"
+          },
+          {
+            "id": "GHSA-r4q5-vmmm-2653",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "follow-redirects",
+            "installed": "1.15.11",
+            "fixed": "1.16.0"
+          },
+          {
+            "id": "CVE-2026-12143",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "form-data",
+            "installed": "4.0.5",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-26996",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "minimatch",
+            "installed": "3.1.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-27903",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "minimatch",
+            "installed": "3.1.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-27904",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "minimatch",
+            "installed": "3.1.2",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-4867",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "path-to-regexp",
+            "installed": "0.1.12",
+            "fixed": "0.1.13"
+          },
+          {
+            "id": "CVE-2026-33671",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "picomatch",
+            "installed": "2.3.1",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-33672",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "picomatch",
+            "installed": "2.3.1",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-90711",
+            "severity": "CRITICAL",
+            "blocking": true,
+            "package": "proxy-addr",
+            "installed": "2.0.7",
+            "fixed": "2.0.8"
+          },
+          {
+            "id": "CVE-2025-15284",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "qs",
+            "installed": "6.14.0",
+            "fixed": "6.14.1"
+          },
+          {
+            "id": "CVE-2026-82417",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "qs",
+            "installed": "6.14.0",
+            "fixed": "6.16.0"
+          },
+          {
+            "id": "CVE-2026-8723",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "qs",
+            "installed": "6.14.0",
+            "fixed": "6.15.2"
+          },
+          {
+            "id": "CVE-2026-2391",
+            "severity": "LOW",
+            "blocking": false,
+            "package": "qs",
+            "installed": "6.14.0",
+            "fixed": "6.14.2"
+          }
+        ],
+        "secrets": [],
+        "misconfigurations": [],
+        "count": 108,
+        "nonblockingVulnerabilityCount": 93
+      }
+    },
+    {
+      "id": "resumora-edit-package",
+      "scope": "LOCAL_SOURCE_SNAPSHOT_ONLY",
+      "description": "Unchanged supplied release package plus isolated review test files; NOT a deployed application.",
+      "productionAcceptance": false,
+      "observedAt": "2026-10-18T00:38:19.617Z",
+      "testedBaseCommit": null,
+      "dirtySourceSnapshot": true,
+      "sourceManifestScope": "Code/config/dependency files excluding .git, node_modules and docs; generated reports are not source inputs.",
+      "sourceManifestHash": "8b8b20aaf824ce8b30a74369d9d272eb6758e899e288d3de12e1a09c731d3a8b",
+      "manifestFileCount": 21,
+      "command": "trivy",
+      "args": [
+        "fs",
+        "--format=json",
+        "--scanners=vuln,secret,misconfig",
+        "--severity=UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL",
+        "--exit-code=0",
+        "--disable-telemetry",
+        "--skip-version-check",
+        "--offline-scan",
+        "--skip-db-update",
+        "--skip-java-db-update",
+        "--skip-check-update",
+        "--secret-config",
+        "<generated-empty-config>",
+        "--cache-dir",
+        "/workspace/work/readiness-trivy-cache",
+        "--config",
+        "<generated-empty-config>",
+        "--ignorefile",
+        "<generated-empty-ignore>",
+        "/workspace/work/resumora-release-review-20261017"
+      ],
+      "configuration": {
+        "scanners": [
+          "vuln",
+          "secret",
+          "misconfig"
+        ],
+        "severity": [
+          "UNKNOWN",
+          "LOW",
+          "MEDIUM",
+          "HIGH",
+          "CRITICAL"
+        ],
+        "blockingPolicy": "HIGH/CRITICAL dependencies; every secret and failed misconfiguration",
+        "offline": true,
+        "maxDurationMs": 120000,
+        "maxOutputBytes": 2097152
+      },
+      "tool": "trivy",
+      "toolVersion": "0.76.0",
+      "environment": "fixture",
+      "dbUpdatedAt": "2026-10-17T18:34:28.174Z",
+      "exitCode": 0,
+      "durationMs": 690,
+      "stdoutBytes": 149516,
+      "stderrBytes": 1326,
+      "status": "FAIL",
+      "findings": {
+        "vulnerabilities": [
+          {
+            "id": "CVE-2026-85393",
+            "severity": "HIGH",
+            "blocking": true,
+            "package": "node-forge",
+            "installed": "1.4.0",
+            "fixed": "unknown"
+          },
+          {
+            "id": "CVE-2026-41907",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "uuid",
+            "installed": "10.0.0",
+            "fixed": "[redacted]"
+          },
+          {
+            "id": "CVE-2026-41907",
+            "severity": "MEDIUM",
+            "blocking": false,
+            "package": "uuid",
+            "installed": "9.0.1",
+            "fixed": "[redacted]"
+          }
+        ],
+        "secrets": [],
+        "misconfigurations": [],
+        "count": 1,
+        "nonblockingVulnerabilityCount": 2
+      }
+    }
+  ]
+}

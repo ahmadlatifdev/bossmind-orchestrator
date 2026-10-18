@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "scope": "SYNTHETIC_FIXTURE_ONLY",
+  "status": "PASS",
+  "observedAt": "2026-10-18T00:35:20.960165+00:00",
+  "productionAcceptance": false,
+  "limitations": [
+    "No Resumora application code, real account, checkout, provider, or deployed endpoint was tested.",
+    "This verifies browser harness assertions, not production authorization or payment security.",
+    "No DBOS integration, shared capacity, existing grants, or remote event publication is proven by this fixture."
+  ],
+  "tools": {
+    "playwrightPython": "1.62.0",
+    "chromium": "154.0.8037.57"
+  },
+  "profile": {
+    "environment": "ephemeral-loopback-fixture",
+    "browser": "chromium-headless",
+    "locale": "en-US",
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "sourceSha256": {
+    "harness": "dc0f135c9e9148daeaae2e0dee59979e60b5f69a50da48c084e8a9f32458b755",
+    "fixture": "326c76468c7e5c2d3c34741a3ef75fbb126d2e9ade32002021eafc46298d12e7"
+  },
+  "checks": [
+    {
+      "id": "anonymous-delivery-denied",
+      "status": "PASS",
+      "observed": "HTTP 401; no generated result"
+    },
+    {
+      "id": "required-form-validation",
+      "status": "PASS",
+      "observed": "Empty email prevented the session request"
+    },
+    {
+      "id": "synthetic-sign-in-outcome",
+      "status": "PASS",
+      "observed": "Authenticated fixture state displayed"
+    },
+    {
+      "id": "plan-amount-outcome",
+      "status": "PASS",
+      "observed": "Selecting Pro displayed USD 49.00 one-time"
+    },
+    {
+      "id": "no-entitlement-delivery-denied",
+      "status": "PASS",
+      "observed": "HTTP 403; no generated result"
+    },
+    {
+      "id": "test-mode-production-grant-denied",
+      "status": "PASS",
+      "observed": "Synthetic negative fixture returned HTTP 409; access stayed false"
+    },
+    {
+      "id": "delivered-download-bytes",
+      "status": "PASS",
+      "observed": "Actual browser download exactly matched the generated synthetic text",
+      "bytes": 66,
+      "sha256": "12e02cf88a6630156427fdafc580982c7b978d869d632c16f338758d7562019d"
+    },
+    {
+      "id": "browser-egress-denied",
+      "status": "PASS",
+      "observed": "External fetch blocked before transport"
+    }
+  ],
+  "passed": 8,
+  "failed": 0,
+  "externalRequestsAllowed": 0,
+  "externalAttemptsBlocked": 0,
+  "realPayments": 0,
+  "modelCalls": 0,
+  "screenshots": 0,
+  "traces": 0,
+  "elapsedMs": 1904,
+  "dashboard": {
+    "scope": "DASHBOARD_WITH_SYNTHETIC_API_ONLY",
+    "status": "PASS",
+    "passed": 6,
+    "failed": 0,
+    "checks": [
+      {
+        "id": "dashboard-reader-true-mutation-disabled",
+        "status": "PASS",
+        "observed": "Run and scheduling controls disabled; no mutation request"
+      },
+      {
+        "id": "dashboard-owner-false-mutation-disabled",
+        "status": "PASS",
+        "observed": "Run and scheduling controls disabled; no mutation request"
+      },
+      {
+        "id": "dashboard-owner-guarded-submit-shape",
+        "status": "PASS",
+        "observed": "One mock run request carried the expected CSRF header and empty body; no production job started"
+      },
+      {
+        "id": "dashboard-safe-rendering-and-evidence-links",
+        "status": "PASS",
+        "observed": "Untrusted content remained text; executable evidence URLs were rejected; safe same-origin link retained"
+      },
+      {
+        "id": "dashboard-read-only-refresh",
+        "status": "PASS",
+        "observed": "Each Refresh issued one GET only, with no scan or model endpoint"
+      },
+      {
+        "id": "dashboard-findings-safe-and-bounded",
+        "status": "PASS",
+        "observed": "Normalized script-like findings remained literal text; oversized findings were truncated below 20000 characters"
+      }
+    ],
+    "sourceSha256": "936d65b87dce859f4b319ebf3f1f1f5bc602ed811dc87919cc657c84f60304ce",
+    "limitations": [
+      "No actual route permission enforcement, queue, DBOS, provider, or deployed dashboard was exercised."
+    ]
+  }
+}

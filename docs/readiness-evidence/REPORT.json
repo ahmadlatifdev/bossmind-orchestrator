@@ -1,0 +1,404 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-10-18T00:38:44.701794+00:00",
+  "status": "BLOCKED",
+  "productionActivated": false,
+  "productionAcceptance": false,
+  "currentWindowsRuntimeVerified": false,
+  "qualification": "Review artifacts and local tool evidence only. No income/global-readiness guarantee.",
+  "enabled": false,
+  "integration": {
+    "status": "BLOCKED",
+    "missing": [
+      "enqueueJob",
+      "runStep",
+      "withLease",
+      "withWriterClaim",
+      "assertGrant",
+      "recordEvent",
+      "storeEvidence",
+      "listEvidence",
+      "runner"
+    ],
+    "reason": "READINESS_DISABLED"
+  },
+  "projects": [
+    {
+      "id": "bossmind",
+      "repository": "ahmadlatifdev/bossmind-orchestrator",
+      "commit": null,
+      "environment": "staging",
+      "fingerprint": "3915a39e29893b487ceac68515f9849dff44959da82e56ddd728de7ac61337c8",
+      "verdict": "NO-GO",
+      "qualification": "Defined technical scope only; not an income, legal or global-readiness guarantee.",
+      "counts": {
+        "PASS": 0,
+        "FAIL": 0,
+        "BLOCKED": 8,
+        "NOT TESTED": 0,
+        "OUTDATED": 0,
+        "NOT APPLICABLE": 0
+      },
+      "checks": [
+        {
+          "id": "customer-journeys",
+          "tool": "playwright",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Authorized synthetic signup, authentication, entitlement, output and download outcomes pass; checkout stays test-only.",
+          "status": "BLOCKED",
+          "reason": "Current Windows runtime and DBOS/auth/lease integration are unavailable in this workspace; staging scope is unapproved.",
+          "findings": {}
+        },
+        {
+          "id": "dependencies-and-secrets",
+          "tool": "trivy",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Fresh vulnerability database; no unresolved HIGH/CRITICAL dependencies, exposed credentials or severe configuration findings.",
+          "status": "BLOCKED",
+          "reason": "Current Windows runtime and DBOS/auth/lease integration are unavailable in this workspace; staging scope is unapproved.",
+          "findings": {}
+        },
+        {
+          "id": "asvs-1.1.4",
+          "tool": "asvs",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Document trust boundaries, components and significant data flows.",
+          "manual": true,
+          "standardVersion": "4.0.3",
+          "requirementId": "v4.0.3-1.1.4",
+          "status": "BLOCKED",
+          "reason": "Current Windows runtime and DBOS/auth/lease integration are unavailable in this workspace; staging scope is unapproved.",
+          "findings": {}
+        },
+        {
+          "id": "asvs-1.4.1",
+          "tool": "asvs",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Verify server-side trusted access-control enforcement.",
+          "manual": true,
+          "standardVersion": "4.0.3",
+          "requirementId": "v4.0.3-1.4.1",
+          "status": "BLOCKED",
+          "reason": "Current Windows runtime and DBOS/auth/lease integration are unavailable in this workspace; staging scope is unapproved.",
+          "findings": {}
+        },
+        {
+          "id": "asvs-1.6.1",
+          "tool": "asvs",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Review cryptographic key lifecycle and management policy.",
+          "manual": true,
+          "standardVersion": "4.0.3",
+          "requirementId": "v4.0.3-1.6.1",
+          "status": "BLOCKED",
+          "reason": "Current Windows runtime and DBOS/auth/lease integration are unavailable in this workspace; staging scope is unapproved.",
+          "findings": {}
+        },
+        {
+          "id": "asvs-1.8.1",
+          "tool": "asvs",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Identify and classify sensitive data protection levels.",
+          "manual": true,
+          "standardVersion": "4.0.3",
+          "requirementId": "v4.0.3-1.8.1",
+          "status": "BLOCKED",
+          "reason": "Current Windows runtime and DBOS/auth/lease integration are unavailable in this workspace; staging scope is unapproved.",
+          "findings": {}
+        },
+        {
+          "id": "passive-staging-baseline",
+          "tool": "zap",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Approved staging baseline has no unresolved critical findings.",
+          "mode": "passive-baseline",
+          "status": "BLOCKED",
+          "reason": "Current Windows runtime and DBOS/auth/lease integration are unavailable in this workspace; staging scope is unapproved.",
+          "findings": {}
+        },
+        {
+          "id": "bounded-staging-load",
+          "tool": "k6",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Approved safe GET endpoint meets p95 latency and failure thresholds under <=2 VUs and <=2 requests/second.",
+          "mode": "read-only",
+          "status": "BLOCKED",
+          "reason": "Current Windows runtime and DBOS/auth/lease integration are unavailable in this workspace; staging scope is unapproved.",
+          "findings": {}
+        }
+      ],
+      "criticalBlockers": [
+        "customer-journeys",
+        "dependencies-and-secrets",
+        "asvs-1.1.4",
+        "asvs-1.4.1",
+        "asvs-1.6.1",
+        "asvs-1.8.1",
+        "passive-staging-baseline",
+        "bounded-staging-load"
+      ]
+    },
+    {
+      "id": "resumora",
+      "repository": "ahmadlatifdev/bossmind-resumora",
+      "commit": null,
+      "environment": "staging",
+      "fingerprint": "02c2ddc9e05250a557ae58886207b6a67bc63783a1266d02e62bd4aa38fba92a",
+      "verdict": "NO-GO",
+      "qualification": "Defined technical scope only; not an income, legal or global-readiness guarantee.",
+      "counts": {
+        "PASS": 0,
+        "FAIL": 0,
+        "BLOCKED": 8,
+        "NOT TESTED": 0,
+        "OUTDATED": 0,
+        "NOT APPLICABLE": 0
+      },
+      "checks": [
+        {
+          "id": "customer-journeys",
+          "tool": "playwright",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Authorized synthetic signup, authentication, entitlement, output and download outcomes pass; checkout stays test-only.",
+          "status": "BLOCKED",
+          "reason": "Production HOLD. No authorized test account, isolated payment environment or approved staging target is available.",
+          "findings": {}
+        },
+        {
+          "id": "dependencies-and-secrets",
+          "tool": "trivy",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Fresh vulnerability database; no unresolved HIGH/CRITICAL dependencies, exposed credentials or severe configuration findings.",
+          "status": "BLOCKED",
+          "reason": "Production HOLD. No authorized test account, isolated payment environment or approved staging target is available.",
+          "findings": {}
+        },
+        {
+          "id": "asvs-1.1.4",
+          "tool": "asvs",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Document trust boundaries, components and significant data flows.",
+          "manual": true,
+          "standardVersion": "4.0.3",
+          "requirementId": "v4.0.3-1.1.4",
+          "status": "BLOCKED",
+          "reason": "Production HOLD. No authorized test account, isolated payment environment or approved staging target is available.",
+          "findings": {}
+        },
+        {
+          "id": "asvs-1.4.1",
+          "tool": "asvs",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Verify server-side trusted access-control enforcement.",
+          "manual": true,
+          "standardVersion": "4.0.3",
+          "requirementId": "v4.0.3-1.4.1",
+          "status": "BLOCKED",
+          "reason": "Production HOLD. No authorized test account, isolated payment environment or approved staging target is available.",
+          "findings": {}
+        },
+        {
+          "id": "asvs-1.6.1",
+          "tool": "asvs",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Review cryptographic key lifecycle and management policy.",
+          "manual": true,
+          "standardVersion": "4.0.3",
+          "requirementId": "v4.0.3-1.6.1",
+          "status": "BLOCKED",
+          "reason": "Production HOLD. No authorized test account, isolated payment environment or approved staging target is available.",
+          "findings": {}
+        },
+        {
+          "id": "asvs-1.8.1",
+          "tool": "asvs",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Identify and classify sensitive data protection levels.",
+          "manual": true,
+          "standardVersion": "4.0.3",
+          "requirementId": "v4.0.3-1.8.1",
+          "status": "BLOCKED",
+          "reason": "Production HOLD. No authorized test account, isolated payment environment or approved staging target is available.",
+          "findings": {}
+        },
+        {
+          "id": "passive-staging-baseline",
+          "tool": "zap",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Approved staging baseline has no unresolved critical findings.",
+          "mode": "passive-baseline",
+          "status": "BLOCKED",
+          "reason": "Production HOLD. No authorized test account, isolated payment environment or approved staging target is available.",
+          "findings": {}
+        },
+        {
+          "id": "bounded-staging-load",
+          "tool": "k6",
+          "critical": true,
+          "owner": "project-owner",
+          "acceptance": "Approved safe GET endpoint meets p95 latency and failure thresholds under <=2 VUs and <=2 requests/second.",
+          "mode": "read-only",
+          "status": "BLOCKED",
+          "reason": "Production HOLD. No authorized test account, isolated payment environment or approved staging target is available.",
+          "findings": {}
+        }
+      ],
+      "criticalBlockers": [
+        "customer-journeys",
+        "dependencies-and-secrets",
+        "asvs-1.1.4",
+        "asvs-1.4.1",
+        "asvs-1.6.1",
+        "asvs-1.8.1",
+        "passive-staging-baseline",
+        "bounded-staging-load"
+      ]
+    }
+  ],
+  "tools": [
+    {
+      "name": "playwright",
+      "kind": "testing-executable",
+      "state": "VERIFIED",
+      "installedVersion": "1.64.1",
+      "scope": "Linux isolated fixture only",
+      "productionState": "BLOCKED",
+      "verification": "playwright-adapter.json",
+      "limitations": "No current customer application, account, checkout, WebKit/Firefox or staging journey tested."
+    },
+    {
+      "name": "trivy",
+      "kind": "security-scanner",
+      "state": "VERIFIED",
+      "installedVersion": "0.76.0",
+      "scope": "Linux local source snapshots only",
+      "productionState": "BLOCKED",
+      "verification": "trivy-source.json",
+      "readiness": "FAIL",
+      "limitations": "Findings require triage/remediation on actual current source. No container scan or suppression review."
+    },
+    {
+      "name": "asvs",
+      "kind": "manual-requirements-checklist",
+      "state": "REGISTERED",
+      "standardVersion": "4.0.3",
+      "execution": "Not an executable worker",
+      "verification": "NOT TESTED",
+      "limitations": "Four versioned manual requirements remain unreviewed; not full ASVS coverage."
+    },
+    {
+      "name": "zap",
+      "kind": "security-scanner",
+      "state": "BLOCKED",
+      "installed": false,
+      "activeScanning": false,
+      "reason": "No authorized staging application scope or installed verified distribution."
+    },
+    {
+      "name": "k6",
+      "kind": "load-test-runner",
+      "state": "BLOCKED",
+      "installed": false,
+      "reason": "No approved safe staging endpoint or installed verified distribution."
+    }
+  ],
+  "unitTests": {
+    "observedAt": "2026-10-18T00:38:18.012790+00:00",
+    "node": "22.23.3",
+    "scope": "ISOLATED_UNIT_AND_HOST_CONTRACT_TESTS_ONLY",
+    "productionIntegrationVerified": false,
+    "results": [
+      {
+        "file": "Server/tests/readiness.test.cjs",
+        "exitCode": 0,
+        "tests": 34,
+        "pass": 34,
+        "fail": 0,
+        "skipped": 0,
+        "sha256": "23eced6c763cc355006310e40bea52109da6a6f7dd960bc3166d42c89a819c77"
+      },
+      {
+        "file": "Server/tests/readiness-tools.test.cjs",
+        "exitCode": 0,
+        "tests": 21,
+        "pass": 21,
+        "fail": 0,
+        "skipped": 0,
+        "sha256": "72293e7dc9de60fed7970e924b9584953d02d6b4def9130d078cddcb65110ed5"
+      },
+      {
+        "file": "Server/tests/readiness-routes.test.cjs",
+        "exitCode": 0,
+        "tests": 16,
+        "pass": 16,
+        "fail": 0,
+        "skipped": 0,
+        "sha256": "b4ddccc09cc08ac63648dc8e357fc17e18b57ae2fcfefe026e513dd899eec442"
+      }
+    ],
+    "testCount": 71,
+    "passed": 71,
+    "failed": 0,
+    "skipped": 0,
+    "actualProcessGuards": "Timeout, cancellation and output-limit termination exercised real child processes in readiness-tools suite.",
+    "limitations": [
+      "No current Windows DBOS, routing/scheduler, real grant storage, Neon publication or staging integrations were exercised."
+    ],
+    "sourceSha256": {
+      "Server/core/readiness.cjs": "e2645ca407564ba2f3b5356e9f9b35a4a4aa455cb877fe460d34fba3eba1c5bb",
+      "Server/core/readinessTools.cjs": "10f8b7bbed1b109f61e0a4aaa45666ba21e6cae2f0d9eeda255c54c0fc7b3cb4",
+      "Server/routes/readiness.cjs": "db0b585b86de1f74c1a5a2bad1457f1416caa0876881d5cacd22e5ba768bec5d",
+      "Server/ui/readiness.html": "936d65b87dce859f4b319ebf3f1f1f5bc602ed811dc87919cc657c84f60304ce"
+    }
+  },
+  "browserEvidence": {
+    "pythonFixture": 8,
+    "dashboard": 6,
+    "nodeAdapter": 1
+  },
+  "sourceFindings": [
+    {
+      "id": "bossmind-source-snapshot",
+      "status": "FAIL",
+      "blockingFindings": 108,
+      "nonblockingDependencies": 93,
+      "sourceManifestHash": "49df3537391acd57628609b7b6e37024082b3c64d0c92b39c8cfb8566b3fb313",
+      "productionAcceptance": false
+    },
+    {
+      "id": "resumora-edit-package",
+      "status": "FAIL",
+      "blockingFindings": 1,
+      "nonblockingDependencies": 2,
+      "sourceManifestHash": "8b8b20aaf824ce8b30a74369d9d272eb6758e899e288d3de12e1a09c731d3a8b",
+      "productionAcceptance": false
+    }
+  ],
+  "deferred": [
+    "DefectDojo"
+  ],
+  "remainingBlockers": [
+    "Current Windows DBOS/scheduler/grants/ledger/dashboard binding and real integration acceptance",
+    "Authorized staging targets and test accounts",
+    "Real signup/test-mode checkout/plan-specific delivery and download acceptance",
+    "Source vulnerability remediation and manual applicability/exploitability/suppression review",
+    "Selected ASVS manual requirements, content/advertising/legal/market review",
+    "ZAP/k6 installation and bounded staging verification",
+    "Container image/digest scan scope not supplied"
+  ]
+}

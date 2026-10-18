@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BossMind readiness</title>
+  <style nonce="__READINESS_NONCE__">
+    :root { color-scheme: dark; font: 16px/1.55 system-ui, sans-serif; background: #111820; color: #edf2f7; }
+    body { margin: 0 auto; max-width: 1120px; padding: 32px 24px; }
+    h1, h2, h3 { line-height: 1.2; } h1 { margin-bottom: 8px; } h2 { margin-top: 0; }
+    p { margin: 10px 0; } .muted { color: #bbc7d2; } .notice, article, .tools { border: 1px solid #3c4d60; border-radius: 12px; padding: 20px; margin: 18px 0; background: #192330; }
+    .notice { border-left: 5px solid #eab464; } .critical { color: #ffc0c0; font-weight: 600; }
+    button { font: inherit; background: #285977; color: white; border: 1px solid #76a6c1; border-radius: 6px; padding: 8px 14px; margin: 6px 12px 6px 0; cursor: pointer; }
+    button:disabled { opacity: .55; cursor: not-allowed; } button:focus-visible, a:focus-visible { outline: 3px solid #ffcf6a; outline-offset: 3px; }
+    a { color: #9bdaff; } .badge { display: inline-block; font-size: .83rem; border: 1px solid #7a8d9e; padding: 2px 8px; border-radius: 20px; margin-right: 10px; }
+    .PASS { color: #93e8ac; border-color: #588966; } .FAIL, .NO-GO { color: #ffc0c0; border-color: #ba6565; } .BLOCKED, .OUTDATED { color: #ffe1a6; border-color: #ac8b50; }
+    .counts { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+    .table-scroll { overflow-x: auto; } table { width: 100%; border-collapse: collapse; text-align: left; } th, td { vertical-align: top; border-bottom: 1px solid #3c4d60; padding: 12px 10px; } th { color: #c8d7e4; font-size: .85rem; }
+    td:first-child { min-width: 130px; } .meta { overflow-wrap: anywhere; font-size: .9rem; } .actions { margin-top: 14px; } small { color: #bbc7d2; }
+    pre { max-height: 340px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font-size: .8rem; }
+    [role="status"] { min-height: 1.6em; } details { margin-top: 18px; } dt { font-weight: 600; } dd { margin: 0 0 10px 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <p class="muted">BossMind / Administration</p>
+    <h1>Project readiness</h1>
+    <p>Evidence for a defined project version, environment and market scope.</p>
+    <p class="muted">Passing technical checks does not guarantee income, demand, legal compliance or global launch readiness.</p>
+  </header>
+  <section class="notice" aria-label="Integration status">
+    <strong data-testid="integration">BLOCKED — integration has not been verified.</strong>
+    <p id="integration-detail">This view only reads saved records. Running checks requires existing authorization and shared worker capacity.</p>
+  </section>
+  <button type="button" id="refresh" data-testid="refresh">Refresh saved evidence</button>
+  <p id="load-status" role="status" aria-live="polite"></p>
+  <p id="summary" data-testid="summary">No readiness results loaded.</p>
+  <div id="projects" data-testid="projects"></div>
+  <section class="tools" aria-label="Tool configuration">
+    <h2>Verification tools</h2>
+    <p class="muted">Tool availability is separate from AI-provider availability. ASVS is a review standard, not an executable scanner.</p>
+    <div id="tool-status" data-testid="tool-status"></div>
+  </section>
+  <details>
+    <summary>Meaning of results</summary>
+    <dl>
+      <dt>PASS</dt><dd>The defined check passed with current evidence. It applies only to the recorded scope.</dd>
+      <dt>FAIL</dt><dd>The check ran and found a problem.</dd>
+      <dt>BLOCKED</dt><dd>A required account, approved target, permission, service or integration is unavailable.</dd>
+      <dt>NOT TESTED</dt><dd>No accepted run or manual review has been recorded.</dd>
+      <dt>OUTDATED</dt><dd>The evidence has expired or no longer matches the project version or configuration.</dd>
+      <dt>N/A</dt><dd>A reviewer documented why the requirement does not apply. Missing justification does not count as acceptance.</dd>
+    </dl>
+  </details>
+  <script type="application/json" id="readiness-bootstrap">__READINESS_BOOTSTRAP__</script>
+  <script nonce="__READINESS_NONCE__">
+  'use strict';
+  (() => {
+    const validStatuses = new Set(['PASS', 'FAIL', 'BLOCKED', 'NOT TESTED', 'OUTDATED', 'N/A']);
+    let bootstrap = {};
+    try { bootstrap = JSON.parse(document.getElementById('readiness-bootstrap').textContent); } catch (_) { /* Controls remain disabled. */ }
+    let integrated = false;
+    const statusText = document.getElementById('load-status');
+    const refresh = document.getElementById('refresh');
+    function element(tag, value, className) {
+      const node = document.createElement(tag);
+      if (value !== undefined && value !== null) node.textContent = String(value);
+      if (className) node.className = className;
+      return node;
+    }
+    function badge(status) { return element('span', status, 'badge ' + (status === 'NO-GO' || status === 'GO' || validStatuses.has(status) ? status.replace(/ /g, '-') : '')); }
+    function safeEvidenceUrl(value) {
+      try {
+        if (typeof value !== 'string' || !value || /[\u0000-\u001f\\]/.test(value)) return null;
+        const url = new URL(value, location.origin);
+        return ['http:', 'https:'].includes(url.protocol) && url.origin === location.origin
+          && !url.username && !url.password ? url.href : null;
+      } catch (_) { return null; }
+    }
+    function cell(row, value) { const node = element('td'); if (value instanceof Node) node.append(value); else node.textContent = String(value == null ? 'Unknown' : value); row.append(node); return node; }
+    async function mutate(projectId, type, button) {
+      if (!integrated || !bootstrap.csrfToken || !bootstrap.canRun || (type === 'schedules' && !bootstrap.canSchedule)) return;
+      button.disabled = true;
+      statusText.textContent = 'Submitting through the existing guarded worker path…';
+      try {
+        const response = await fetch('/api/readiness/' + encodeURIComponent(projectId) + '/' + type, {
+          method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': bootstrap.csrfToken }, body: '{}'
+        });
+        if (!response.ok) throw new Error('Request refused (' + response.status + '). No acceptance is implied.');
+        statusText.textContent = type === 'runs' ? 'Run accepted by the existing worker queue. Refresh evidence after it completes.' : 'Existing schedule request accepted. No check has passed from scheduling alone.';
+      } catch (error) { statusText.textContent = error.message; }
+      finally { button.disabled = false; }
+    }
+    function projectCard(project) {
+      const card = element('article');
+      card.append(element('h2', project.id || 'Unknown project'));
+      const verdict = project.verdict === 'GO' ? 'GO' : 'NO-GO';
+      card.append(badge(verdict));
+      card.append(element('p', 'Repository: ' + (project.repository || 'Unknown') + ' · Commit: ' + (project.commit || 'Unknown') + ' · Environment: ' + (project.environment || 'Unknown'), 'meta'));
+      card.append(element('p', 'Owner: ' + (project.owner || 'Unassigned'), 'meta'));
+      const counts = element('div', null, 'counts');
+      for (const status of validStatuses) {
+        const value = project.counts && (project.counts[status] === undefined && status === 'N/A' ? project.counts['NOT APPLICABLE'] : project.counts[status]);
+        counts.append(badge(status + ': ' + (Number(value) || 0)));
+      }
+      card.append(counts);
+      const table = element('table'); const header = element('tr');
+      for (const name of ['Check', 'Result', 'Detail / owner', 'Evidence']) header.append(element('th', name));
+      const head = element('thead'); head.append(header); table.append(head);
+      const body = element('tbody');
+      for (const check of Array.isArray(project.checks) ? project.checks : []) {
+        const row = element('tr'); const checkCell = cell(row, check.id || check.tool || 'Check');
+        if (check.critical) checkCell.append(element('p', 'Launch critical', 'critical'));
+        const suppliedStatus = check.status === 'NOT APPLICABLE' ? 'N/A' : check.status;
+        const status = validStatuses.has(suppliedStatus) ? suppliedStatus : 'NOT TESTED';
+        cell(row, badge(status));
+        const detail = element('div');
+        detail.append(element('p', check.reason || (status === 'N/A' ? 'Justification missing — review required.' : 'No detail supplied.')));
+        detail.append(element('small', 'Owner: ' + (check.owner || project.owner || 'Unassigned')));
+        if (check.findings && typeof check.findings === 'object' && Object.keys(check.findings).length) {
+          let findingsText;
+          try { findingsText = JSON.stringify(check.findings, null, 2); } catch (_) { findingsText = 'Normalized findings could not be displayed.'; }
+          if (findingsText.length > 20000) findingsText = findingsText.slice(0, 19980) + '\n…truncated';
+          detail.append(element('p', 'Normalized findings'));
+          detail.append(element('pre', findingsText));
+        }
+        cell(row, detail);
+        const evidence = element('div'); const record = check.evidence || {};
+        const href = safeEvidenceUrl(record.url);
+        if (href) { const link = element('a', 'Open evidence'); link.href = href; evidence.append(link); }
+        else evidence.append(element('span', record.url ? 'Evidence link unavailable: unsafe or external URL.' : 'No accepted evidence link.'));
+        evidence.append(element('p', 'Tested: ' + (record.observedAt || 'Unknown') + ' · Commit: ' + (record.commit || 'Unknown') + ' · Environment: ' + (record.environment || project.environment || 'Unknown'), 'meta'));
+        cell(row, evidence); body.append(row);
+      }
+      if (!body.childNodes.length) { const row = element('tr'); const message = cell(row, 'NOT TESTED — no defined checks are available.'); message.colSpan = 4; body.append(row); }
+      table.append(body); const scroll = element('div', null, 'table-scroll'); scroll.append(table); card.append(scroll);
+      const actions = element('div', null, 'actions');
+      const run = element('button', 'Run approved checks'); run.type = 'button'; run.disabled = !(integrated && bootstrap.canRun && bootstrap.csrfToken); run.dataset.action = 'run'; run.addEventListener('click', () => mutate(project.id, 'runs', run)); actions.append(run);
+      const schedule = element('button', 'Request approved schedule'); schedule.type = 'button'; schedule.disabled = !(integrated && bootstrap.canSchedule && bootstrap.canRun && bootstrap.csrfToken); schedule.dataset.action = 'schedule'; schedule.addEventListener('click', () => mutate(project.id, 'schedules', schedule)); actions.append(schedule);
+      if (run.disabled) actions.append(element('p', 'Run controls require an owner session, existing CSRF token and verified integration.'));
+      actions.append(element('small', 'Targets and commands are fixed by the reviewed project profile. These controls cannot approve a release.'));
+      card.append(actions); return card;
+    }
+    async function load() {
+      refresh.disabled = true; statusText.textContent = 'Reading saved evidence…';
+      try {
+        const response = await fetch('/api/readiness', { credentials: 'same-origin', headers: { Accept: 'application/json' } });
+        if (!response.ok) throw new Error('Saved evidence unavailable (' + response.status + '). Use the existing administration sign-in and integration status.');
+        const data = await response.json();
+        const projects = Array.isArray(data.projects) ? data.projects : [];
+        const integration = data.integration || {};
+        integrated = data.enabled === true && integration.status === 'VERIFIED';
+        document.querySelector('[data-testid="integration"]').textContent = integrated ? 'Integration VERIFIED — inspect individual project checks below.' : 'BLOCKED — readiness integration or activation is incomplete.';
+        document.getElementById('integration-detail').textContent = Array.isArray(integration.missing) && integration.missing.length ? 'Missing: ' + integration.missing.join(', ') : 'Saved evidence only. Polling does not run a scan or contact a model.';
+        // An integrated page with an incomplete service must also fail closed.
+        const container = document.getElementById('projects'); container.replaceChildren(...projects.map(projectCard));
+        document.getElementById('summary').textContent = projects.length + ' projects · ' + projects.filter(project => project.verdict === 'GO').length + ' technical GO · ' + projects.filter(project => project.verdict !== 'GO').length + ' NO-GO. Critical unresolved checks prevent launch acceptance.';
+        const tools = document.getElementById('tool-status'); tools.replaceChildren();
+        for (const tool of Array.isArray(data.tools) ? data.tools : []) tools.append(element('p', (tool.name || tool.id || 'Tool') + ': ' + (tool.status || 'Unknown') + (tool.reason ? ' — ' + tool.reason : '')));
+        if (!tools.childNodes.length) tools.append(element('p', 'Tool verification records are unavailable.'));
+        statusText.textContent = 'Saved evidence refreshed. No check was started.';
+      } catch (error) {
+        integrated = false;
+        document.querySelectorAll('button[data-action]').forEach(button => { button.disabled = true; });
+        statusText.textContent = error.message;
+      }
+      finally { refresh.disabled = false; }
+    }
+    refresh.addEventListener('click', load);
+    load();
+  })();
+  </script>
+</body>
+</html>

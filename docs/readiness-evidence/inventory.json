@@ -1,0 +1,63 @@
+{
+  "observedAt": "2026-10-18",
+  "source": "accessible Linux snapshots; not a Windows/live deployment inventory",
+  "projects": [
+    {
+      "name": "bossmind-orchestrator",
+      "commit": "ae9fb895d8a6bfbfa3d963359092cb8605b59f77",
+      "environment": "source snapshot",
+      "staging": "BLOCKED: no approved target or account",
+      "includedInReadinessAcceptance": false
+    },
+    {
+      "name": "bossmind-admin-dashboard",
+      "commit": "9e0271a938489b8738404470ba40871db6bf932a",
+      "environment": "source snapshot",
+      "staging": "BLOCKED: no approved target or account",
+      "includedInReadinessAcceptance": false
+    },
+    {
+      "name": "bossmind-core",
+      "commit": "76297d5c01437ce49c220ab15315877518559fc2",
+      "environment": "source snapshot",
+      "staging": "BLOCKED: no approved target or account",
+      "includedInReadinessAcceptance": false
+    }
+  ],
+  "unavailable": [
+    "Current Windows BossMind runtime",
+    "resumora.net staging/test account",
+    "AI Video Generator",
+    "TikTok AI",
+    "Global Stock"
+  ],
+  "additionalAvailableSourceSnapshots": [
+    {
+      "name": "elegancyart-website",
+      "parentRepository": "bossmind-orchestrator",
+      "currentDeploymentCommit": "unknown",
+      "staging": "BLOCKED: no approved target",
+      "selectedForStagingAcceptance": false
+    },
+    {
+      "name": "bossmind-sheets-service",
+      "parentRepository": "bossmind-orchestrator",
+      "currentDeploymentCommit": "unknown",
+      "staging": "BLOCKED: no approved target",
+      "selectedForStagingAcceptance": false
+    },
+    {
+      "name": "bossmind-dashboard",
+      "parentRepository": "bossmind-orchestrator",
+      "currentDeploymentCommit": "unknown",
+      "staging": "BLOCKED: no approved target",
+      "selectedForStagingAcceptance": false
+    }
+  ],
+  "suppliedReleaseArtifact": {
+    "name": "Resumora edit release package",
+    "sha256": "0002238d4be32a9bfa5b2b1854e903bc1f1f200ab6b61aaca0d6bb619653d89a",
+    "scope": "functions-only review package; not a complete current application or staging environment",
+    "deployment": "HOLD"
+  }
+}

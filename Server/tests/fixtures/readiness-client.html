@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Synthetic readiness harness — not Resumora</title>
+<h1>Synthetic readiness harness</h1>
+<p>This disposable fixture verifies the browser harness. It is not a deployed product or a payment service.</p>
+<form id="login">
+  <label>Email <input id="email" type="email" required autocomplete="off"></label>
+  <label>Fixture password <input id="password" type="password" required autocomplete="off"></label>
+  <button>Sign in</button>
+</form>
+<p id="session" role="status">Signed out</p>
+<label>Plan <select id="plan"><option value="basic">Basic</option><option value="pro">Pro</option><option value="business">Business</option></select></label>
+<p id="amount">USD 29.00 one-time</p>
+<button id="generate" type="button">Generate synthetic result</button>
+<p id="status" role="status">No result</p>
+<pre id="result"></pre>
+<button id="download" type="button" disabled>Download fixture text</button>
+<script>
+'use strict';
+let saved = null;
+const amounts = {basic: 29, pro: 49, business: 79};
+document.querySelector('#plan').addEventListener('change', event => {
+  document.querySelector('#amount').textContent = `USD ${amounts[event.target.value].toFixed(2)} one-time`;
+});
+document.querySelector('#login').addEventListener('submit', async event => {
+  event.preventDefault();
+  const response = await fetch('/fixture/session', {method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({email: document.querySelector('#email').value, password: document.querySelector('#password').value})});
+  document.querySelector('#session').textContent = response.ok ? 'Signed in (synthetic fixture)' : 'Sign-in rejected';
+});
+document.querySelector('#generate').addEventListener('click', async () => {
+  const button = document.querySelector('#generate');
+  button.disabled = true;
+  const response = await fetch('/fixture/generate', {method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({plan: document.querySelector('#plan').value})});
+  const body = await response.json();
+  if (response.ok) {
+    saved = body;
+    document.querySelector('#result').textContent = body.text;
+    document.querySelector('#download').disabled = false;
+    document.querySelector('#status').textContent = 'Result delivered';
+  } else {
+    document.querySelector('#status').textContent = body.code;
+  }
+  button.disabled = false;
+});
+document.querySelector('#download').addEventListener('click', () => {
+  if (!saved) return;
+  const url = URL.createObjectURL(new Blob([saved.text], {type: 'text/plain;charset=utf-8'}));
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'synthetic-readiness-result.txt';
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
+</script>
+</html>

@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "scope": "DEVELOPMENT_SYNTHETIC_ADAPTER_FIXTURE_ONLY",
+  "productionAcceptance": false,
+  "observedAt": "2026-10-18T00:34:53.851Z",
+  "integrationPath": "Manual development call to planTool/runTool; no production host guards or DBOS workflow",
+  "limitations": [
+    "No deployed application, real account, payment, model, staging target, or production authorization was tested.",
+    "This proves the Node Playwright adapter executes and normalizes a trusted synthetic suite; existing host integration remains unverified."
+  ],
+  "modelCalls": 0,
+  "realPayments": 0,
+  "externalBrowserRequestsAllowed": 0,
+  "screenshots": 0,
+  "traces": 0,
+  "status": "PASS",
+  "tools": {
+    "node": "v22.23.3",
+    "playwright": "1.64.1",
+    "cliOutput": "Version 1.64.1",
+    "chromium": "Chromium 154.0.8037.57 built on Debian GNU/Linux 13 (trixie)"
+  },
+  "suite": {
+    "path": "tools/readiness/tests/local.spec.cjs",
+    "sha256": "a6e0e45ec7697db6d30b670cb8e43347d445fd68414dc15d1555beed947a08f1"
+  },
+  "sourceSha256": {
+    "adapter": "10f8b7bbed1b109f61e0a4aaa45666ba21e6cae2f0d9eeda255c54c0fc7b3cb4",
+    "harness": "5078b277ec049f5152f5a7e12ba0ce8816533ccbe2bc042cdf91045e825bad99",
+    "packageLock": "aca26c11d3ca60eb8220f62815b335cd21ba4a1d322ee8dbaf4eb7293625cd94"
+  },
+  "plannedInvocation": {
+    "command": "/workspace/work/node22-runtime/node-v22.23.3-linux-x64/bin/node",
+    "args": [
+      "/workspace/work/bossmind-readiness/tools/readiness/node_modules/@playwright/test/cli.js",
+      "test",
+      "--config",
+      "<generated-config>",
+      "--reporter=json",
+      "--workers=1",
+      "--retries=0",
+      "--max-failures=1",
+      "--trace=off"
+    ],
+    "shell": false,
+    "target": "http://127.0.0.1:49301/",
+    "maxDurationMs": 30000,
+    "maxOutputBytes": 1048576,
+    "workers": 1,
+    "retries": 0,
+    "trace": "off",
+    "screenshot": "off",
+    "video": "off"
+  },
+  "result": {
+    "tool": "playwright",
+    "toolVersion": "1.64.1",
+    "environment": "fixture",
+    "exitCode": 0,
+    "durationMs": 3539,
+    "stdoutBytes": 4045,
+    "stderrBytes": 0,
+    "status": "PASS",
+    "findings": {
+      "passed": 1,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 0,
+      "errors": 0
+    }
+  }
+}

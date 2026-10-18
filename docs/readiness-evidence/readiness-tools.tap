@@ -1,0 +1,136 @@
+TAP version 13
+# Subtest: production, unknown tools, and missing synthetic data policy fail closed
+ok 1 - production, unknown tools, and missing synthetic data policy fail closed
+  ---
+  duration_ms: 1.826666
+  type: 'test'
+  ...
+# Subtest: ASVS remains a manual standard; active ZAP and fixture load scans stay disabled
+ok 2 - ASVS remains a manual standard; active ZAP and fixture load scans stay disabled
+  ---
+  duration_ms: 0.543531
+  type: 'test'
+  ...
+# Subtest: only explicitly pinned approved Playwright suite runs
+ok 3 - only explicitly pinned approved Playwright suite runs
+  ---
+  duration_ms: 2.146784
+  type: 'test'
+  ...
+# Subtest: fixture targets are loopback only and staging authorization is exact and current
+ok 4 - fixture targets are loopback only and staging authorization is exact and current
+  ---
+  duration_ms: 1.77228
+  type: 'test'
+  ...
+# Subtest: credential environment and cloud identity are never inherited
+ok 5 - credential environment and cloud identity are never inherited
+  ---
+  duration_ms: 0.373932
+  type: 'test'
+  ...
+# Subtest: forged or deserialized plans cannot launch a process
+ok 6 - forged or deserialized plans cannot launch a process
+  ---
+  duration_ms: 2.413918
+  type: 'test'
+  ...
+# Subtest: successful Playwright report emits only counts and deletes temporary artifacts
+ok 7 - successful Playwright report emits only counts and deletes temporary artifacts
+  ---
+  duration_ms: 12.283191
+  type: 'test'
+  ...
+# Subtest: a skipped, flaky, absent, or failed journey cannot pass
+ok 8 - a skipped, flaky, absent, or failed journey cannot pass
+  ---
+  duration_ms: 9.543647
+  type: 'test'
+  ...
+# Subtest: suite change after planning prevents any launch
+ok 9 - suite change after planning prevents any launch
+  ---
+  duration_ms: 0.820018
+  type: 'test'
+  ...
+# Subtest: expired deadlines and pre-cancelled work do not launch
+ok 10 - expired deadlines and pre-cancelled work do not launch
+  ---
+  duration_ms: 0.814519
+  type: 'test'
+  ...
+# Subtest: timeout, cancellation, output caps, invalid reports and process errors never pass or leak diagnostics
+ok 11 - timeout, cancellation, output caps, invalid reports and process errors never pass or leak diagnostics
+  ---
+  duration_ms: 18.534104
+  type: 'test'
+  ...
+# Subtest: Trivy cannot run with absent, stale or unknown database metadata
+ok 12 - Trivy cannot run with absent, stale or unknown database metadata
+  ---
+  duration_ms: 0.596147
+  type: 'test'
+  ...
+# Subtest: Trivy records DB timestamp and strips Match, Code, target paths and secret content
+ok 13 - Trivy records DB timestamp and strips Match, Code, target paths and secret content
+  ---
+  duration_ms: 2.311309
+  type: 'test'
+  ...
+# Subtest: Trivy clean report requires actual valid report and exit zero
+ok 14 - Trivy clean report requires actual valid report and exit zero
+  ---
+  duration_ms: 6.249692
+  type: 'test'
+  ...
+# Subtest: k6 needs staging approval, refuses scripts, and generates bounded GET-only traffic
+ok 15 - k6 needs staging approval, refuses scripts, and generates bounded GET-only traffic
+  ---
+  duration_ms: 10.043845
+  type: 'test'
+  ...
+# Subtest: passive ZAP is staging-only and has no active scan switch
+ok 16 - passive ZAP is staging-only and has no active scan switch
+  ---
+  duration_ms: 0.429034
+  type: 'test'
+  ...
+# Subtest: approval expires before queued launch and no process starts
+ok 17 - approval expires before queued launch and no process starts
+  ---
+  duration_ms: 0.632639
+  type: 'test'
+  ...
+# Subtest: k6 cannot pass a latency failure hidden behind process exit zero
+ok 18 - k6 cannot pass a latency failure hidden behind process exit zero
+  ---
+  duration_ms: 14.080412
+  type: 'test'
+  ...
+# Subtest: real process timeout awaits termination; sandbox restrictions are reported as skip
+ok 19 - real process timeout awaits termination; sandbox restrictions are reported as skip
+  ---
+  duration_ms: 404.20119
+  type: 'test'
+  ...
+# Subtest: real cancellation and output bounds await process termination
+ok 20 - real cancellation and output bounds await process termination
+  ---
+  duration_ms: 694.938862
+  type: 'test'
+  ...
+# Subtest: Trivy scans every severity, disables telemetry/version calls, and blocks low-severity secrets
+ok 21 - Trivy scans every severity, disables telemetry/version calls, and blocks low-severity secrets
+  ---
+  duration_ms: 4.738466
+  type: 'test'
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 21
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1197.739411

@@ -1,0 +1,214 @@
+TAP version 13
+# Subtest: disabled extension refuses dispatch even with complete host hooks
+ok 1 - disabled extension refuses dispatch even with complete host hooks
+  ---
+  duration_ms: 3.570742
+  type: 'test'
+  ...
+# Subtest: each absent required host hook blocks the integration
+ok 2 - each absent required host hook blocks the integration
+  ---
+  duration_ms: 3.58052
+  type: 'test'
+  ...
+# Subtest: status polling reads evidence without dispatch, tools, model calls or writes
+ok 3 - status polling reads evidence without dispatch, tools, model calls or writes
+  ---
+  duration_ms: 1.031227
+  type: 'test'
+  ...
+# Subtest: configured hooks without verified host integration remain read-only
+ok 4 - configured hooks without verified host integration remain read-only
+  ---
+  duration_ms: 0.667526
+  type: 'test'
+  ...
+# Subtest: enqueue requires an actor and an affirmative current grant
+ok 5 - enqueue requires an actor and an affirmative current grant
+  ---
+  duration_ms: 0.292951
+  type: 'test'
+  ...
+# Subtest: queued actor is taken from authenticated argument, not overridable context
+ok 6 - queued actor is taken from authenticated argument, not overridable context
+  ---
+  duration_ms: 0.335722
+  type: 'test'
+  ...
+# Subtest: schedule uses the host cadence hook and denies a false grant
+ok 7 - schedule uses the host cadence hook and denies a false grant
+  ---
+  duration_ms: 0.311503
+  type: 'test'
+  ...
+# Subtest: worker rejects absent execution context, cancellation and deadline before hooks
+ok 8 - worker rejects absent execution context, cancellation and deadline before hooks
+  ---
+  duration_ms: 0.589751
+  type: 'test'
+  ...
+# Subtest: unsafe execution identifiers, absent actor and counterfeit abort signals are rejected
+ok 9 - unsafe execution identifiers, absent actor and counterfeit abort signals are rejected
+  ---
+  duration_ms: 0.632133
+  type: 'test'
+  ...
+# Subtest: integration test rejects live database before any SDK or host work
+ok 10 - integration test rejects live database before any SDK or host work
+  ---
+  duration_ms: 0.588501
+  type: 'test'
+  ...
+# Subtest: grant revoked while waiting for shared lease prevents tool and evidence write
+ok 11 - grant revoked while waiting for shared lease prevents tool and evidence write
+  ---
+  duration_ms: 1.666656
+  type: 'test'
+  ...
+# Subtest: tool, evidence write and recorded event are wrapped by the shared lease and writer
+ok 12 - tool, evidence write and recorded event are wrapped by the shared lease and writer
+  ---
+  duration_ms: 1.953382
+  type: 'test'
+  ...
+# Subtest: host durable-step replay reuses completed step without a second tool or evidence write
+ok 13 - host durable-step replay reuses completed step without a second tool or evidence write
+  ---
+  duration_ms: 1.065375
+  type: 'test'
+  ...
+# Subtest: a completed durable step is still protected after its execution grant is revoked
+ok 14 - a completed durable step is still protected after its execution grant is revoked
+  ---
+  duration_ms: 0.533468
+  type: 'test'
+  ...
+# Subtest: failed evidence persistence aborts the step and never records a successful status
+ok 15 - failed evidence persistence aborts the step and never records a successful status
+  ---
+  duration_ms: 0.599942
+  type: 'test'
+  ...
+# Subtest: missing or mismatched durable persistence receipts cannot become a PASS
+ok 16 - missing or mismatched durable persistence receipts cannot become a PASS
+  ---
+  duration_ms: 1.780742
+  type: 'test'
+  ...
+# Subtest: cancellation during runner releases capacity without recording completed evidence
+ok 17 - cancellation during runner releases capacity without recording completed evidence
+  ---
+  duration_ms: 0.477401
+  type: 'test'
+  ...
+# Subtest: a deadline that expires during the tool prevents persistence and releases capacity
+ok 18 - a deadline that expires during the tool prevents persistence and releases capacity
+  ---
+  duration_ms: 0.911624
+  type: 'test'
+  ...
+# Subtest: redaction happens before the existing evidence and event sinks receive data
+ok 19 - redaction happens before the existing evidence and event sinks receive data
+  ---
+  duration_ms: 0.979268
+  type: 'test'
+  ...
+# Subtest: profile configuration is cloned and a queued fingerprint cannot silently change scope
+ok 20 - profile configuration is cloned and a queued fingerprint cannot silently change scope
+  ---
+  duration_ms: 0.637498
+  type: 'test'
+  ...
+# Subtest: evidence becomes OUTDATED for commit, environment, scope, provenance or expiry changes
+ok 21 - evidence becomes OUTDATED for commit, environment, scope, provenance or expiry changes
+  ---
+  duration_ms: 1.163678
+  type: 'test'
+  ...
+# Subtest: the most recent failing observation supersedes an earlier pass
+ok 22 - the most recent failing observation supersedes an earlier pass
+  ---
+  duration_ms: 0.80966
+  type: 'test'
+  ...
+# Subtest: manual ASVS checks require an attributed reviewer and evidence reference for PASS
+ok 23 - manual ASVS checks require an attributed reviewer and evidence reference for PASS
+  ---
+  duration_ms: 0.27323
+  type: 'test'
+  ...
+# Subtest: automated execution never converts a manual ASVS requirement into a pass
+ok 24 - automated execution never converts a manual ASVS requirement into a pass
+  ---
+  duration_ms: 0.490052
+  type: 'test'
+  ...
+# Subtest: N/A requires an attributed, substantive applicability rationale
+ok 25 - N/A requires an attributed, substantive applicability rationale
+  ---
+  duration_ms: 0.566489
+  type: 'test'
+  ...
+# Subtest: every critical non-pass or unreviewed N/A prevents a technical GO
+ok 26 - every critical non-pass or unreviewed N/A prevents a technical GO
+  ---
+  duration_ms: 0.43255
+  type: 'test'
+  ...
+# Subtest: an externally blocked profile cannot be queued or made GO by supplied pass evidence
+ok 27 - an externally blocked profile cannot be queued or made GO by supplied pass evidence
+  ---
+  duration_ms: 0.377852
+  type: 'test'
+  ...
+# Subtest: direct worker delivery cannot bypass a missing tested commit
+ok 28 - direct worker delivery cannot bypass a missing tested commit
+  ---
+  duration_ms: 0.41946
+  type: 'test'
+  ...
+# Subtest: invalid profile scope, duplicate checks and unversioned ASVS requirements are rejected
+ok 29 - invalid profile scope, duplicate checks and unversioned ASVS requirements are rejected
+  ---
+  duration_ms: 0.600401
+  type: 'test'
+  ...
+# Subtest: unsafe artifact links and raw scanner details are not reflected to the dashboard
+ok 30 - unsafe artifact links and raw scanner details are not reflected to the dashboard
+  ---
+  duration_ms: 0.490287
+  type: 'test'
+  ...
+# Subtest: evidence retrieval uses a read-only grant and validates its scoped content hash
+ok 31 - evidence retrieval uses a read-only grant and validates its scoped content hash
+  ---
+  duration_ms: 0.709868
+  type: 'test'
+  ...
+# Subtest: evidence retrieval denies a revoked read grant before querying host storage
+ok 32 - evidence retrieval denies a revoked read grant before querying host storage
+  ---
+  duration_ms: 0.306547
+  type: 'test'
+  ...
+# Subtest: evidence retrieval rejects a changed digest or cross-project, execution or check record
+ok 33 - evidence retrieval rejects a changed digest or cross-project, execution or check record
+  ---
+  duration_ms: 0.994759
+  type: 'test'
+  ...
+# Subtest: invalid evidence identifiers and missing identity never reach the artifact store
+ok 34 - invalid evidence identifiers and missing identity never reach the artifact store
+  ---
+  duration_ms: 0.578786
+  type: 'test'
+  ...
+1..34
+# tests 34
+# suites 0
+# pass 34
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 61.544362

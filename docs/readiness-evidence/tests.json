@@ -1,0 +1,49 @@
+{
+  "observedAt": "2026-10-18T00:38:18.012790+00:00",
+  "node": "22.23.3",
+  "scope": "ISOLATED_UNIT_AND_HOST_CONTRACT_TESTS_ONLY",
+  "productionIntegrationVerified": false,
+  "results": [
+    {
+      "file": "Server/tests/readiness.test.cjs",
+      "exitCode": 0,
+      "tests": 34,
+      "pass": 34,
+      "fail": 0,
+      "skipped": 0,
+      "sha256": "23eced6c763cc355006310e40bea52109da6a6f7dd960bc3166d42c89a819c77"
+    },
+    {
+      "file": "Server/tests/readiness-tools.test.cjs",
+      "exitCode": 0,
+      "tests": 21,
+      "pass": 21,
+      "fail": 0,
+      "skipped": 0,
+      "sha256": "72293e7dc9de60fed7970e924b9584953d02d6b4def9130d078cddcb65110ed5"
+    },
+    {
+      "file": "Server/tests/readiness-routes.test.cjs",
+      "exitCode": 0,
+      "tests": 16,
+      "pass": 16,
+      "fail": 0,
+      "skipped": 0,
+      "sha256": "b4ddccc09cc08ac63648dc8e357fc17e18b57ae2fcfefe026e513dd899eec442"
+    }
+  ],
+  "testCount": 71,
+  "passed": 71,
+  "failed": 0,
+  "skipped": 0,
+  "actualProcessGuards": "Timeout, cancellation and output-limit termination exercised real child processes in readiness-tools suite.",
+  "limitations": [
+    "No current Windows DBOS, routing/scheduler, real grant storage, Neon publication or staging integrations were exercised."
+  ],
+  "sourceSha256": {
+    "Server/core/readiness.cjs": "e2645ca407564ba2f3b5356e9f9b35a4a4aa455cb877fe460d34fba3eba1c5bb",
+    "Server/core/readinessTools.cjs": "10f8b7bbed1b109f61e0a4aaa45666ba21e6cae2f0d9eeda255c54c0fc7b3cb4",
+    "Server/routes/readiness.cjs": "db0b585b86de1f74c1a5a2bad1457f1416caa0876881d5cacd22e5ba768bec5d",
+    "Server/ui/readiness.html": "936d65b87dce859f4b319ebf3f1f1f5bc602ed811dc87919cc657c84f60304ce"
+  }
+}
