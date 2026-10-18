@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "policyId": "BOSSMIND-OPEN-SOURCE-ONLY-1",
+  "effectiveDate": "2026-10-17",
+  "timezone": "America/Toronto",
+  "scope": "all-current-and-future-bossmind-systems-projects-agents-workers-and-automations",
+  "defaultDecision": "BLOCKED",
+  "newAutonomousSpendLimit": 0,
+  "prohibitedActions": [
+    "purchase",
+    "subscribe",
+    "paid-upgrade",
+    "manual-paid-renewal",
+    "trial-enrollment",
+    "top-up",
+    "add-payment-method",
+    "buy-credits",
+    "buy-hardware",
+    "buy-hosting",
+    "enable-paid-or-metered-api",
+    "provision-billable-resource",
+    "paid-provider-fallback",
+    "quota-auto-upgrade"
+  ],
+  "newWorkerRequirements": {
+    "verifiedOpenSourceLicense": true,
+    "commercialUseCompatible": true,
+    "modelCodeAndWeightsReviewedSeparately": true,
+    "maintainedStableVersionPinned": true,
+    "execution": "local-or-existing-self-hosted-resources",
+    "incrementalCharges": 0,
+    "meteredDependenciesAllowed": false,
+    "unknownLicenseOrCost": "BLOCKED",
+    "evidenceRequired": true
+  },
+  "olderApprovalsOverridePolicy": false,
+  "exceptionRequires": "later-explicit-user-instruction-changing-this-rule",
+  "existingServices": {
+    "cancelAutomatically": false,
+    "changeBillingAutomatically": false,
+    "disableInfrastructureAutomatically": false,
+    "cancelOrReplayInFlightJobs": false,
+    "newBillableAITasksAllowed": false,
+    "unavoidableExistingCharges": "inventory-and-separate-migration-or-cancellation-action"
+  },
+  "customerPayments": "preserve-existing-checkout-and-financial-controls; not-owner-procurement",
+  "runtimeEnforcement": {
+    "status": "UNVERIFIED",
+    "declarationIsNotExecutableEnforcement": true,
+    "mustCheckBeforeCredentialsOrTransport": true,
+    "missingCurrentWindowsSource": true,
+    "requiredEntryPoints": [
+      "provider-router",
+      "API-and-CLI-workers",
+      "scheduled-jobs",
+      "supervisor-and-hand-run-scripts",
+      "installer-and-provisioning-actions"
+    ],
+    "existingGuardsMustRemain": true
+  },
+  "canonicalDocument": "docs/OPEN_SOURCE_ONLY.md"
+}

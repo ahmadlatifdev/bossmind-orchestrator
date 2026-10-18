@@ -1,0 +1,25 @@
+{
+  "policyId": "BOSSMIND-OPEN-SOURCE-ONLY-1",
+  "scope": "accessible Linux workspace only",
+  "instructionFiles": [
+    "/workspace/AGENTS.md",
+    "/workspace/bossmind-orchestrator/AGENTS.md",
+    "/workspace/bossmind-admin-dashboard/AGENTS.md",
+    "/workspace/bossmind-core/AGENTS.md",
+    "/workspace/bossmind-core-dashboard-/AGENTS.md",
+    "/workspace/bossmind-orchestrator/bossmind-dashboard/AGENTS.md",
+    "/workspace/bossmind-orchestrator/bossmind-sheets-service/AGENTS.md",
+    "/workspace/bossmind-orchestrator/elegancyart-website/AGENTS.md"
+  ],
+  "policyDocument": "/workspace/bossmind-orchestrator/docs/OPEN_SOURCE_ONLY.md",
+  "machineDeclaration": "/workspace/bossmind-orchestrator/config/open-source-only-policy.json",
+  "runtimeEnforcement": "UNVERIFIED: current Windows/production entry points unavailable",
+  "existingServicesChanged": false,
+  "existingSubscriptionsCancelled": false,
+  "credentialsRead": false,
+  "paidProviderCalls": 0,
+  "verification": "Policy ID read back from all eight instruction files; machine declaration parsed; instructions match; no executable/runtime changes.",
+  "canonicalDocumentSha256": "a222c820c6da4958e74bed3780d71c22d5a86547263ea22bff9fa384a5b1a787",
+  "workflowSafety": "Policy branch does not match existing push triggers (main/master); no workflow dispatched.",
+  "defaultBranchesChanged": false
+}
