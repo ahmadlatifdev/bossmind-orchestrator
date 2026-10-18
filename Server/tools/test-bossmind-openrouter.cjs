@@ -1,37 +1,13 @@
-// D:\Shakhsy11\Bossmind-orchestrator\Server\tools\test-bossmind-openrouter.cjs
-require("dotenv").config();
+"use strict";
 
-const http = require("http");
-
-const PORT = process.env.PORT || 5000; // will try PORT, else 5004
-const body = JSON.stringify({
-  messages: [{ role: "user", content: "Say OK" }],
-});
-
-const opts = {
-  hostname: "localhost",
-  port: PORT,
-  path: "/api/openrouter/chat",
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "Content-Length": Buffer.byteLength(body),
-  },
-};
-
-const req = http.request(opts, (res) => {
-  let data = "";
-  res.on("data", (c) => (data += c));
-  res.on("end", () => {
-    console.log("HTTP", res.statusCode);
-    console.log(data);
-  });
-});
-
-req.on("error", (e) => {
-  console.error("REQUEST FAILED:", e.message);
-  console.error("TIP: Your BossMind server may be on a different port (auto-port).");
-});
-
-req.write(body);
-req.end();
+// Legacy paid-provider probe is retired. No credentials, model call, or listener.
+const { assertInferenceAllowed } = require("../core/spendPolicy.cjs");
+try {
+  assertInferenceAllowed("openrouter");
+  // This historical cloud-only entry has no reviewed zero-charge local runner.
+  console.error(JSON.stringify({ ok: false, code: "DIRECT_PROVIDER_BLOCKED" }));
+  process.exitCode = 1;
+} catch (err) {
+  console.error(JSON.stringify({ ok: false, code: err.code, reason: err.reason }));
+  process.exitCode = 1;
+}

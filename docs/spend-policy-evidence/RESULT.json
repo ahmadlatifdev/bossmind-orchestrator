@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-10-18T03:45:43.525495+00:00",
+  "node": "22.23.3",
+  "scope": "Available legacy Linux source; isolated guard/entrypoint tests and actual no-model probe processes",
+  "currentWindowsRuntimeVerified": false,
+  "tests": [
+    {
+      "file": "Server/tests/spend-policy.test.cjs",
+      "exitCode": 0,
+      "tests": 27,
+      "pass": 27,
+      "fail": 0,
+      "skipped": 0
+    },
+    {
+      "file": "Server/tests/spend-policy-entrypoints.test.cjs",
+      "exitCode": 0,
+      "tests": 10,
+      "pass": 10,
+      "fail": 0,
+      "skipped": 0
+    }
+  ],
+  "passed": 37,
+  "failed": 0,
+  "skipped": 0,
+  "actualProbeInvocations": [
+    {
+      "file": "server-test.js",
+      "invocation": "node server-test.js",
+      "exitCode": 1,
+      "result": {
+        "ok": false,
+        "code": "COST_POLICY_BLOCKED",
+        "reason": "CLOUD_PROVIDER_PROHIBITED"
+      }
+    },
+    {
+      "file": "test-api.js",
+      "invocation": "node test-api.js",
+      "exitCode": 1,
+      "result": {
+        "ok": false,
+        "code": "COST_POLICY_BLOCKED",
+        "reason": "CLOUD_PROVIDER_PROHIBITED"
+      }
+    },
+    {
+      "file": "Server/tools/test-openrouter.cjs",
+      "invocation": "node Server/tools/test-openrouter.cjs",
+      "exitCode": 1,
+      "result": {
+        "ok": false,
+        "code": "COST_POLICY_BLOCKED",
+        "reason": "CLOUD_PROVIDER_PROHIBITED"
+      }
+    },
+    {
+      "file": "Server/tools/test-bossmind-openrouter.cjs",
+      "invocation": "node Server/tools/test-bossmind-openrouter.cjs",
+      "exitCode": 1,
+      "result": {
+        "ok": false,
+        "code": "COST_POLICY_BLOCKED",
+        "reason": "CLOUD_PROVIDER_PROHIBITED"
+      }
+    }
+  ],
+  "credentialReadsInGuardedEntryPointTests": 0,
+  "providerTransportCalls": 0,
+  "modelsDownloaded": 0,
+  "modelsActivated": 0,
+  "runtimeEnforcement": "Current Windows provider chain/CLIs/DBOS not available; UNVERIFIED",
+  "limitations": [
+    "Source gate is not an OS/network/billing firewall.",
+    "Positive local catalog tests use synthetic evidence; production catalog is empty.",
+    "No customer application, cloud console, automatic renewal or deployment was changed."
+  ],
+  "sourceSha256": {
+    "Server/core/spendPolicy.cjs": "1670cad12dffe4c55bd6e2ee2c8987d70c3bf6f8814905414ed464b6a1ab8cae",
+    "config/local-provider-eligibility.json": "9a64ff032836d3be88815d8ed616a41ca453f332e1e8e59060fcfa629f30b3c4",
+    "Server/core/handleDeepseekChat.cjs": "cf515c2ec5e6cad04e6be50b5ebceacbdad02825e727b1c3adc80ab983cd0fa2",
+    "Server/core/openrouterClient.cjs": "ef09ae1dd80b4b18b8e4cbf43b65780a98af57f819c6eb2a728ab98e29ed22de",
+    "Server/core/providers/openrouterClient.cjs": "c414fac88b9968d97116a38e4de85e132cb84f3b5faf7b2b338e76cb35780561",
+    "Server/routes/openrouter.chat.cjs": "cb4a762f5c3dde695ed39b702e129b1dec449f6cf79d3bd9deee817e7cd7570c",
+    "Server/routes/openrouter.cjs": "d6dd1046db46e104829e24af088e64bd64cf7305a1a85c5b481516aaa9c70c0a",
+    "Server/tools/test-openrouter.cjs": "9b95d739a8eacfeed69f982e6bf8beb78e71c396748902b23011936ce789768a",
+    "Server/tools/test-bossmind-openrouter.cjs": "9b95d739a8eacfeed69f982e6bf8beb78e71c396748902b23011936ce789768a",
+    "server-test.js": "51b9813b1bc18853acf944f6b21ac29fe6289c624743448105fb2314a78c4f9d",
+    "test-api.js": "51b9813b1bc18853acf944f6b21ac29fe6289c624743448105fb2314a78c4f9d",
+    "bossmind-dashboard/src/services/deepseek.js": "4ec88f6b7bb434c5734322a3821edbc24c31fdc287ea835346b6709645f07d7a",
+    "Server/tests/spend-policy.test.cjs": "a29cd5f3ce8dc893a7d9b2fc146fa600c06d0d77328778d8ca121b792f3140a3",
+    "Server/tests/spend-policy-entrypoints.test.cjs": "6778fe1e1af38d0e5387c66a11c50ed76ee168c489f2050b2d6c0d9f2f06bb16"
+  },
+  "coveredSourceEntryPoints": 10,
+  "otherAvailableSourceAudit": {
+    "pattern": "Direct known cloud-provider URL names in *.js/*.cjs/*.ts/*.tsx excluding node_modules",
+    "snapshots": [
+      "bossmind-admin-dashboard",
+      "bossmind-core",
+      "bossmind-core-dashboard-"
+    ],
+    "matchingFiles": 0,
+    "qualification": "Scoped filename audit, not proof of runtime coverage."
+  },
+  "appliedSourceCheckout": "Accessible Linux bossmind-orchestrator checkout; no process restarted",
+  "sourceReadbackVerified": true
+}

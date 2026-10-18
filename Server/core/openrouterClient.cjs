@@ -16,6 +16,8 @@
  *   OPENROUTER_TIMEOUT_MS=60000
  */
 
+const { assertInferenceAllowed } = require("./spendPolicy.cjs");
+
 const DEFAULT_BASE_URL = "https://openrouter.ai/api/v1";
 
 function getEnv(name, fallback = "") {
@@ -61,7 +63,8 @@ function extractAssistantText(json) {
   return "";
 }
 
-async function chat({ model, messages, headers = {}, temperature, max_tokens }) {
+async function chat({ model, messages, headers = {}, temperature, max_tokens } = {}) {
+  assertInferenceAllowed("openrouter");
   const apiKey = getEnv("OPENROUTER_API_KEY");
   if (!apiKey) {
     return {

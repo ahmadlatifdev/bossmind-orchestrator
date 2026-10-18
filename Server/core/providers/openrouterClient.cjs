@@ -2,6 +2,8 @@
 // BossMind Phase 6 — OpenRouter Client (CJS)
 // Uses native fetch (Node 18+). No external deps.
 
+const { assertInferenceAllowed } = require("../spendPolicy.cjs");
+
 function mustGetKey() {
   const key = (process.env.OPENROUTER_API_KEY || "").trim();
   if (!key) {
@@ -23,6 +25,7 @@ function toMessages(messages) {
 }
 
 async function chat({ messages, model = "openrouter/auto", timeoutMs = 30000 } = {}) {
+  assertInferenceAllowed("openrouter");
   const key = mustGetKey();
 
   const controller = new AbortController();

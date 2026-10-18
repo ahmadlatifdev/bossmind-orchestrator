@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: Server/core/openrouterClient.cjs denies before key resolution or transport
+ok 1 - Server/core/openrouterClient.cjs denies before key resolution or transport
+  ---
+  duration_ms: 3.245137
+  type: 'test'
+  ...
+# Subtest: Server/core/providers/openrouterClient.cjs denies before key resolution or transport
+ok 2 - Server/core/providers/openrouterClient.cjs denies before key resolution or transport
+  ---
+  duration_ms: 1.761019
+  type: 'test'
+  ...
+# Subtest: DeepSeek handler denies before optional clients, routing, or credentials
+ok 3 - DeepSeek handler denies before optional clients, routing, or credentials
+  ---
+  duration_ms: 1.15193
+  type: 'test'
+  ...
+# Subtest: Server/routes/openrouter.chat.cjs returns a structured 403 without credentials, retries or client loading
+ok 4 - Server/routes/openrouter.chat.cjs returns a structured 403 without credentials, retries or client loading
+  ---
+  duration_ms: 1.660294
+  type: 'test'
+  ...
+# Subtest: Server/routes/openrouter.cjs returns a structured 403 without credentials, retries or client loading
+ok 5 - Server/routes/openrouter.cjs returns a structured 403 without credentials, retries or client loading
+  ---
+  duration_ms: 1.127827
+  type: 'test'
+  ...
+# Subtest: Server/tools/test-openrouter.cjs exits blocked without dotenv, transport or listener
+ok 6 - Server/tools/test-openrouter.cjs exits blocked without dotenv, transport or listener
+  ---
+  duration_ms: 0.98369
+  type: 'test'
+  ...
+# Subtest: Server/tools/test-bossmind-openrouter.cjs exits blocked without dotenv, transport or listener
+ok 7 - Server/tools/test-bossmind-openrouter.cjs exits blocked without dotenv, transport or listener
+  ---
+  duration_ms: 0.947853
+  type: 'test'
+  ...
+# Subtest: server-test.js exits blocked without dotenv, transport or listener
+ok 8 - server-test.js exits blocked without dotenv, transport or listener
+  ---
+  duration_ms: 1.053341
+  type: 'test'
+  ...
+# Subtest: test-api.js exits blocked without dotenv, transport or listener
+ok 9 - test-api.js exits blocked without dotenv, transport or listener
+  ---
+  duration_ms: 1.258125
+  type: 'test'
+  ...
+# Subtest: legacy browser service rejects before credential imports, configuration reads or transport
+ok 10 - legacy browser service rejects before credential imports, configuration reads or transport
+  ---
+  duration_ms: 2.96487
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 26.09532

@@ -13,24 +13,12 @@
  * 4) Return normalized response
  */
 
-const path = require("path");
+const { assertInferenceAllowed } = require("./spendPolicy.cjs");
 
-// Optional safety / routing layers (used if present)
-let modelRouter = null;
-let approvalGuard = null;
-let openrouterClient = null;
-
-try {
-  modelRouter = require("./modelRouter.cjs");
-} catch (_) {}
-
-try {
-  approvalGuard = require("./approvalGuard.cjs");
-} catch (_) {}
-
-try {
-  openrouterClient = require("./openrouterClient.cjs");
-} catch (_) {}
+// Resolve optional provider modules only after the cost policy has allowed a task.
+function optionalModule(name) {
+  try { return require(name); } catch (_) { return null; }
+}
 
 /**
  * Main handler
@@ -38,7 +26,16 @@ try {
  * @param {Object} params.req
  * @param {Array}  params.messages
  */
-module.exports = async function handleDeepseekChat({ req, messages }) {
+module.exports = async function handleDeepseekChat({ req, messages } = {}) {
+  try {
+    assertInferenceAllowed("deepseek");
+  } catch (err) {
+    if (err.code !== "COST_POLICY_BLOCKED") throw err;
+    return { ok: false, status: 403, code: err.code, error: err.code, reason: err.reason };
+  }
+  const modelRouter = optionalModule("./modelRouter.cjs");
+  const approvalGuard = optionalModule("./approvalGuard.cjs");
+  const openrouterClient = optionalModule("./openrouterClient.cjs");
   /* ---------------- Basic validation ---------------- */
 
   if (!Array.isArray(messages) || messages.length === 0) {
@@ -77,8 +74,8 @@ module.exports = async function handleDeepseekChat({ req, messages }) {
   if (!openrouterClient || typeof openrouterClient.chat !== "function") {
     // Safety fallback (should never happen once wired)
     return {
-      ok: true,
-      mode: "local-fallback",
+      ok: false,
+      code: "PROVIDER_UNAVAILABLE",
       model,
       reply:
         "DeepSeek handler is installed, but openrouterClient.chat() is not wired yet.",

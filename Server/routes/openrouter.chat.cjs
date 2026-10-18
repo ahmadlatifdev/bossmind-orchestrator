@@ -1,6 +1,7 @@
 // D:\Shakhsy11\Bossmind-orchestrator\Server\routes\openrouter.chat.cjs
 // OpenRouter execution route (provider controls + fallback + metadata + hard timeouts + retry)
 
+const { assertInferenceAllowed } = require("../core/spendPolicy.cjs");
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
@@ -49,6 +50,12 @@ async function fetchWithTimeout(url, options, timeoutMs) {
 }
 
 router.post("/api/openrouter/chat", async (req, res) => {
+  try {
+    assertInferenceAllowed("openrouter");
+  } catch (err) {
+    if (err.code !== "COST_POLICY_BLOCKED") throw err;
+    return res.status(403).json({ ok: false, code: err.code, error: err.code, reason: err.reason });
+  }
   const key = getOpenRouterKey();
   if (!key) {
     return res.status(500).json({

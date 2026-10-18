@@ -1,32 +1,13 @@
-import axios from "axios";
+"use strict";
 
-// ⬇️ PASTE YOUR NEW CORE KEY BETWEEN THE QUOTES
-const CORE_KEY = "sk-5a46bee270d64a78b7019886b98c63e0";
-const MODEL = "deepseek-chat";
-
-async function testDeepSeek() {
-  console.log("🔍 Testing CORE_AI");
-  console.log("🔑 Using Key:", CORE_KEY.substring(0, 15) + "...");
-
-  try {
-    const response = await axios.post(
-      "https://api.deepseek.com/chat/completions",
-      {
-        model: MODEL,
-        messages: [{ role: "user", content: "Respond with one word: SUCCESS" }]
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${CORE_KEY}`,
-          "Content-Type": "application/json"
-        }
-      }
-    );
-
-    console.log("🌟 RESULT:", response.data.choices[0].message.content);
-  } catch (err) {
-    console.log("❌ ERROR:", err.response?.data || err.message);
-  }
+// Legacy paid-provider probe is retired. No credentials, model call, or listener.
+const { assertInferenceAllowed } = require("./Server/core/spendPolicy.cjs");
+try {
+  assertInferenceAllowed("deepseek");
+  // This historical cloud-only entry has no reviewed zero-charge local runner.
+  console.error(JSON.stringify({ ok: false, code: "DIRECT_PROVIDER_BLOCKED" }));
+  process.exitCode = 1;
+} catch (err) {
+  console.error(JSON.stringify({ ok: false, code: err.code, reason: err.reason }));
+  process.exitCode = 1;
 }
-
-testDeepSeek();

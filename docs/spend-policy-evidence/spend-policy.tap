@@ -1,0 +1,172 @@
+TAP version 13
+# Subtest: production defaults block unreviewed local and hosted inference before callback execution
+ok 1 - production defaults block unreviewed local and hosted inference before callback execution
+  ---
+  duration_ms: 2.924005
+  type: 'test'
+  ...
+# Subtest: existing cloud transport IDs cannot be approved by relabeling them as local catalog entries
+ok 2 - existing cloud transport IDs cannot be approved by relabeling them as local catalog entries
+  ---
+  duration_ms: 2.499987
+  type: 'test'
+  ...
+# Subtest: a complete reviewed local fixture returns an immutable exact model and transport binding
+ok 3 - a complete reviewed local fixture returns an immutable exact model and transport binding
+  ---
+  duration_ms: 1.382401
+  type: 'test'
+  ...
+# Subtest: eligible callback receives only the reviewed frozen binding and executes once
+ok 4 - eligible callback receives only the reviewed frozen binding and executes once
+  ---
+  duration_ms: 0.618159
+  type: 'test'
+  ...
+# Subtest: guard clones trusted inventory and policy so later mutation cannot approve a provider
+ok 5 - guard clones trusted inventory and policy so later mutation cannot approve a provider
+  ---
+  duration_ms: 0.306236
+  type: 'test'
+  ...
+# Subtest: missing or unknown inventory identity remains blocked
+ok 6 - missing or unknown inventory identity remains blocked
+  ---
+  duration_ms: 0.229156
+  type: 'test'
+  ...
+# Subtest: missing and malformed trusted catalogs fail closed
+ok 7 - missing and malformed trusted catalogs fail closed
+  ---
+  duration_ms: 0.527571
+  type: 'test'
+  ...
+# Subtest: production exports fail closed when fixed policy/catalog files are missing, malformed or mismatched
+ok 8 - production exports fail closed when fixed policy/catalog files are missing, malformed or mismatched
+  ---
+  duration_ms: 4.784621
+  type: 'test'
+  ...
+# Subtest: duplicate provider identities cannot select an arbitrary reviewed binding
+ok 9 - duplicate provider identities cannot select an arbitrary reviewed binding
+  ---
+  duration_ms: 0.398194
+  type: 'test'
+  ...
+# Subtest: missing, malformed, or weakened policy cannot authorize inference
+ok 10 - missing, malformed, or weakened policy cannot authorize inference
+  ---
+  duration_ms: 0.633487
+  type: 'test'
+  ...
+# Subtest: owner grants, login and cost override environment variables cannot authorize hosted inference
+ok 11 - owner grants, login and cost override environment variables cannot authorize hosted inference
+  ---
+  duration_ms: 0.416595
+  type: 'test'
+  ...
+# Subtest: billing must be exactly zero and metered dependencies must be explicitly absent
+ok 12 - billing must be exactly zero and metered dependencies must be explicitly absent
+  ---
+  duration_ms: 0.654778
+  type: 'test'
+  ...
+# Subtest: both model code and weights need separately reviewed commercially compatible open-source licenses
+ok 13 - both model code and weights need separately reviewed commercially compatible open-source licenses
+  ---
+  duration_ms: 0.777454
+  type: 'test'
+  ...
+# Subtest: license evidence needs a source and fresh review with no future date
+ok 14 - license evidence needs a source and fresh review with no future date
+  ---
+  duration_ms: 0.5399
+  type: 'test'
+  ...
+# Subtest: software and model artifacts must be pinned
+ok 15 - software and model artifacts must be pinned
+  ---
+  duration_ms: 0.403479
+  type: 'test'
+  ...
+# Subtest: verification requires maintenance, security, demonstrated quality and a source reference
+ok 16 - verification requires maintenance, security, demonstrated quality and a source reference
+  ---
+  duration_ms: 0.419595
+  type: 'test'
+  ...
+# Subtest: expired, excessively long, future or invalid evidence cannot enable a provider
+ok 17 - expired, excessively long, future or invalid evidence cannot enable a provider
+  ---
+  duration_ms: 0.341339
+  type: 'test'
+  ...
+# Subtest: clock changes cannot keep previously eligible evidence authorized after expiry
+ok 18 - clock changes cannot keep previously eligible evidence authorized after expiry
+  ---
+  duration_ms: 0.266412
+  type: 'test'
+  ...
+# Subtest: an unavailable or invalid verification clock fails closed
+ok 19 - an unavailable or invalid verification clock fails closed
+  ---
+  duration_ms: 0.271227
+  type: 'test'
+  ...
+# Subtest: execution must use existing local resources with cloud and redirects explicitly disabled
+ok 20 - execution must use existing local resources with cloud and redirects explicitly disabled
+  ---
+  duration_ms: 0.518671
+  type: 'test'
+  ...
+# Subtest: remote, DNS, credential-bearing and ambiguous endpoints are blocked
+ok 21 - remote, DNS, credential-bearing and ambiguous endpoints are blocked
+  ---
+  duration_ms: 0.746702
+  type: 'test'
+  ...
+# Subtest: literal IPv6 loopback is eligible with all other reviews intact
+ok 22 - literal IPv6 loopback is eligible with all other reviews intact
+  ---
+  duration_ms: 0.213691
+  type: 'test'
+  ...
+# Subtest: cloud-model labels and ambiguous mutable aliases cannot masquerade as pinned local execution
+ok 23 - cloud-model labels and ambiguous mutable aliases cannot masquerade as pinned local execution
+  ---
+  duration_ms: 0.576876
+  type: 'test'
+  ...
+# Subtest: blocked request details never echo arbitrary provider identifiers or secrets
+ok 24 - blocked request details never echo arbitrary provider identifiers or secrets
+  ---
+  duration_ms: 0.134096
+  type: 'test'
+  ...
+# Subtest: prohibited and unknown procurement actions cannot be authorized by generic owner flags
+ok 25 - prohibited and unknown procurement actions cannot be authorized by generic owner flags
+  ---
+  duration_ms: 0.810062
+  type: 'test'
+  ...
+# Subtest: blocked provider never runs the supplied callback even when it would expose credentials
+ok 26 - blocked provider never runs the supplied callback even when it would expose credentials
+  ---
+  duration_ms: 0.675802
+  type: 'test'
+  ...
+# Subtest: an eligible callback failure is propagated without retry or fallback
+ok 27 - an eligible callback failure is propagated without retry or fallback
+  ---
+  duration_ms: 0.293572
+  type: 'test'
+  ...
+1..27
+# tests 27
+# suites 0
+# pass 27
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 37.758836

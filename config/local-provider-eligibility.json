@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "policyId": "BOSSMIND-OPEN-SOURCE-ONLY-1",
+  "providers": [],
+  "status": "BLOCKED",
+  "reason": "No local provider has verified software/model licenses, pinned artifacts, zero-cost execution and quality/security evidence. No model was downloaded or enabled."
+}
